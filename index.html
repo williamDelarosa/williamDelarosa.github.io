@@ -3,238 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corso TAI 2025/2026</title>
+    <title>App di Studio con Flashcard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Slate Blue Accent -->
+    <!-- Application Structure Plan: L'applicazione è strutturata come un'esperienza guidata. Inizia con una schermata di selezione della materia per consentire all'utente di focalizzare la sessione di studio. Successivamente, si passa a una vista a singola "flashcard" per evitare il sovraccarico cognitivo, presentando una domanda alla volta. Le interazioni principali sono la selezione di una risposta e la navigazione tra le domande. Questa struttura è stata scelta perché imita e migliora l'uso delle flashcard fisiche, aggiungendo feedback istantaneo e tracciamento del punteggio, che sono fondamentali per un apprendimento efficace. Il flusso si conclude con una schermata di riepilogo dei risultati per valutare la performance. -->
+    <!-- Visualization & Content Choices: Le informazioni (domande e risposte) sono state trasformate da un elenco statico a elementi interattivi. L'obiettivo è valutare la conoscenza. Il metodo di presentazione è una "card" UI che contiene la domanda e le opzioni di risposta come pulsanti cliccabili. L'interazione è il click, che attiva un feedback visivo immediato (colori verde/rosso) per rinforzare l'apprendimento. Questa scelta è giustificata dalla necessità di un feedback rapido e chiaro. La logica è gestita interamente con JavaScript vaniglia. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a1a1a;
-            color: #e0e0e0;
         }
-        .flashcard-container {
-            width: 100%;
-            height: 400px;
-            perspective: 1000px;
+        .flashcard-option.correct {
+            background-color: #d1fae5; 
+            border-color: #10b981;
+            color: #065f46;
         }
-        .flashcard {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-            cursor: pointer;
+        .flashcard-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
         }
-        .flashcard.flipped {
-            transform: rotateY(180deg);
+        .flashcard-option.selected-incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+            opacity: 1;
         }
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        .flashcard-option:not(.disabled):hover {
+            background-color: #f3f4f6;
         }
-        .flashcard-front {
-            background-color: #2d2d2d;
-            color: #ffffff;
-            z-index: 2;
-        }
-        .flashcard-back {
-            background-color: #6366f1;
-            color: #ffffff;
-            transform: rotateY(180deg);
-        }
-        .tab-button.active {
-            background-color: #6366f1;
-            color: #ffffff;
+        .disabled {
+            pointer-events: none;
+            opacity: 0.8;
         }
     </style>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4">
+<body class="bg-stone-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
 
-    
+    <div id="app-container" class="w-full max-w-2xl mx-auto">
 
-    <div class="w-full max-w-2xl bg-gray-800 rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center">
-        
-        <div class="flex flex-wrap items-center justify-center space-x-2 mb-6 p-1 bg-gray-700 rounded-full">
-            <button id="disegno-tecnico-btn" class="tab-button px-4 py-2 rounded-full font-medium transition-colors duration-200">
-                Disegno Tecnico
-            </button>
-            <button id="cuscinetti-btn" class="tab-button px-4 py-2 rounded-full font-medium transition-colors duration-200">
-                Cuscinetti
-            </button>
-            <button id="sicurezza-btn" class="tab-button px-4 py-2 rounded-full font-medium transition-colors duration-200">
-                Sicurezza
-            </button>
-        </div>
-
-        <div class="flashcard-container w-full h-96 mb-6">
-            <div id="flashcard" class="flashcard">
-                <div id="flashcard-front" class="flashcard-face flashcard-front">
-                    <p class="text-2xl font-semibold">Caricamento...</p>
-                </div>
-                <div id="flashcard-back" class="flashcard-face flashcard-back">
-                    <p class="text-xl font-medium">Caricamento...</p>
-                </div>
+        <!-- Schermata di selezione della materia -->
+        <div id="selection-screen" class="text-center">
+            <h1 class="text-4xl font-bold mb-4 text-slate-700">App di Studio con Flashcard</h1>
+            <p class="text-lg text-slate-600 mb-8">Scegli la materia per iniziare la tua sessione di studio.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button onclick="startQuiz('meccanica')" class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                    <span class="text-5xl mb-4 block">⚙️</span>
+                    <h2 class="text-2xl font-semibold text-slate-800">Progettazione Meccanica</h2>
+                </button>
+                <button onclick="startQuiz('sicurezza')" class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                    <span class="text-5xl mb-4 block">️️⚠️</span>
+                    <h2 class="text-2xl font-semibold text-slate-800">Sicurezza sul Lavoro</h2>
+                </button>
             </div>
         </div>
 
-        <div class="flex items-center space-x-4 mb-4">
-            <button id="prev-btn" class="bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                Precedente
-            </button>
-            <span id="card-counter" class="text-lg font-medium text-gray-400">0/0</span>
-            <button id="next-btn" class="bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                Successiva
-            </button>
+        <!-- Schermata del Quiz -->
+        <div id="quiz-screen" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                 <h1 id="quiz-title" class="text-2xl font-bold text-slate-700"></h1>
+                 <button onclick="showSelectionScreen()" class="text-sm bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2 px-4 rounded-lg transition-colors">Cambia Materia</button>
+            </div>
+           
+            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+                <div class="flex justify-between items-baseline mb-6">
+                    <div id="progress-text" class="text-sm font-medium text-slate-500"></div>
+                    <div id="score-text" class="text-lg font-bold text-slate-600"></div>
+                </div>
+
+                <div id="flashcard-container">
+                    <p id="question-text" class="text-xl font-semibold mb-6 min-h-[6rem]"></p>
+                    <div id="options-container" class="space-y-3"></div>
+                </div>
+                 <div id="feedback-text" class="mt-4 text-center font-semibold hidden"></div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button id="next-button" onclick="nextQuestion()" class="bg-slate-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-slate-700 transition-colors shadow-md disabled:bg-slate-300 disabled:cursor-not-allowed" disabled>Prossima</button>
+            </div>
         </div>
+        
+        <!-- Schermata dei Risultati -->
+        <div id="results-screen" class="hidden text-center bg-white p-8 rounded-xl shadow-lg">
+             <h1 id="results-title" class="text-3xl font-bold mb-2 text-slate-700"></h1>
+             <p id="results-score" class="text-5xl font-bold my-4 text-slate-800"></p>
+             <p id="results-message" class="text-lg text-slate-600 mb-8"></p>
+             <div class="flex gap-4 justify-center">
+                 <button onclick="restartQuiz()" class="bg-slate-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-colors shadow-md">Riprova Quiz</button>
+                 <button onclick="showSelectionScreen()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-6 rounded-lg transition-colors">Scegli un'altra materia</button>
+             </div>
+        </div>
+
     </div>
 
     <script>
-        const flashcardData = {
-            disegnoTecnico: [
-                { question: 'Qual è la duplice funzione di un disegno tecnico?', answer: 'Permette la ricostruzione mentale del modello e diffonde informazioni per la produzione.' },
-                { question: 'Quali sono le caratteristiche del linguaggio convenzionale del disegno tecnico?', answer: 'Facilità d\'interpretazione, univocità, completezza e trasferibilità.' },
-                { question: 'Chi stabilisce le norme per il disegno tecnico?', answer: 'Enti nazionali e internazionali di normazione e unificazione.' },
-                { question: 'Cos\'è una norma?', answer: 'Un documento che fornisce regole e linee guida per standardizzare attività e prodotti.' },
-                { question: 'Qual è lo scopo della normazione?', answer: 'Ordinare e razionalizzare un campo di attività per ottenere una situazione economica ottimale nel rispetto delle esigenze funzionali e di sicurezza.' },
-                { question: 'Quale norma definisce i dati da indicare sui disegni tecnici?', answer: 'UNI 7462 e UNI 7463.' },
-                { question: 'Cosa si intende per "univocità" nel disegno?', answer: 'Significa che non può essere interpretato in modi diversi, garantendo fedeltà.' },
-                { question: 'Cos\'è il disegno tecnico industriale?', answer: 'La rappresentazione di oggetti tecnici e il documento che traduce graficamente le idee del progettista.' },
-                { question: 'Spiega la funzione di "diffusione di informazioni".', answer: 'Trasmette dati come dimensioni, materiali, tolleranze e finiture superficiali necessari per la produzione di un pezzo.' },
-                { question: 'Perché il disegno tecnico è considerato un "linguaggio internazionale"?', answer: 'Grazie alle convenzioni e alle norme stabilite da enti di normazione, che lo rendono universalmente comprensibile.' },
-                { question: 'Cosa si intende per "fedeltà" nel disegno tecnico?', answer: 'L\'univocità e la precisione nel rappresentare l\'oggetto.' },
-                { question: 'Quali sono i componenti di base di un sistema di disegno?', answer: 'Progettista, disegnatore, fabbricante.' },
-                { question: 'Cosa si intende per "trasferibilità" nel disegno tecnico?', answer: 'La possibilità di inviare il disegno e riprodurre l\'oggetto in qualsiasi parte del mondo, senza perdita di informazioni.' },
-                { question: 'Che cos\'è la "grammatica" del disegno tecnico?', answer: 'Le regole di rappresentazione stabilite dalle norme.' },
-                { question: 'Come si definisce la sintassi del disegno tecnico?', answer: 'Le modalità con cui le regole vengono applicate per comunicare un\'idea in modo coerente.' },
-                { question: 'Perché è fondamentale l\'univocità nel disegno tecnico?', answer: 'Per evitare errori e incomprensioni nel processo di produzione.' },
-                { question: 'In che modo la normazione contribuisce alla sicurezza?', answer: 'Assicurando che i componenti siano prodotti in modo affidabile e interscambiabile.' },
-                { question: 'Perché il disegno tecnico è considerato un linguaggio visivo?', answer: 'Perché comunica informazioni complesse tramite simboli, linee e forme grafiche.' },
-                { question: 'Qual è il primo passo per un disegnatore tecnico?', answer: 'Tradurre graficamente le idee del progettista.' },
-                { question: 'Cosa sono i "dati da indicare" sui disegni?', answer: 'Le informazioni aggiuntive (come tolleranze, finiture, materiali) richieste dalle norme per rendere il disegno completo.' },
-            ],
-            cuscinetti: [
-                { question: 'Qual è lo scopo principale dei cuscinetti a rotolamento?', answer: 'Permettere la rotazione relativa tra un componente (albero) e un altro (supporto) evitando lo strisciamento.' },
-                { question: 'Da quali componenti è formato un cuscinetto a rotolamento?', answer: 'Anello interno, anello esterno, corpi volventi e gabbia.' },
-                { question: 'A cosa serve l\'anello interno?', answer: 'È solidale all\'albero e la sua pista interna guida i corpi volventi.' },
-                { question: 'A cosa serve la gabbia?', answer: 'Mantiene i corpi volventi equidistanti e in posizione corretta.' },
-                { question: 'Quali tipi di cuscinetti sono citati in relazione al carico?', answer: 'Radiali, assiali e combinati.' },
-                { question: 'Descrivi un cuscinetto radiale.', answer: 'Un cuscinetto progettato per sopportare carichi perpendicolari all\'asse di rotazione.' },
-                { question: 'Qual è il ruolo dei corpi volventi?', answer: 'Rotolano sulle piste, riducendo l\'attrito tra l\'anello interno ed esterno.' },
-                { question: 'Qual è lo scopo delle guarnizioni nei cuscinetti?', answer: 'Proteggere i corpi volventi da sporco e contaminanti esterni.' },
-                { question: 'Come vengono classificati i cuscinetti a rotolamento?', answer: 'In base alla modalità di trasferimento del carico: radiali, assiali e combinati.' },
-                { question: 'Che tipo di cuscinetto supporta carichi paralleli all\'asse?', answer: 'Un cuscinetto assiale.' },
-                { question: 'Qual è il contrario di "rotolamento"?', answer: 'Strisciamento.' },
-                { question: 'Qual è il materiale più comune per i corpi volventi?', answer: 'Acciaio, solitamente temperato per la durezza.' },
-                { question: 'Che tipo di cuscinetti sopportano sia carichi radiali che assiali?', answer: 'Cuscinetti combinati.' },
-                { question: 'Come si rappresenta una pista in un cuscinetto?', answer: 'È la superficie degli anelli su cui rotolano i corpi volventi.' },
-                { question: 'Che cos\'è un cuscinetto radiale a due corone di sfere?', answer: 'Un cuscinetto che utilizza due serie di sfere per sopportare carichi radiali più elevati.' },
-                { question: 'Quale parte del cuscinetto è solidale al supporto?', answer: 'L\'anello esterno.' },
-                { question: 'Che cos\'è un "alloggiamento" in riferimento ai cuscinetti?', answer: 'La sede nel supporto dove viene montato il cuscinetto.' },
-                { question: 'Cosa distingue un cuscinetto a rulli da uno a sfere?', answer: 'Il tipo di corpi volventi, che influisce sulla capacità di carico e sul tipo di attrito.' },
-                { question: 'Cosa sono i "rulli" in un cuscinetto a rotolamento?', answer: 'Corpi volventi di forma cilindrica o conica, utilizzati per carichi più pesanti rispetto alle sfere.' },
-                { question: 'Cos\'è un cuscinetto radiale-obliquo?', answer: 'Un tipo di cuscinetto che può supportare sia carichi radiali che assiali in una direzione.' },
-                { question: 'Spiega la differenza tra albero e supporto in un sistema con cuscinetti.', answer: 'L\'albero è la parte che ruota, mentre il supporto è la parte fissa che lo sostiene.' },
-                { question: 'A cosa serve la "gabbia rotante"?', answer: 'A mantenere in posizione i corpi volventi, impedendo che si tocchino tra loro.' },
-                { question: 'Un cuscinetto assiale a sfere è adatto per carichi radiali?', answer: 'No, è progettato principalmente per carichi assiali.' },
-            ],
-            sicurezza: [
-                { question: 'Cosa si intende per "rischio" in un ambiente di lavoro?', answer: 'La probabilità che un pericolo causi un danno alla salute o un infortunio.' },
-                { question: 'Qual è l\'obiettivo principale della valutazione dei rischi?', answer: 'Identificare, analizzare e valutare i pericoli per implementare le misure di prevenzione e protezione necessarie.' },
-                { question: 'Chi è il "Datore di Lavoro" per la sicurezza?', answer: 'Il soggetto titolare del rapporto di lavoro che ha la responsabilità dell\'organizzazione aziendale e della sicurezza.' },
-                { question: 'Cosa sono i "DPI"?', answer: 'Dispositivi di Protezione Individuale, come caschi, guanti e scarpe antinfortunistiche.' },
-                { question: 'Cos\'è un infortunio sul lavoro?', answer: 'Un evento che avviene per causa violenta in occasione di lavoro, dal quale deriva un danno alla persona.' },
-                { question: 'Cosa significa "prevenzione" nel contesto della sicurezza sul lavoro?', answer: 'Evitare o ridurre al minimo i rischi prima che si verifichino, attraverso misure preventive.' },
-                { question: 'Qual è il ruolo del "Responsabile del Servizio di Prevenzione e Protezione" (RSPP)?', answer: 'Collaborare con il datore di lavoro per la valutazione dei rischi e l\'adozione di misure preventive e protettive.' },
-                { question: 'Cos\'è il rischio stress lavoro-correlato?', answer: 'Un rischio derivante da un prolungato squilibrio tra le richieste dell\'ambiente lavorativo e le capacità del lavoratore.' },
-                { question: 'Quali sono i principali doveri del lavoratore in materia di sicurezza?', answer: 'Contribuire alla sicurezza, rispettare le procedure, segnalare pericoli e utilizzare correttamente i DPI.' },
-                { question: 'Cosa sono i "dispositivi di comando" delle macchine?', answer: 'Componenti che permettono all\'operatore di avviare, arrestare o modificare il funzionamento di una macchina.' },
-            ]
-        };
+        const progettazioneMeccanicaQuestions = [
+            { question: "Qual è lo scopo principale dei cuscinetti a rotolamento?", options: ["Evitare lo scivolamento circonferenziale tra due componenti.", "Ridurre l'attrito e permettere la rotazione relativa di un albero rispetto a un supporto.", "Collegare in modo permanente due parti meccaniche.", "Assorbire le vibrazioni in un sistema meccanico."], answer: "Ridurre l'attrito e permettere la rotazione relativa di un albero rispetto a un supporto." },
+            { question: "Da quali componenti è formato un cuscinetto a rotolamento?", options: ["Anello interno, anello esterno e una gabbia.", "Anello interno, anello esterno, corpi volventi e una gabbia.", "Anello esterno, alberi e supporti.", "Solo da sfere o rulli."], answer: "Anello interno, anello esterno, corpi volventi e una gabbia." },
+            { question: "Cosa rappresenta la sigla 'UNI'?", options: ["Unità Nazionale per l'Industria.", "Unificazione Italiana.", "Università Nazionale Italiana.", "Unione Nazionale per l'Innovazione."], answer: "Unificazione Italiana." },
+            { question: "Quali sono i principali tipi di cuscinetti in base al carico che possono sopportare?", options: ["A sfere e a rulli.", "Radiali, assiali e combinati.", "A contatto obliquo e a rulli conici.", "A una corona e a due corone."], answer: "Radiali, assiali e combinati." },
+            { question: "Qual è la funzione di un disegno tecnico?", options: ["Fornire solo una rappresentazione artistica di un oggetto.", "Tradurre graficamente le idee del progettista e fornire indicazioni per la realizzazione di un pezzo.", "Creare un documento visivamente accattivante per la presentazione.", "Semplificare la comunicazione tra i dipartimenti amministrativi."], answer: "Tradurre graficamente le idee del progettista e fornire indicazioni per la realizzazione di un pezzo." },
+            { question: "Quali sono le caratteristiche principali che rendono un linguaggio convenzionale come il disegno tecnico efficace?", options: ["Complessità e unicità.", "Univocità, fedeltà, completezza e trasferibilità.", "Facilità di interpretazione e creatività.", "Rapidità di esecuzione e stile personale."], answer: "Univocità, fedeltà, completezza e trasferibilità." },
+            { question: "Quale entità ha stabilito la 'grammatica e sintassi' del disegno tecnico?", options: ["Le università.", "Gli enti nazionali e internazionali di normazione e unificazione.", "Le aziende private.", "Il governo."], answer: "Gli enti nazionali e internazionali di normazione e unificazione." },
+            { question: "A cosa serve la gabbia in un cuscinetto a rotolamento?", options: ["A proteggere i cuscinetti da polvere e sporco.", "A mantenere in posizione i corpi volventi.", "A sopportare il carico assiale.", "A lubrificare i cuscinetti."], answer: "A mantenere in posizione i corpi volventi." },
+            { question: "I cuscinetti radiali ad una corona di sfere sono progettati per sopportare quale tipo di carico?", options: ["Carico assiale.", "Carico radiale.", "Sia carico radiale che assiale.", "Carico combinato."], answer: "Carico radiale." },
+            { question: "Cosa definisce una 'norma' nel contesto del disegno tecnico?", options: ["Un suggerimento per la buona pratica.", "Un documento approvato che fornisce regole e linee guida per usi comuni.", "Una legge governativa.", "Una tradizione non scritta."], answer: "Un documento approvato che fornisce regole e linee guida per usi comuni." }
+        ];
 
-        let currentTopic = 'disegnoTecnico';
-        let currentCardIndex = 0;
-        const flashcard = document.getElementById('flashcard');
-        const flashcardFront = document.getElementById('flashcard-front');
-        const flashcardBack = document.getElementById('flashcard-back');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const cardCounter = document.getElementById('card-counter');
-        const dtBtn = document.getElementById('disegno-tecnico-btn');
-        const cBtn = document.getElementById('cuscinetti-btn');
-        const sBtn = document.getElementById('sicurezza-btn');
+        const sicurezzaLavoroQuestions = [
+            { question: "Chi è il 'Datore di Lavoro' secondo la normativa sulla sicurezza?", options: ["L'impiegato più anziano dell'azienda.", "Il gestore di un reparto.", "Il soggetto titolare del rapporto di lavoro che ha la responsabilità dell'impresa.", "Il medico competente."], answer: "Il soggetto titolare del rapporto di lavoro che ha la responsabilità dell'impresa." },
+            { question: "Qual è l'obiettivo del 'Testo Unico sulla Sicurezza'?", options: ["Fornire linee guida per la produzione.", "Raccogliere e riordinare le disposizioni legislative in materia di sicurezza.", "Determinare i salari minimi.", "Promuovere la formazione dei dipendenti su temi non legati alla sicurezza."], answer: "Raccogliere e riordinare le disposizioni legislative in materia di sicurezza." },
+            { question: "Quale figura ha il compito di organizzare il servizio di prevenzione e protezione (SPP)?", options: ["Il rappresentante dei lavoratori per la sicurezza (RLS).", "Il medico competente.", "Il datore di lavoro.", "Il responsabile del servizio di prevenzione e protezione (RSPP)."], answer: "Il datore di lavoro." },
+            { question: "Qual è il ruolo del 'Responsabile del Servizio di Prevenzione e Protezione' (RSPP)?", options: ["Sorvegliare la produzione.", "Applicare le misure di prevenzione e protezione.", "Collaborare con il datore di lavoro per la valutazione dei rischi e la stesura del DVR.", "Scegliere i dipendenti da formare."], answer: "Collaborare con il datore di lavoro per la valutazione dei rischi e la stesura del DVR." },
+            { question: "Cosa si intende per 'rischio'?", options: ["La probabilità che si verifichi un evento pericoloso.", "La causa di un evento dannoso.", "Una situazione di pericolo.", "La combinazione della probabilità e della gravità dei possibili effetti di un evento dannoso."], answer: "La combinazione della probabilità e della gravità dei possibili effetti di un evento dannoso." },
+            { question: "Chi ha il dovere di segnalare al datore di lavoro le condizioni di pericolo?", options: ["Solo il rappresentante dei lavoratori per la sicurezza (RLS).", "Solo il medico competente.", "Tutti i lavoratori, ciascuno per le proprie competenze.", "Il responsabile della produzione."], answer: "Tutti i lavoratori, ciascuno per le proprie competenze." },
+            { question: "Qual è l'obiettivo della 'valutazione dei rischi'?", options: ["Identificare i lavoratori più esposti.", "Eliminare completamente i rischi.", "Individuare i fattori di rischio, valutare i pericoli e pianificare le misure di prevenzione.", "Creare un documento formale senza misure pratiche."], answer: "Individuare i fattori di rischio, valutare i pericoli e pianificare le misure di prevenzione." },
+            { question: "Cosa sono i 'dispositivi di protezione individuale' (DPI)?", options: ["Strumenti usati per la produzione.", "Attrezzature destinate a essere indossate o tenute dal lavoratore per proteggerlo dai rischi.", "Segnaletica di sicurezza.", "Macchinari con protezioni incorporate."], answer: "Attrezzature destinate a essere indossate o tenute dal lavoratore per proteggerlo dai rischi." },
+            { question: "Quando è obbligatoria la sorveglianza sanitaria?", options: ["Solo per i lavori ad alto rischio.", "Quando i lavoratori sono esposti a rischi specifici per la salute.", "Sempre e per tutti i dipendenti.", "Solo per i lavoratori sopra i 50 anni."], answer: "Quando i lavoratori sono esposti a rischi specifici per la salute." },
+            { question: "Chi deve redigere il 'Documento di Valutazione dei Rischi' (DVR)?", options: ["Il medico competente.", "Il responsabile del servizio di prevenzione e protezione (RSPP).", "Il datore di lavoro.", "Il rappresentante dei lavoratori per la sicurezza (RLS)."], answer: "Il datore di lavoro." }
+        ];
 
-        function updateCardContent() {
-            flashcard.classList.remove('flipped');
-            const data = flashcardData[currentTopic];
-            if (data.length === 0) {
-                flashcardFront.querySelector('p').textContent = 'Nessuna flashcard disponibile per questa sezione.';
-                flashcardBack.querySelector('p').textContent = 'Selezionare un altro argomento.';
-                cardCounter.textContent = `0/0`;
+        let currentQuizData = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let currentSubject = '';
+
+        const selectionScreen = document.getElementById('selection-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const progressText = document.getElementById('progress-text');
+        const scoreText = document.getElementById('score-text');
+        const nextButton = document.getElementById('next-button');
+        const quizTitle = document.getElementById('quiz-title');
+        const feedbackText = document.getElementById('feedback-text');
+
+
+        function startQuiz(subject) {
+            currentSubject = subject;
+            if (subject === 'meccanica') {
+                currentQuizData = [...progettazioneMeccanicaQuestions].sort(() => Math.random() - 0.5);
+                quizTitle.innerText = "Progettazione Meccanica";
             } else {
-                setTimeout(() => {
-                    flashcardFront.querySelector('p').textContent = data[currentCardIndex].question;
-                    flashcardBack.querySelector('p').textContent = data[currentCardIndex].answer;
-                    cardCounter.textContent = `${currentCardIndex + 1}/${data.length}`;
-                }, 300);
+                currentQuizData = [...sicurezzaLavoroQuestions].sort(() => Math.random() - 0.5);
+                quizTitle.innerText = "Sicurezza sul Lavoro";
             }
-        }
-
-        function switchTopic(topic) {
-            currentTopic = topic;
-            currentCardIndex = 0;
-            updateCardContent();
             
-            // Update active button state
-            dtBtn.classList.remove('active');
-            cBtn.classList.remove('active');
-            sBtn.classList.remove('active');
-            if (topic === 'disegnoTecnico') {
-                dtBtn.classList.add('active');
-            } else if (topic === 'cuscinetti') {
-                cBtn.classList.add('active');
-            } else if (topic === 'sicurezza') {
-                sBtn.classList.add('active');
-            }
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            selectionScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            displayQuestion();
         }
 
-        flashcard.addEventListener('click', () => {
-            flashcard.classList.toggle('flipped');
-        });
+        function displayQuestion() {
+            nextButton.disabled = true;
+            feedbackText.classList.add('hidden');
 
-        prevBtn.addEventListener('click', () => {
-            const data = flashcardData[currentTopic];
-            if (data.length > 0) {
-                currentCardIndex = (currentCardIndex - 1 + data.length) % data.length;
-                updateCardContent();
+            const questionData = currentQuizData[currentQuestionIndex];
+            questionText.innerText = questionData.question;
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach(option => {
+                const optionElement = document.createElement('button');
+                optionElement.innerText = option;
+                optionElement.classList.add('flashcard-option', 'w-full', 'p-4', 'text-left', 'border-2', 'border-slate-200', 'rounded-lg', 'transition-colors', 'duration-200');
+                optionElement.onclick = (event) => selectAnswer(event, questionData.answer);
+                optionsContainer.appendChild(optionElement);
+            });
+
+            progressText.innerText = `Domanda ${currentQuestionIndex + 1} / ${currentQuizData.length}`;
+            scoreText.innerText = `Punteggio: ${score}`;
+        }
+
+        function selectAnswer(event, correctAnswer) {
+            const selectedOption = event.target;
+            const allOptions = optionsContainer.children;
+            
+            for(let option of allOptions) {
+                option.classList.add('disabled');
             }
-        });
 
-        nextBtn.addEventListener('click', () => {
-            const data = flashcardData[currentTopic];
-            if (data.length > 0) {
-                currentCardIndex = (currentCardIndex + 1) % data.length;
-                updateCardContent();
+            if (selectedOption.innerText === correctAnswer) {
+                score++;
+                selectedOption.classList.add('correct');
+                feedbackText.innerText = "Corretto!";
+                feedbackText.style.color = '#10b981';
+            } else {
+                selectedOption.classList.add('selected-incorrect');
+                feedbackText.innerText = "Sbagliato!";
+                 feedbackText.style.color = '#ef4444';
+                
+                for(let option of allOptions) {
+                    if (option.innerText === correctAnswer) {
+                        option.classList.add('correct');
+                    }
+                }
             }
-        });
 
-        dtBtn.addEventListener('click', () => switchTopic('disegnoTecnico'));
-        cBtn.addEventListener('click', () => switchTopic('cuscinetti'));
-        sBtn.addEventListener('click', () => switchTopic('sicurezza'));
+            feedbackText.classList.remove('hidden');
+            scoreText.innerText = `Punteggio: ${score}`;
+            nextButton.disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizData.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
         
-        // Initial load
-        switchTopic(currentTopic);
-    </script>
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            const resultsTitle = document.getElementById('results-title');
+            const resultsScore = document.getElementById('results-score');
+            const resultsMessage = document.getElementById('results-message');
 
+            resultsTitle.innerText = "Quiz Completato!";
+            resultsScore.innerText = `${score} / ${currentQuizData.length}`;
+
+            const percentage = (score / currentQuizData.length) * 100;
+            if (percentage >= 80) {
+                resultsMessage.innerText = "Ottimo lavoro! Hai una solida conoscenza dell'argomento.";
+            } else if (percentage >= 50) {
+                resultsMessage.innerText = "Buon risultato! Continua a studiare per migliorare ancora.";
+            } else {
+                resultsMessage.innerText = "Non ti preoccupare, ripassa gli argomenti e riprova. Puoi farcela!";
+            }
+        }
+        
+        function restartQuiz() {
+            startQuiz(currentSubject);
+        }
+
+        function showSelectionScreen() {
+             quizScreen.classList.add('hidden');
+             resultsScreen.classList.add('hidden');
+             selectionScreen.classList.remove('hidden');
+        }
+
+    </script>
 </body>
 </html>
