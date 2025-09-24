@@ -14,23 +14,23 @@
             font-family: 'Inter', sans-serif;
         }
         .flashcard-option.correct {
-            background-color: #d1fae5; 
+            background-color: #065f46; 
             border-color: #10b981;
-            color: #065f46;
+            color: #d1fae5;
         }
         .flashcard-option.incorrect {
-            background-color: #fee2e2;
+            background-color: #991b1b;
             border-color: #ef4444;
-            color: #991b1b;
+            color: #fee2e2;
         }
         .flashcard-option.selected-incorrect {
-            background-color: #fee2e2;
+            background-color: #991b1b;
             border-color: #ef4444;
-            color: #991b1b;
+            color: #fee2e2;
             opacity: 1;
         }
         .flashcard-option:not(.disabled):hover {
-            background-color: #f3f4f6;
+            background-color: #4b5563;
         }
         .disabled {
             pointer-events: none;
@@ -39,22 +39,22 @@
     </style>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
-<body class="bg-stone-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
 
     <div id="app-container" class="w-full max-w-2xl mx-auto">
 
         <!-- Schermata di selezione della materia -->
         <div id="selection-screen" class="text-center">
-            <h1 class="text-4xl font-bold mb-4 text-slate-700">App di Studio con Flashcard</h1>
-            <p class="text-lg text-slate-600 mb-8">Scegli la materia per iniziare la tua sessione di studio.</p>
+            <h1 class="text-4xl font-bold mb-4 text-white">App di Studio con Flashcard</h1>
+            <p class="text-lg text-gray-400 mb-8">Scegli la materia per iniziare la tua sessione di studio.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <button onclick="startQuiz('meccanica')" class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <button onclick="startQuiz('meccanica')" class="bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
                     <span class="text-5xl mb-4 block">⚙️</span>
-                    <h2 class="text-2xl font-semibold text-slate-800">Progettazione Meccanica</h2>
+                    <h2 class="text-2xl font-semibold text-gray-100">Progettazione Meccanica</h2>
                 </button>
-                <button onclick="startQuiz('sicurezza')" class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <button onclick="startQuiz('sicurezza')" class="bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
                     <span class="text-5xl mb-4 block">️️⚠️</span>
-                    <h2 class="text-2xl font-semibold text-slate-800">Sicurezza sul Lavoro</h2>
+                    <h2 class="text-2xl font-semibold text-gray-100">Sicurezza sul Lavoro</h2>
                 </button>
             </div>
         </div>
@@ -62,36 +62,36 @@
         <!-- Schermata del Quiz -->
         <div id="quiz-screen" class="hidden">
             <div class="flex justify-between items-center mb-4">
-                 <h1 id="quiz-title" class="text-2xl font-bold text-slate-700"></h1>
-                 <button onclick="showSelectionScreen()" class="text-sm bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2 px-4 rounded-lg transition-colors">Cambia Materia</button>
+                 <h1 id="quiz-title" class="text-2xl font-bold text-gray-200"></h1>
+                 <button onclick="showSelectionScreen()" class="text-sm bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition-colors">Cambia Materia</button>
             </div>
            
-            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+            <div class="bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg">
                 <div class="flex justify-between items-baseline mb-6">
-                    <div id="progress-text" class="text-sm font-medium text-slate-500"></div>
-                    <div id="score-text" class="text-lg font-bold text-slate-600"></div>
+                    <div id="progress-text" class="text-sm font-medium text-gray-400"></div>
+                    <div id="score-text" class="text-lg font-bold text-gray-300"></div>
                 </div>
 
                 <div id="flashcard-container">
-                    <p id="question-text" class="text-xl font-semibold mb-6 min-h-[6rem]"></p>
+                    <p id="question-text" class="text-xl font-semibold mb-6 min-h-[6rem] text-gray-100"></p>
                     <div id="options-container" class="space-y-3"></div>
                 </div>
                  <div id="feedback-text" class="mt-4 text-center font-semibold hidden"></div>
             </div>
 
             <div class="mt-6 flex justify-end">
-                <button id="next-button" onclick="nextQuestion()" class="bg-slate-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-slate-700 transition-colors shadow-md disabled:bg-slate-300 disabled:cursor-not-allowed" disabled>Prossima</button>
+                <button id="next-button" onclick="nextQuestion()" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors shadow-md disabled:bg-gray-600 disabled:cursor-not-allowed" disabled>Prossima</button>
             </div>
         </div>
         
         <!-- Schermata dei Risultati -->
-        <div id="results-screen" class="hidden text-center bg-white p-8 rounded-xl shadow-lg">
-             <h1 id="results-title" class="text-3xl font-bold mb-2 text-slate-700"></h1>
-             <p id="results-score" class="text-5xl font-bold my-4 text-slate-800"></p>
-             <p id="results-message" class="text-lg text-slate-600 mb-8"></p>
+        <div id="results-screen" class="hidden text-center bg-gray-800 p-8 rounded-xl shadow-lg">
+             <h1 id="results-title" class="text-3xl font-bold mb-2 text-white"></h1>
+             <p id="results-score" class="text-5xl font-bold my-4 text-blue-400"></p>
+             <p id="results-message" class="text-lg text-gray-400 mb-8"></p>
              <div class="flex gap-4 justify-center">
-                 <button onclick="restartQuiz()" class="bg-slate-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-colors shadow-md">Riprova Quiz</button>
-                 <button onclick="showSelectionScreen()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-6 rounded-lg transition-colors">Scegli un'altra materia</button>
+                 <button onclick="restartQuiz()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors shadow-md">Riprova Quiz</button>
+                 <button onclick="showSelectionScreen()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 px-6 rounded-lg transition-colors">Scegli un'altra materia</button>
              </div>
         </div>
 
@@ -108,7 +108,48 @@
             { question: "Quale entità ha stabilito la 'grammatica e sintassi' del disegno tecnico?", options: ["Le università.", "Gli enti nazionali e internazionali di normazione e unificazione.", "Le aziende private.", "Il governo."], answer: "Gli enti nazionali e internazionali di normazione e unificazione." },
             { question: "A cosa serve la gabbia in un cuscinetto a rotolamento?", options: ["A proteggere i cuscinetti da polvere e sporco.", "A mantenere in posizione i corpi volventi.", "A sopportare il carico assiale.", "A lubrificare i cuscinetti."], answer: "A mantenere in posizione i corpi volventi." },
             { question: "I cuscinetti radiali ad una corona di sfere sono progettati per sopportare quale tipo di carico?", options: ["Carico assiale.", "Carico radiale.", "Sia carico radiale che assiale.", "Carico combinato."], answer: "Carico radiale." },
-            { question: "Cosa definisce una 'norma' nel contesto del disegno tecnico?", options: ["Un suggerimento per la buona pratica.", "Un documento approvato che fornisce regole e linee guida per usi comuni.", "Una legge governativa.", "Una tradizione non scritta."], answer: "Un documento approvato che fornisce regole e linee guida per usi comuni." }
+            { question: "Cosa definisce una 'norma' nel contesto del disegno tecnico?", options: ["Un suggerimento per la buona pratica.", "Un documento approvato che fornisce regole e linee guida per usi comuni.", "Una legge governativa.", "Una tradizione non scritta."], answer: "Un documento approvato che fornisce regole e linee guida per usi comuni." },
+            { question: "Qual è la funzione principale di un albero in meccanica?", options: ["Trasmettere il movimento rotatorio.", "Supportare solo carichi statici.", "Ridurre l'attrito tra due componenti.", "Collegare in modo permanente due pezzi."], answer: "Trasmettere il movimento rotatorio." },
+            { question: "Qual è il principale vantaggio dei cuscinetti a rotolamento rispetto a quelli a strisciamento?", options: ["Maggiore resistenza all'usura.", "Minore attrito all'avviamento e maggiore velocità.", "Maggiore semplicità costruttiva.", "Capacità di sopportare carichi più elevati."], answer: "Minore attrito all'avviamento e maggiore velocità." },
+            { question: "Cosa si intende per 'tolleranza' in un disegno tecnico?", options: ["Un errore di misura.", "Un'indicazione per la corretta lubrificazione.", "La massima variazione accettabile di una dimensione.", "Il materiale da utilizzare."], answer: "La massima variazione accettabile di una dimensione." },
+            { question: "Quale tipo di cuscinetto è ideale per sopportare un carico assiale in una sola direzione?", options: ["Cuscinetto radiale a sfere.", "Cuscinetto a rulli conici.", "Cuscinetto assiale a sfere.", "Cuscinetto a contatto obliquo."], answer: "Cuscinetto assiale a sfere." },
+            { question: "In un cuscinetto a rotolamento, cosa sono i 'corpi volventi'?", options: ["Le piste di scorrimento.", "La gabbia che tiene le sfere.", "Le sfere o i rulli che riducono l'attrito.", "Le guarnizioni di protezione."], answer: "Le sfere o i rulli che riducono l'attrito." },
+            { question: "Cosa indica il simbolo del 'diametro' (ø) su un disegno tecnico?", options: ["La lunghezza di un pezzo.", "La larghezza di una parte.", "Il raggio di un cerchio.", "Il diametro di una superficie circolare."], answer: "Il diametro di una superficie circolare." },
+            { question: "Qual è la funzione di una 'chiavetta' in un albero?", options: ["Prevenire la corrosione.", "Fissare permanentemente un componente.", "Evitare la rotazione relativa tra albero e mozzo.", "Bilanciare il peso dell'albero."], answer: "Evitare la rotazione relativa tra albero e mozzo." },
+            { question: "A cosa serve la rappresentazione in 'sezione' in un disegno tecnico?", options: ["A mostrare la vista frontale dell'oggetto.", "A evidenziare i dettagli nascosti all'interno dell'oggetto.", "A indicare le dimensioni totali.", "A mostrare l'oggetto in tre dimensioni."], answer: "A evidenziare i dettagli nascosti all'interno dell'oggetto." },
+            { question: "Qual è la differenza tra un cuscinetto a sfere e uno a rulli?", options: ["I cuscinetti a rulli sopportano carichi maggiori.", "I cuscinetti a sfere sono più rumorosi.", "I cuscinetti a rulli sono più economici.", "I cuscinetti a sfere sono utilizzati per carichi assiali."], answer: "I cuscinetti a rulli sopportano carichi maggiori." },
+            { question: "In quale caso si utilizza un cuscinetto a due corone di sfere?", options: ["Quando è necessario sopportare solo un carico assiale.", "Quando si vuole una maggiore capacità di carico radiale.", "Quando si vuole un ingombro minore.", "Quando il cuscinetto deve essere leggero."], answer: "Quando si vuole una maggiore capacità di carico radiale." },
+            { question: "Cosa indica il simbolo 'R' su un disegno tecnico?", options: ["Rettifica.", "Raggio.", "Rotazione.", "Resistenza."], answer: "Raggio." },
+            { question: "Quale tipo di cuscinetto è più adatto per carichi combinati (radiali e assiali)?", options: ["Cuscinetto radiale a sfere.", "Cuscinetto a rulli conici.", "Cuscinetto assiale a rulli.", "Cuscinetto a una corona di sfere."], answer: "Cuscinetto a rulli conici." },
+            { question: "In un disegno tecnico, a cosa serve la 'linea di mezzeria'?", options: ["A indicare i limiti dell'oggetto.", "A rappresentare l'asse di simmetria di un pezzo.", "A mostrare le dimensioni.", "A indicare i dettagli nascosti."], answer: "A rappresentare l'asse di simmetria di un pezzo." },
+            { question: "Cosa è la 'normalizzazione' nel contesto industriale?", options: ["Il processo di produzione in serie.", "L'atto di stabilire e applicare regole per unificare prodotti e processi.", "La fase di assemblaggio dei componenti.", "Il controllo qualità finale."], answer: "L'atto di stabilire e applicare regole per unificare prodotti e processi." },
+            { question: "Qual è il principale vantaggio dei cuscinetti a rotolamento con guarnizioni integrate?", options: ["Maggiore resistenza alla temperatura.", "Protezione da polvere e umidità.", "Maggiore velocità di rotazione.", "Riduzione del peso del cuscinetto."], answer: "Protezione da polvere e umidità." },
+            { question: "A cosa servono le 'proiezioni ortogonali' nel disegno tecnico?", options: ["A rappresentare l'oggetto in prospettiva.", "A mostrare una vista singola dell'oggetto.", "A rappresentare l'oggetto da più punti di vista (viste principali).", "A disegnare le sezioni trasversali."], answer: "A rappresentare l'oggetto da più punti di vista (viste principali)." },
+            { question: "Qual è la funzione di un 'mozzetto' in un sistema meccanico?", options: ["Ridurre l'attrito.", "Collegare un albero a un altro componente (es. puleggia).", "Assorbire vibrazioni.", "Supportare il carico assiale."], answer: "Collegare un albero a un altro componente (es. puleggia)." },
+            { question: "Cosa si intende per 'UNI 7462'?", options: ["Norma sulle tolleranze.", "Norma sui tipi di cuscinetti.", "Norma sui dati da indicare sui disegni.", "Norma sulla saldatura."], answer: "Norma sui dati da indicare sui disegni." },
+            { question: "Quale tipo di cuscinetto ha una maggiore capacità di sopportare carichi assiali rispetto ai cuscinetti radiali ad una corona di sfere?", options: ["Cuscinetto a sfere a contatto obliquo.", "Cuscinetto a rulli cilindrici.", "Cuscinetto a due corone di sfere.", "Cuscinetto radiale ad una corona di sfere."], answer: "Cuscinetto a sfere a contatto obliquo." },
+            { question: "Cosa si intende per 'univocità' in un disegno tecnico?", options: ["Il disegno deve essere interpretato in un solo modo.", "Il disegno deve essere facile da copiare.", "Il disegno deve avere un solo tipo di linea.", "Il disegno deve essere unico nel suo genere."], answer: "Il disegno deve essere interpretato in un solo modo." },
+            { question: "Qual è la differenza tra un cuscinetto a rulli conici e uno a rulli cilindrici?", options: ["Il cuscinetto a rulli conici sopporta carichi assiali e radiali.", "Il cuscinetto a rulli cilindrici è più economico.", "Il cuscinetto a rulli conici sopporta solo carichi radiali.", "Il cuscinetto a rulli cilindrici ha una minore precisione."], answer: "Il cuscinetto a rulli conici sopporta carichi assiali e radiali." },
+            { question: "Come si rappresenta un foro cieco su un disegno tecnico?", options: ["Con una linea tratteggiata.", "Con una linea continua.", "Con una sezione trasversale.", "Non si rappresenta."], answer: "Con una linea tratteggiata." },
+            { question: "Cosa indica una 'quota' su un disegno tecnico?", options: ["Il tipo di materiale.", "La dimensione di un elemento.", "La forma geometrica di un pezzo.", "Il peso dell'oggetto."], answer: "La dimensione di un elemento." },
+            { question: "Quale tipo di 'filettatura' è più comune per scopi di fissaggio?", options: ["Filettatura metrica ISO.", "Filettatura a passo grosso.", "Filettatura a passo fine.", "Filettatura trapezoidale."], answer: "Filettatura metrica ISO." },
+            { question: "Qual è la funzione di un 'ingranaggio'?", options: ["Collegare due alberi paralleli.", "Ridurre l'attrito.", "Trasmettere potenza e movimento tra alberi.", "Bilanciare il peso di una macchina."], answer: "Trasmettere potenza e movimento tra alberi." },
+            { question: "Cosa si intende per 'gioco' in un cuscinetto?", options: ["La quantità di lubrificante.", "La forza necessaria per farlo ruotare.", "Il gioco tra i corpi volventi e le piste.", "Il carico massimo che può sopportare."], answer: "Il gioco tra i corpi volventi e le piste." },
+            { question: "A cosa serve una 'molla' in un sistema meccanico?", options: ["A trasmettere la forza.", "A immagazzinare energia elastica.", "A collegare due componenti.", "A bilanciare il peso."], answer: "A immagazzinare energia elastica." },
+            { question: "Qual è la funzione di un 'freno'?", options: ["Aumentare la velocità.", "Fermare il movimento di un albero.", "Ridurre l'attrito.", "Trasformare l'energia in movimento."], answer: "Fermare il movimento di un albero." },
+            { question: "Cosa indica un 'ruotino' su un disegno tecnico?", options: ["Una puleggia.", "Un cuscinetto a rotolamento.", "Un ingranaggio.", "Un freno."], answer: "Un ingranaggio." },
+            { question: "Qual è la differenza tra una 'puleggia' e un 'ingranaggio'?", options: ["La puleggia trasmette il movimento tramite una cinghia.", "L'ingranaggio trasmette il movimento tramite un cavo.", "La puleggia è più efficiente.", "L'ingranaggio è più economico."], answer: "La puleggia trasmette il movimento tramite una cinghia." },
+            { question: "Cosa si intende per 'montaggio a pressione'?", options: ["Un tipo di saldatura.", "Un metodo di montaggio senza viti.", "Un metodo di montaggio con cuscinetti a rulli.", "Un tipo di bilanciamento."], answer: "Un metodo di montaggio senza viti." },
+            { question: "Cosa indica il 'simbolo del grado' (°)?", options: ["La temperatura di esercizio.", "L'angolo di un cono.", "La durezza del materiale.", "La velocità di rotazione."], answer: "L'angolo di un cono." },
+            { question: "Qual è la funzione di una 'guarnizione' in un cuscinetto?", options: ["Aumentare il carico sopportabile.", "Ridurre il rumore.", "Proteggere il cuscinetto da agenti esterni.", "Aumentare la precisione."], answer: "Proteggere il cuscinetto da agenti esterni." },
+            { question: "Quale tipo di 'lubrificazione' è più comune per i cuscinetti?", options: ["Lubrificazione a secco.", "Lubrificazione a grasso.", "Lubrificazione a polvere.", "Lubrificazione ad aria."], answer: "Lubrificazione a grasso." },
+            { question: "Cosa si intende per 'serie dimensionale' di un cuscinetto?", options: ["La sua capacità di carico.", "La sua velocità di rotazione.", "Il suo ingombro in base a diametro e larghezza.", "Il suo tipo di materiale."], answer: "Il suo ingombro in base a diametro e larghezza." },
+            { question: "Qual è il principale tipo di 'usura' in un cuscinetto?", options: ["L'usura da strisciamento.", "L'usura da rotolamento.", "L'usura da corrosione.", "L'usura da fatica."], answer: "L'usura da fatica." },
+            { question: "Cosa si intende per 'accoppiamento' in meccanica?", options: ["La combinazione di due materiali.", "Il rapporto tra due forze.", "Il sistema di due pezzi accoppiati tra loro.", "Il gioco tra due cuscinetti."], answer: "Il sistema di due pezzi accoppiati tra loro." },
+            { question: "Qual è la funzione di un 'pignone' in un ingranaggio?", options: ["Trasmettere il movimento all'albero.", "Ricevere il movimento dalla ruota dentata.", "Ridurre la velocità.", "Aumentare la coppia."], answer: "Trasmettere il movimento all'albero." },
+            { question: "Cosa si intende per 'filettatura' interna ed esterna?", options: ["La filettatura interna è sulla superficie esterna di un foro.", "La filettatura esterna è sulla superficie esterna di un albero.", "La filettatura interna e la filettatura esterna sono la stessa cosa.", "La filettatura interna è un dado."], answer: "La filettatura esterna è sulla superficie esterna di un albero." },
+            { question: "Quale norma definisce i simboli grafici per la saldatura?", options: ["UNI 7462", "UNI EN ISO 1302", "UNI EN ISO 2553", "UNI 3949"], answer: "UNI EN ISO 2553" },
+            { question: "A cosa serve una 'guida' in un sistema meccanico?", options: ["Ridurre l'attrito.", "Limitare la corsa di un componente.", "Aumentare la velocità.", "Trasmettere la potenza."], answer: "Limitare la corsa di un componente." }
         ];
 
         const sicurezzaLavoroQuestions = [
@@ -121,7 +162,46 @@
             { question: "Qual è l'obiettivo della 'valutazione dei rischi'?", options: ["Identificare i lavoratori più esposti.", "Eliminare completamente i rischi.", "Individuare i fattori di rischio, valutare i pericoli e pianificare le misure di prevenzione.", "Creare un documento formale senza misure pratiche."], answer: "Individuare i fattori di rischio, valutare i pericoli e pianificare le misure di prevenzione." },
             { question: "Cosa sono i 'dispositivi di protezione individuale' (DPI)?", options: ["Strumenti usati per la produzione.", "Attrezzature destinate a essere indossate o tenute dal lavoratore per proteggerlo dai rischi.", "Segnaletica di sicurezza.", "Macchinari con protezioni incorporate."], answer: "Attrezzature destinate a essere indossate o tenute dal lavoratore per proteggerlo dai rischi." },
             { question: "Quando è obbligatoria la sorveglianza sanitaria?", options: ["Solo per i lavori ad alto rischio.", "Quando i lavoratori sono esposti a rischi specifici per la salute.", "Sempre e per tutti i dipendenti.", "Solo per i lavoratori sopra i 50 anni."], answer: "Quando i lavoratori sono esposti a rischi specifici per la salute." },
-            { question: "Chi deve redigere il 'Documento di Valutazione dei Rischi' (DVR)?", options: ["Il medico competente.", "Il responsabile del servizio di prevenzione e protezione (RSPP).", "Il datore di lavoro.", "Il rappresentante dei lavoratori per la sicurezza (RLS)."], answer: "Il datore di lavoro." }
+            { question: "Chi deve redigere il 'Documento di Valutazione dei Rischi' (DVR)?", options: ["Il medico competente.", "Il responsabile del servizio di prevenzione e protezione (RSPP).", "Il datore di lavoro.", "Il rappresentante dei lavoratori per la sicurezza (RLS)."], answer: "Il datore di lavoro." },
+            { question: "Chi può svolgere il ruolo di 'Responsabile del Servizio di Prevenzione e Protezione' (RSPP)?", options: ["Solo un medico.", "Solo un ingegnere.", "Una persona in possesso delle capacità e dei requisiti professionali previsti dalla legge.", "Qualsiasi dipendente con più di 5 anni di esperienza."], answer: "Una persona in possesso delle capacità e dei requisiti professionali previsti dalla legge." },
+            { question: "Qual è il principale obbligo del datore di lavoro in materia di sicurezza?", options: ["Fornire solo i DPI.", "Valutare tutti i rischi presenti in azienda.", "Nominare il medico competente.", "Redigere il DVR senza l'aiuto di nessuno."], answer: "Valutare tutti i rischi presenti in azienda." },
+            { question: "A cosa serve il 'Documento di Valutazione dei Rischi' (DVR)?", options: ["A definire i salari.", "A individuare, valutare e gestire i rischi aziendali.", "A registrare le presenze dei dipendenti.", "A stabilire i turni di lavoro."], answer: "A individuare, valutare e gestire i rischi aziendali." },
+            { question: "Qual è il ruolo del 'Rappresentante dei Lavoratori per la Sicurezza' (RLS)?", options: ["Rappresentare il datore di lavoro.", "Rappresentare i dipendenti in materia di salute e sicurezza.", "Gestire il servizio di prevenzione e protezione.", "Organizzare la formazione sulla sicurezza."], answer: "Rappresentare i dipendenti in materia di salute e sicurezza." },
+            { question: "Cosa si intende per 'pericolo'?", options: ["Una situazione che può causare un danno.", "La probabilità che un danno si verifichi.", "Il risultato della valutazione dei rischi.", "Una misura di prevenzione."], answer: "Una situazione che può causare un danno." },
+            { question: "Qual è la differenza tra rischio e pericolo?", options: ["Sono sinonimi.", "Il pericolo è la causa, il rischio è la probabilità del danno.", "Il rischio è la causa, il pericolo è la probabilità del danno.", "Il pericolo è solo fisico, il rischio è solo chimico."], answer: "Il pericolo è la causa, il rischio è la probabilità del danno." },
+            { question: "Cosa si intende per 'formazione' dei lavoratori?", options: ["Solo l'addestramento all'uso dei macchinari.", "Un processo educativo per acquisire conoscenze e procedure per la sicurezza.", "L'insegnamento di abilità tecniche.", "La comunicazione di informazioni aziendali."], answer: "Un processo educativo per acquisire conoscenze e procedure per la sicurezza." },
+            { question: "Qual è la durata minima della formazione generale per i lavoratori a basso rischio?", options: ["4 ore.", "8 ore.", "16 ore.", "40 ore."], answer: "4 ore." },
+            { question: "Cosa indica il simbolo di 'obbligo' sulla segnaletica di sicurezza?", options: ["Un divieto.", "Un avvertimento.", "Un'azione da compiere.", "Un pericolo."], answer: "Un'azione da compiere." },
+            { question: "Chi nomina il 'Medico Competente'?", options: ["L'INAIL.", "Il lavoratore.", "Il datore di lavoro.", "L'ASL."], answer: "Il datore di lavoro." },
+            { question: "Qual è il compito principale del 'Medico Competente'?", options: ["Curare le malattie dei dipendenti.", "Organizzare la formazione.", "Effettuare la sorveglianza sanitaria.", "Redigere il DVR."], answer: "Effettuare la sorveglianza sanitaria." },
+            { question: "Cosa si intende per 'stress lavoro-correlato'?", options: ["Un tipo di infortunio.", "Un rischio psicosociale legato al lavoro.", "Una malattia fisica.", "Una sanzione disciplinare."], answer: "Un rischio psicosociale legato al lavoro." },
+            { question: "Qual è la prima misura da adottare per la prevenzione dei rischi?", options: ["Fornire i DPI.", "Sostituire i macchinari.", "Eliminare il rischio alla fonte.", "Addestrare i lavoratori."], answer: "Eliminare il rischio alla fonte." },
+            { question: "Cosa si intende per 'informazione' dei lavoratori?", options: ["Dare istruzioni verbali.", "Mettere a disposizione i documenti aziendali.", "Fornire conoscenze su rischi, misure di prevenzione e procedure.", "Comunicare solo i pericoli."], answer: "Fornire conoscenze su rischi, misure di prevenzione e procedure." },
+            { question: "Qual è l'obbligo principale dei lavoratori in materia di sicurezza?", options: ["Redigere il DVR.", "Collaborare con il datore di lavoro per la sicurezza.", "Nominare il RSPP.", "Scegliere il proprio DPI."], answer: "Collaborare con il datore di lavoro per la sicurezza." },
+            { question: "Quando deve essere aggiornato il DVR?", options: ["Solo in caso di infortunio.", "In caso di modifiche del processo produttivo.", "Ogni 5 anni.", "Non ha scadenza."], answer: "In caso di modifiche del processo produttivo." },
+            { question: "A cosa serve l''addestramento' dei lavoratori?", options: ["A fare il test finale.", "A mettere in pratica le procedure di lavoro sicure.", "A imparare le teorie di sicurezza.", "A memorizzare le norme."], answer: "A mettere in pratica le procedure di lavoro sicure." },
+            { question: "Cosa si intende per 'infortunio sul lavoro'?", options: ["Una malattia causata dal lavoro.", "Qualsiasi lesione avvenuta in occasione di lavoro.", "Una sanzione disciplinare.", "Una malattia che dura più di un mese."], answer: "Qualsiasi lesione avvenuta in occasione di lavoro." },
+            { question: "Chi è responsabile dell'attuazione delle misure di prevenzione in azienda?", options: ["Il Medico Competente.", "Il Preposto.", "Il RLS.", "Tutti i lavoratori."], answer: "Il Preposto." },
+            { question: "Qual è la differenza tra 'prevenzione' e 'protezione'?", options: ["La prevenzione elimina o riduce i rischi, la protezione riduce i danni.", "Sono sinonimi.", "La prevenzione è individuale, la protezione è collettiva.", "La prevenzione si applica solo alle macchine."], answer: "La prevenzione elimina o riduce i rischi, la protezione riduce i danni." },
+            { question: "Cosa si intende per 'rischio chimico'?", options: ["Rischio di caduta.", "Rischio legato all'uso di sostanze pericolose.", "Rischio di incendio.", "Rischio elettrico."], answer: "Rischio legato all'uso di sostanze pericolose." },
+            { question: "Qual è l'organo di vigilanza per la sicurezza sul lavoro?", options: ["L'ufficio del lavoro.", "L'ASL (Azienda Sanitaria Locale).", "La Guardia di Finanza.", "I Carabinieri."], answer: "L'ASL (Azienda Sanitaria Locale)." },
+            { question: "Qual è il ruolo del 'Preposto'?", options: ["Sorvegliare l'applicazione delle disposizioni di sicurezza.", "Dare sanzioni ai lavoratori.", "Redigere il DVR.", "Curare le malattie."], answer: "Sorvegliare l'applicazione delle disposizioni di sicurezza." },
+            { question: "Cosa si intende per 'rischio biologico'?", options: ["Rischio di intossicazione alimentare.", "Rischio legato all'esposizione a microrganismi.", "Rischio di caduta dall'alto.", "Rischio di folgorazione."], answer: "Rischio legato all'esposizione a microrganismi." },
+            { question: "Qual è la funzione del 'Comitato Paritetico Territoriale'?", options: ["Rappresentare il governo.", "Collaborare per la sicurezza tra sindacati e imprese.", "Gestire le questioni amministrative.", "Organizzare gli scioperi."], answer: "Collaborare per la sicurezza tra sindacati e imprese." },
+            { question: "Cosa si intende per 'segnaletica di sicurezza'?", options: ["Istruzioni per l'uso dei macchinari.", "Cartelli o segnali per informare e avvertire sui rischi.", "Istruzioni per l'evacuazione.", "Pianificazione dei turni di lavoro."], answer: "Cartelli o segnali per informare e avvertire sui rischi." },
+            { question: "Qual è il principio di base per l'uso dei DPI?", options: ["Usarli sempre.", "Usarli solo se il rischio non può essere eliminato con altre misure.", "Usarli solo in caso di emergenza.", "Non è obbligatorio usarli."], answer: "Usarli solo se il rischio non può essere eliminato con altre misure." },
+            { question: "Quando un lavoratore può chiedere una verifica sulla sicurezza?", options: ["Quando non si sente bene.", "In qualsiasi momento senza motivo.", "Quando ritiene che il suo lavoro presenti un rischio grave e immediato.", "Solo se è un RLS."], answer: "Quando ritiene che il suo lavoro presenti un rischio grave e immediato." },
+            { question: "Qual è il principale tipo di rischio in un ambiente di lavoro d'ufficio?", options: ["Rischio di caduta.", "Rischio da movimentazione manuale dei carichi.", "Rischio da videoterminali.", "Rischio di esposizione a sostanze chimiche."], answer: "Rischio da videoterminali." },
+            { question: "Cosa si intende per 'primo soccorso'?", options: ["L'intervento del medico competente.", "Le prime cure da prestare a un infortunato in attesa di soccorsi qualificati.", "L'intervento dei vigili del fuoco.", "L'intervento dell'ambulanza."], answer: "Le prime cure da prestare a un infortunato in attesa di soccorsi qualificati." },
+            { question: "Chi è il responsabile della manutenzione delle macchine?", options: ["Il Datore di Lavoro e il Preposto.", "L'RLS.", "Il lavoratore.", "Il Medico Competente."], answer: "Il Datore di Lavoro e il Preposto." },
+            { question: "Cosa si intende per 'rischio ergonomico'?", options: ["Rischio di incendio.", "Rischio legato all'interazione tra l'uomo e l'ambiente di lavoro.", "Rischio chimico.", "Rischio di infortunio."], answer: "Rischio legato all'interazione tra l'uomo e l'ambiente di lavoro." },
+            { question: "Qual è il ruolo del 'dirigente' in materia di sicurezza?", options: ["Organizza e dirige l'attività secondo le norme di sicurezza.", "Esegue solo i compiti assegnati.", "Non ha alcuna responsabilità.", "Redige il DVR."], answer: "Organizza e dirige l'attività secondo le norme di sicurezza." },
+            { question: "Cosa si intende per 'sorveglianza sanitaria'?", options: ["Il controllo delle presenze.", "Un'azione di prevenzione che tutela la salute del lavoratore.", "Un controllo del lavoro svolto.", "Un'ispezione aziendale."], answer: "Un'azione di prevenzione che tutela la salute del lavoratore." },
+            { question: "Qual è il principale rischio legato all'uso di scale portatili?", options: ["Elettrocuzione.", "Caduta dall'alto.", "Rischio biologico.", "Stress lavoro-correlato."], answer: "Caduta dall'alto." },
+            { question: "Cosa si intende per 'rischio di incendio'?", options: ["La presenza di fiamme in un luogo di lavoro.", "La possibilità che si sviluppi un incendio.", "L'uso di sostanze chimiche.", "Un cortocircuito."], answer: "La possibilità che si sviluppi un incendio." },
+            { question: "Qual è la funzione del 'piano di emergenza'?", options: ["Definire le procedure per evacuare l'edificio in caso di pericolo.", "Organizzare i turni di lavoro.", "Definire le sanzioni per i lavoratori.", "Pianificare le assunzioni."], answer: "Definire le procedure per evacuare l'edificio in caso di pericolo." },
+            { question: "Cosa si intende per 'dispositivo di protezione collettiva' (DPC)?", options: ["Un DPI usato da più persone.", "Un dispositivo che protegge più lavoratori contemporaneamente.", "Un dispositivo per la protezione personale.", "Un tipo di macchinario."], answer: "Un dispositivo che protegge più lavoratori contemporaneamente." },
+            { question: "Qual è il principale rischio legato al lavoro notturno?", options: ["Rischio di caduta.", "Rischio biologico.", "Maggiore esposizione a rumore.", "Sfasamento dei ritmi biologici e affaticamento."], answer: "Sfasamento dei ritmi biologici e affaticamento." }
         ];
 
         let currentQuizData = [];
@@ -172,7 +252,7 @@
             questionData.options.forEach(option => {
                 const optionElement = document.createElement('button');
                 optionElement.innerText = option;
-                optionElement.classList.add('flashcard-option', 'w-full', 'p-4', 'text-left', 'border-2', 'border-slate-200', 'rounded-lg', 'transition-colors', 'duration-200');
+                optionElement.classList.add('flashcard-option', 'w-full', 'p-4', 'text-left', 'border-2', 'border-gray-700', 'bg-gray-700', 'rounded-lg', 'transition-colors', 'duration-200', 'text-gray-200', 'hover:bg-gray-600', 'hover:border-gray-600');
                 optionElement.onclick = (event) => selectAnswer(event, questionData.answer);
                 optionsContainer.appendChild(optionElement);
             });
