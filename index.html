@@ -72,9 +72,9 @@
             border: 1px solid #374151;
         }
         .flashcard-back {
-            background-color: #374151;
+            background-color: #4b5563; /* Colore più chiaro per le risposte */
             transform: rotateY(180deg);
-            border: 1px solid #4b5563;
+            border: 1px solid #6b7280;
         }
         
         /* Animazioni delle icone */
@@ -113,7 +113,7 @@
                     <h2 class="text-2xl font-bold text-gray-100">Progettazione Meccanica</h2>
                 </button>
                 <button onclick="startQuiz(this, 'sicurezza')" class="bg-gray-800 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 card-animation">
-                    <span class="text-6xl mb-4 block sicurezza-icon">️⚠️</span>
+                    <span class="text-6xl mb-4 block sicurezza-icon">⚠️</span>
                     <h2 class="text-2xl font-bold text-gray-100">Sicurezza sul Lavoro</h2>
                 </button>
             </div>
@@ -143,11 +143,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="mt-8 flex justify-between items-center gap-4">
-                <button id="prev-button" onclick="previousQuestion()" class="bg-gray-700 text-gray-200 font-bold py-3 px-8 rounded-xl hover:bg-gray-600 transition-colors shadow-lg hidden">Precedente</button>
-                <button id="next-button" onclick="nextQuestion()" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl hover:bg-blue-700 transition-colors shadow-lg hidden">Prossima Domanda</button>
             </div>
         </div>
         
@@ -280,8 +275,6 @@
         const questionText = document.getElementById('question-text');
         const answerText = document.getElementById('answer-text');
         const progressText = document.getElementById('progress-text');
-        const nextButton = document.getElementById('next-button');
-        const prevButton = document.getElementById('prev-button');
         const quizTitle = document.getElementById('quiz-title');
         const flashcard = document.getElementById('flashcard');
         const flashcardContainer = document.getElementById('flashcard-container');
@@ -291,26 +284,44 @@
         let diffX = 0;
         const SWIPE_THRESHOLD = 50;
         
-        // Listener per le gesture
+        // Listener per le gesture sui dispositivi touch
         flashcardContainer.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             diffX = 0;
+            // Interrompe la transizione CSS per una risposta più immediata al movimento
+            flashcard.style.transition = 'none';
         });
 
         flashcardContainer.addEventListener('touchmove', (e) => {
             diffX = e.touches[0].clientX - startX;
-            // Opzionale: aggiungi un feedback visivo durante il movimento
+            // Applica la traslazione per un feedback visivo immediato
             flashcard.style.transform = `translateX(${diffX}px) rotateY(${isFlipped ? 180 : 0}deg)`;
         });
 
         flashcardContainer.addEventListener('touchend', () => {
-            flashcard.style.transform = `rotateY(${isFlipped ? 180 : 0}deg)`; // Ripristina la rotazione 3D
+            // Ripristina la transizione CSS
+            flashcard.style.transition = 'transform 0.6s';
+            // Resetta la posizione della card
+            flashcard.style.transform = `rotateY(${isFlipped ? 180 : 0}deg)`; 
+            
             if (diffX > SWIPE_THRESHOLD) {
                 // Swipe a destra (indietro)
                 previousQuestion();
             } else if (diffX < -SWIPE_THRESHOLD) {
                 // Swipe a sinistra (avanti)
                 nextQuestion();
+            }
+        });
+        
+        // Listener per i tasti freccia su desktop
+        document.addEventListener('keydown', (e) => {
+            if (quizScreen.classList.contains('hidden')) {
+                return; // Non fare nulla se non siamo nella schermata del quiz
+            }
+            if (e.key === 'ArrowRight') {
+                nextQuestion();
+            } else if (e.key === 'ArrowLeft') {
+                previousQuestion();
             }
         });
 
@@ -343,20 +354,13 @@
         }
 
         function displayQuestion() {
+            // Assicurati che la card sia sempre girata sul fronte (domanda) quando ne viene caricata una nuova
             if (isFlipped) {
                 flashcard.classList.remove('flipped');
                 isFlipped = false;
             }
-            nextButton.classList.add('hidden');
-            prevButton.classList.add('hidden');
             
-            // Gestione dei pulsanti Avanti/Indietro
-            if (currentQuestionIndex < currentQuizData.length - 1) {
-                nextButton.classList.remove('hidden');
-            }
-            if (currentQuestionIndex > 0) {
-                prevButton.classList.remove('hidden');
-            }
+            // Non ci sono più i pulsanti, la navigazione è gestita da swipe o tasti freccia.
 
             const questionData = currentQuizData[currentQuestionIndex];
             questionText.innerText = questionData.question;
@@ -369,26 +373,26 @@
             if (!isFlipped) {
                 flashcard.classList.add('flipped');
                 isFlipped = true;
-                nextButton.classList.remove('hidden');
-                prevButton.classList.remove('hidden');
+            } else {
+                flashcard.classList.remove('flipped');
+                isFlipped = false;
             }
         }
 
         function nextQuestion() {
             if (currentQuestionIndex < currentQuizData.length - 1) {
                 currentQuestionIndex++;
+                displayQuestion();
             } else {
                 showResults();
-                return;
             }
-            displayQuestion();
         }
 
         function previousQuestion() {
             if (currentQuestionIndex > 0) {
                 currentQuestionIndex--;
+                displayQuestion();
             }
-            displayQuestion();
         }
         
         function showResults() {
