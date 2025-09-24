@@ -3,71 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App di Studio con Flashcard</title>
+    <title>App di Studio con Flashcard 3D</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
         }
-        .flashcard-option:hover {
-            background-color: #4b5563;
+
+        /* Animazione per le card di selezione */
+        .card-animation {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .card-animation:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animazione per il fade-in */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sfondo a gradiente */
+        .bg-gradient-radial {
+            background-image: radial-gradient(circle at center, #1f2937 0%, #111827 100%);
+        }
+
+        /* Stili per la flashcard 3D */
+        .flashcard-container {
+            perspective: 1000px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .flashcard-front {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+        }
+        .flashcard-back {
+            background-color: #374151;
+            transform: rotateY(180deg);
+            border: 1px solid #4b5563;
         }
     </style>
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
-<body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gradient-radial text-gray-200 flex items-center justify-center min-h-screen p-4">
 
     <div id="app-container" class="w-full max-w-2xl mx-auto">
 
         <!-- Schermata di selezione della materia -->
-        <div id="selection-screen" class="text-center">
-            <h1 class="text-4xl font-bold mb-4 text-white">App di Studio con Flashcard</h1>
-            <p class="text-lg text-gray-400 mb-8">Scegli la materia per iniziare la tua sessione di studio.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <button onclick="startQuiz('meccanica')" class="bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                    <span class="text-5xl mb-4 block">⚙️</span>
-                    <h2 class="text-2xl font-semibold text-gray-100">Progettazione Meccanica</h2>
+        <div id="selection-screen" class="text-center fade-in">
+            <h1 class="text-4xl font-extrabold mb-4 text-white">Flashcard di Studio</h1>
+            <p class="text-lg text-gray-400 mb-10">Scegli la materia per iniziare a ripassare.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <button onclick="startQuiz('meccanica')" class="bg-gray-800 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 card-animation">
+                    <span class="text-6xl mb-4 block">⚙️</span>
+                    <h2 class="text-2xl font-bold text-gray-100">Progettazione Meccanica</h2>
                 </button>
-                <button onclick="startQuiz('sicurezza')" class="bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                    <span class="text-5xl mb-4 block">️⚠️</span>
-                    <h2 class="text-2xl font-semibold text-gray-100">Sicurezza sul Lavoro</h2>
+                <button onclick="startQuiz('sicurezza')" class="bg-gray-800 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 card-animation">
+                    <span class="text-6xl mb-4 block">️⚠️</span>
+                    <h2 class="text-2xl font-bold text-gray-100">Sicurezza sul Lavoro</h2>
                 </button>
             </div>
         </div>
 
         <!-- Schermata del Quiz -->
-        <div id="quiz-screen" class="hidden">
+        <div id="quiz-screen" class="hidden fade-in">
             <div class="flex justify-between items-center mb-4">
-                 <h1 id="quiz-title" class="text-2xl font-bold text-gray-200"></h1>
-                 <button onclick="showSelectionScreen()" class="text-sm bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition-colors">Cambia Materia</button>
+                 <h1 id="quiz-title" class="text-3xl font-bold text-gray-200"></h1>
+                 <button onclick="showSelectionScreen()" class="text-sm bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition-colors shadow-md">Cambia Materia</button>
             </div>
            
-            <div class="bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg">
+            <div class="bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
                 <div class="flex justify-between items-baseline mb-6">
                     <div id="progress-text" class="text-sm font-medium text-gray-400"></div>
                 </div>
 
-                <div id="flashcard-container">
-                    <p id="question-text" class="text-xl font-semibold mb-6 min-h-[6rem] text-gray-100"></p>
-                    <div id="answer-container" class="mt-4 hidden p-4 bg-gray-700 rounded-lg">
-                        <p id="answer-text" class="text-lg text-gray-300"></p>
+                <div id="flashcard-container" class="flashcard-container">
+                    <div id="flashcard" class="flashcard cursor-pointer" onclick="flipCard()">
+                        <!-- Fronte della card -->
+                        <div id="flashcard-front" class="flashcard-face flashcard-front">
+                            <p id="question-text" class="text-2xl font-semibold text-gray-100"></p>
+                        </div>
+                        <!-- Retro della card -->
+                        <div id="flashcard-back" class="flashcard-face flashcard-back">
+                            <p id="answer-text" class="text-lg text-gray-300"></p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-6 flex justify-end gap-4">
-                <button id="show-answer-button" onclick="showAnswer()" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors shadow-md">Mostra Risposta</button>
-                <button id="next-button" onclick="nextQuestion()" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 transition-colors shadow-md hidden">Prossima Domanda</button>
+            <div class="mt-8 flex justify-end gap-4">
+                <button id="next-button" onclick="nextQuestion()" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl hover:bg-blue-700 transition-colors shadow-lg hidden">Prossima Domanda</button>
             </div>
         </div>
         
         <!-- Schermata dei Risultati -->
-        <div id="results-screen" class="hidden text-center bg-gray-800 p-8 rounded-xl shadow-lg">
-             <h1 id="results-title" class="text-3xl font-bold mb-2 text-white"></h1>
+        <div id="results-screen" class="hidden text-center bg-gray-800 p-10 rounded-2xl shadow-xl fade-in">
+             <h1 id="results-title" class="text-3xl font-bold mb-4 text-white"></h1>
              <p id="results-message" class="text-lg text-gray-400 mb-8"></p>
-             <div class="flex gap-4 justify-center">
-                 <button onclick="restartQuiz()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors shadow-md">Riprova Quiz</button>
-                 <button onclick="showSelectionScreen()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 px-6 rounded-lg transition-colors">Scegli un'altra materia</button>
+             <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                 <button onclick="restartQuiz()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-700 transition-colors shadow-lg">Riprova Quiz</button>
+                 <button onclick="showSelectionScreen()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg">Scegli un'altra materia</button>
              </div>
         </div>
 
@@ -182,17 +250,17 @@
 
         let currentQuizData = [];
         let currentQuestionIndex = 0;
+        let isFlipped = false;
         
         const selectionScreen = document.getElementById('selection-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const resultsScreen = document.getElementById('results-screen');
         const questionText = document.getElementById('question-text');
         const answerText = document.getElementById('answer-text');
-        const answerContainer = document.getElementById('answer-container');
         const progressText = document.getElementById('progress-text');
-        const showAnswerButton = document.getElementById('show-answer-button');
         const nextButton = document.getElementById('next-button');
         const quizTitle = document.getElementById('quiz-title');
+        const flashcard = document.getElementById('flashcard');
         
         function startQuiz(subject) {
             if (subject === 'meccanica') {
@@ -204,6 +272,7 @@
             }
             
             currentQuestionIndex = 0;
+            isFlipped = false;
             
             selectionScreen.classList.add('hidden');
             resultsScreen.classList.add('hidden');
@@ -213,22 +282,25 @@
         }
 
         function displayQuestion() {
-            showAnswerButton.classList.remove('hidden');
+            if (isFlipped) {
+                flashcard.classList.remove('flipped');
+                isFlipped = false;
+            }
             nextButton.classList.add('hidden');
-            answerContainer.classList.add('hidden');
 
             const questionData = currentQuizData[currentQuestionIndex];
             questionText.innerText = questionData.question;
+            answerText.innerText = questionData.answer;
             
-            progressText.innerText = `Domanda ${currentQuestionIndex + 1} / ${currentQuizData.length}`;
+            progressText.innerText = `Domanda ${currentQuestionIndex + 1} di ${currentQuizData.length}`;
         }
         
-        function showAnswer() {
-            const questionData = currentQuizData[currentQuestionIndex];
-            answerText.innerText = questionData.answer;
-            answerContainer.classList.remove('hidden');
-            showAnswerButton.classList.add('hidden');
-            nextButton.classList.remove('hidden');
+        function flipCard() {
+            if (!isFlipped) {
+                flashcard.classList.add('flipped');
+                isFlipped = true;
+                nextButton.classList.remove('hidden');
+            }
         }
 
         function nextQuestion() {
@@ -252,7 +324,7 @@
         }
         
         function restartQuiz() {
-            startQuiz(quizTitle.innerText === "Progettazione Meccanica" ? 'meccanica' : 'sicurezza');
+            startQuiz(quizTitle.innerText.includes("Meccanica") ? 'meccanica' : 'sicurezza');
         }
 
         function showSelectionScreen() {
