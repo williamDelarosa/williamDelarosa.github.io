@@ -1,287 +1,173 @@
 <!DOCTYPE html>
-<html lang="it" class="scroll-smooth">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Interattiva: Disegno Tecnico Industriale</title>
+    <title>Flashcard Interattive - Disegno Tecnico</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Calm Neutrals -->
-    <!-- Application Structure Plan: La SPA è organizzata in tre sezioni tematiche accessibili tramite una navigazione superiore e da un hub centrale: Home, Fondamenti e Cuscinetti. Questa struttura non lineare, a differenza delle slide, permette all'utente di esplorare gli argomenti liberamente. L'obiettivo è trasformare la presentazione passiva in un'esperienza di apprendimento attiva, utilizzando interazioni come diagrammi "hover-to-reveal" e visualizzazioni dinamiche per chiarire concetti complessi. Questa architettura è stata scelta per massimizzare il coinvolgimento e la comprensione dell'utente. -->
-    <!-- Visualization & Content Choices: 1. Funzioni del Disegno (Testo -> Obiettivo: Informare -> Metodo: Diagramma HTML/CSS -> Interazione: Hover per evidenziare -> Giustificazione: Visualizza il flusso di informazioni in modo più chiaro del testo). 2. Componenti Cuscinetto (Testo -> Obiettivo: Organizzare/Informare -> Metodo: Diagramma "esploso" in HTML/CSS -> Interazione: Hover sui componenti per visualizzare dettagli -> Giustificazione: Insegna l'anatomia di un pezzo meccanico in modo interattivo ed efficace). 3. Tipi di Carico (Testo -> Obiettivo: Confrontare -> Metodo: Icone e testo dinamico -> Interazione: Click sui bottoni per cambiare la visualizzazione -> Giustificazione: Semplifica un concetto fisico complesso). 4. Performance Cuscinetti (Dato implicito -> Obiettivo: Confrontare -> Metodo: Grafico a barre Chart.js -> Interazione: Tooltip su hover -> Giustificazione: Aggiunge un elemento quantitativo per il confronto, dimostrando l'uso di dati). -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f4f4f5; /* Zinc 100 */
-            color: #18181b; /* Zinc 900 */
+            background-color: #f3f4f6; /* Gray 100 */
         }
-        .nav-link {
-            transition: color 0.3s ease;
+        .flashcard-container {
+            width: 100%;
+            height: 400px;
+            perspective: 1000px;
         }
-        .nav-link:hover {
-            color: #3b82f6; /* Blue 500 */
-        }
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-        .interactive-diagram-part {
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
             cursor: pointer;
         }
-        .interactive-diagram-part:hover {
-            background-color: #dbeafe; /* Blue 100 */
-            border-color: #3b82f6; /* Blue 500 */
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .flashcard-front {
+            background-color: #ffffff;
+            z-index: 2;
+        }
+        .flashcard-back {
+            background-color: #3b82f6; /* Blue 500 */
+            color: #ffffff;
+            transform: rotateY(180deg);
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
 
-    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-gray-800">
-                Disegno Tecnico
-            </div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#home" class="nav-link text-gray-600 font-medium">Home</a>
-                <a href="#fondamenti" class="nav-link text-gray-600 font-medium">Fondamenti</a>
-                <a href="#cuscinetti" class="nav-link text-gray-600 font-medium">Focus: Cuscinetti</a>
-            </div>
-        </nav>
-    </header>
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8">Flashcard Interattive</h1>
 
-    <main class="container mx-auto px-6 py-12">
-
-        <!-- Sezione Home -->
-        <section id="home" class="text-center min-h-[60vh] flex flex-col items-center justify-center">
-            <h1 class="text-5xl md:text-6xl font-extrabold mb-4 text-gray-900">Esplora il Disegno Tecnico Industriale</h1>
-            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-                Un'applicazione interattiva per comprendere i concetti fondamentali, dalle norme di base all'analisi di componenti meccanici come i cuscinetti a rotolamento.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
-                <a href="#fondamenti" class="card bg-white p-8 rounded-xl shadow-md text-left">
-                    <h3 class="text-2xl font-bold mb-2 text-blue-600">Fondamenti e Normazione</h3>
-                    <p class="text-gray-600">Scopri perché il disegno tecnico è un linguaggio universale e l'importanza delle norme per la comunicazione. </p>
-                </a>
-                <a href="#cuscinetti" class="card bg-white p-8 rounded-xl shadow-md text-left">
-                    <h3 class="text-2xl font-bold mb-2 text-blue-600">Analisi Componenti</h3>
-                    <p class="text-gray-600">Approfondisci la struttura e il funzionamento dei cuscinetti a rotolamento attraverso diagrammi interattivi.</p>
-                </a>
-            </div>
-        </section>
-
-        <!-- Sezione Fondamenti -->
-        <section id="fondamenti" class="py-20">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold">I Fondamenti del Disegno Tecnico</h2>
-                <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">Il disegno tecnico è più di una semplice immagine; è un documento completo che guida la progettazione e la produzione.</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                <div class="bg-white p-8 rounded-xl shadow-md">
-                    <h3 class="text-2xl font-bold mb-4">La Duplice Funzione del Disegno</h3>
-                    <p class="text-gray-700 mb-6">Un disegno tecnico efficace deve assolvere a due compiti principali, creando un ponte tra l'idea concettuale e il prodotto fisico. Questa sezione illustra come l'informazione viene codificata e trasmessa.</p>
-                     <div class="space-y-4">
-                        <div class="interactive-diagram-part border-l-4 border-gray-200 p-4">
-                            <h4 class="font-bold text-lg">1. Ricostruzione Mentale</h4>
-                            <p class="text-gray-600">Permette al lettore di visualizzare tridimensionalmente l'oggetto rappresentato, comprendendone forma e proporzioni.</p>
-                        </div>
-                        <div class="text-center text-2xl text-gray-400">↓</div>
-                        <div class="interactive-diagram-part border-l-4 border-gray-200 p-4">
-                             <h4 class="font-bold text-lg">2. Diffusione di Informazioni</h4>
-                            <p class="text-gray-600">Trasmette dati essenziali per la produzione: dimensioni, materiali, tolleranze e finiture superficiali.</p>
-                        </div>
-                    </div>
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center">
+        <div class="flashcard-container w-full h-96 mb-6">
+            <div id="flashcard" class="flashcard">
+                <div id="flashcard-front" class="flashcard-face flashcard-front">
+                    <p class="text-2xl font-semibold text-gray-700">Caricamento...</p>
                 </div>
-                <div class="bg-white p-8 rounded-xl shadow-md">
-                    <h3 class="text-2xl font-bold mb-4">L'Importanza della Normazione</h3>
-                    <p class="text-gray-700 mb-4">Per garantire che un disegno sia interpretato universalmente senza ambiguità, esistono enti di normazione che stabiliscono regole precise. Questo assicura completezza, univocità e trasferibilità.</p>
-                    <div class="space-y-3">
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <h4 class="font-semibold">Norma</h4>
-                            <p class="text-sm text-gray-600">Un documento che fornisce regole e linee guida per standardizzare attività e prodotti.</p>
-                        </div>
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <h4 class="font-semibold">Normazione</h4>
-                            <p class="text-sm text-gray-600">Il processo di stabilire e applicare queste regole per ottimizzare l'ordine e la sicurezza in un dato settore.</p>
-                        </div>
-                         <div class="p-4 bg-gray-50 rounded-lg">
-                            <h4 class="font-semibold">Standard citati</h4>
-                            <p class="text-sm text-gray-600">Nelle slide vengono menzionate le norme <span class="font-mono bg-gray-200 px-1 rounded">UNI 7462</span> e <span class="font-mono bg-gray-200 px-1 rounded">UNI 7463</span> relative ai dati da indicare sui disegni.</p>
-                        </div>
-                    </div>
+                <div id="flashcard-back" class="flashcard-face flashcard-back">
+                    <p class="text-xl font-medium">Caricamento...</p>
                 </div>
             </div>
-        </section>
-
-        <!-- Sezione Cuscinetti -->
-        <section id="cuscinetti" class="py-20 bg-gray-50 -mx-6 px-6 rounded-3xl">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold">Focus: Cuscinetti a Rotolamento</h2>
-                <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Analizziamo uno dei componenti meccanici più comuni. I cuscinetti riducono l'attrito tra parti in rotazione tramite elementi volventi.</p>
-            </div>
-            
-            <div class="grid lg:grid-cols-2 gap-8 items-start">
-                <!-- Diagramma interattivo -->
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-2xl font-bold mb-2">Anatomia di un Cuscinetto</h3>
-                    <p class="text-gray-600 mb-4">Passa il mouse sui componenti per scoprirne il nome e la funzione.</p>
-                    <div id="bearing-diagram" class="relative w-full h-80 flex items-center justify-center">
-                        <!-- Componenti del diagramma -->
-                        <div data-part="outer" class="bearing-part absolute w-80 h-80 border-[20px] border-gray-400 rounded-full"></div>
-                        <div data-part="inner" class="bearing-part absolute w-40 h-40 border-[20px] border-gray-400 rounded-full bg-gray-100"></div>
-                        <div data-part="cage" class="bearing-part absolute w-60 h-60 border-[2px] border-dashed border-gray-300 rounded-full animate-spin [animation-duration:10s]"></div>
-                        <!-- Sfere -->
-                        <div data-part="balls" class="bearing-part absolute w-8 h-8 bg-gray-500 rounded-full" style="transform: translate(110px, 0);"></div>
-                        <div data-part="balls" class="bearing-part absolute w-8 h-8 bg-gray-500 rounded-full" style="transform: translate(-110px, 0);"></div>
-                        <div data-part="balls" class="bearing-part absolute w-8 h-8 bg-gray-500 rounded-full" style="transform: translate(0, 110px);"></div>
-                        <div data-part="balls" class="bearing-part absolute w-8 h-8 bg-gray-500 rounded-full" style="transform: translate(0, -110px);"></div>
-                    </div>
-                    <div id="bearing-info" class="mt-4 p-4 bg-blue-50 rounded-lg min-h-[80px]">
-                        <h4 id="bearing-part-name" class="font-bold text-blue-800 text-lg">Diagramma Interattivo</h4>
-                        <p id="bearing-part-desc" class="text-blue-700">Seleziona un componente.</p>
-                    </div>
-                </div>
-
-                <div class="space-y-8">
-                    <!-- Tipi di carico -->
-                    <div class="bg-white p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Tipi di Carico Supportati</h3>
-                        <p class="text-gray-600 mb-4">I cuscinetti sono progettati per sopportare carichi specifici. Clicca per vedere la direzione delle forze.</p>
-                        <div class="flex space-x-2 mb-4">
-                            <button class="load-btn flex-1 bg-gray-200 hover:bg-blue-500 hover:text-white font-semibold py-2 px-4 rounded-lg transition" data-load="radiale">Radiale</button>
-                            <button class="load-btn flex-1 bg-gray-200 hover:bg-blue-500 hover:text-white font-semibold py-2 px-4 rounded-lg transition" data-load="assiale">Assiale</button>
-                            <button class="load-btn flex-1 bg-gray-200 hover:bg-blue-500 hover:text-white font-semibold py-2 px-4 rounded-lg transition" data-load="combinato">Combinato</button>
-                        </div>
-                        <div id="load-display" class="p-4 bg-gray-100 rounded-lg text-center">
-                            <p id="load-desc" class="text-gray-700">Seleziona un tipo di carico.</p>
-                        </div>
-                    </div>
-                    <!-- Grafico -->
-                    <div class="bg-white p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Confronto Prestazioni (Ipotetico)</h3>
-                        <p class="text-gray-600 mb-4">Questo grafico mostra una comparazione ipotetica della capacità di carico per diversi tipi di cuscinetti.</p>
-                        <div class="chart-container relative h-64 w-full max-w-lg mx-auto">
-                             <canvas id="bearingChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="bg-white mt-12">
-        <div class="container mx-auto px-6 py-4 text-center text-gray-500">
-            <p>&copy; 2025 Dashboard Interattiva sul Disegno Tecnico. Creato a scopo didattico.</p>
         </div>
-    </footer>
+
+        <div class="flex items-center space-x-4 mb-4">
+            <button id="prev-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors">
+                Precedente
+            </button>
+            <span id="card-counter" class="text-lg font-medium text-gray-600">0/50</span>
+            <button id="next-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors">
+                Successiva
+            </button>
+        </div>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Logica per il diagramma interattivo dei cuscinetti
-            const bearingParts = document.querySelectorAll('.bearing-part');
-            const infoName = document.getElementById('bearing-part-name');
-            const infoDesc = document.getElementById('bearing-part-desc');
+        const flashcardData = [
+            { question: 'Qual è la duplice funzione di un disegno tecnico?', answer: 'Permette la ricostruzione mentale del modello e diffonde informazioni per la produzione.' },
+            { question: 'Quali sono le caratteristiche del linguaggio convenzionale del disegno tecnico?', answer: 'Facilità d\'interpretazione, univocità, completezza e trasferibilità.' },
+            { question: 'Chi stabilisce le norme per il disegno tecnico?', answer: 'Enti nazionali e internazionali di normazione e unificazione.' },
+            { question: 'Cos\'è una norma?', answer: 'Un documento che fornisce regole e linee guida per standardizzare attività e prodotti.' },
+            { question: 'Qual è lo scopo della normazione?', answer: 'Ordinare e razionalizzare un campo di attività per ottenere una situazione economica ottimale nel rispetto delle esigenze funzionali e di sicurezza.' },
+            { question: 'Quale norma definisce i dati da indicare sui disegni tecnici?', answer: 'UNI 7462 e UNI 7463.' },
+            { question: 'Qual è lo scopo principale dei cuscinetti a rotolamento?', answer: 'Permettere la rotazione relativa tra un componente (albero) e un altro (supporto) evitando lo strisciamento.' },
+            { question: 'Da quali componenti è formato un cuscinetto a rotolamento?', answer: 'Anello interno, anello esterno, corpi volventi e gabbia.' },
+            { question: 'A cosa serve l\'anello interno?', answer: 'È solidale all\'albero e la sua pista interna guida i corpi volventi.' },
+            { question: 'A cosa serve la gabbia?', answer: 'Mantiene i corpi volventi equidistanti e in posizione corretta.' },
+            { question: 'Quali tipi di cuscinetti sono citati in relazione al carico?', answer: 'Radiali, assiali e combinati.' },
+            { question: 'Descrivi un cuscinetto radiale.', answer: 'Un cuscinetto progettato per sopportare carichi perpendicolari all\'asse di rotazione.' },
+            { question: 'Qual è il ruolo dei corpi volventi?', answer: 'Rotolano sulle piste, riducendo l\'attrito tra l\'anello interno ed esterno.' },
+            { question: 'Cosa significa che un disegno è "univoco"?', answer: 'Significa che non può essere interpretato in modi diversi, garantendo fedeltà.' },
+            { question: 'Cos\'è il disegno tecnico industriale?', answer: 'La rappresentazione di oggetti tecnici e il documento che traduce graficamente le idee del progettista.' },
+            { question: 'Spiega la funzione di "diffusione di informazioni".', answer: 'Trasmette dati come dimensioni, materiali, tolleranze e finiture superficiali necessari per la produzione di un pezzo.' },
+            { question: 'Perché il disegno tecnico è considerato un "linguaggio internazionale"?', answer: 'Grazie alle convenzioni e alle norme stabilite da enti di normazione, che lo rendono universalmente comprensibile.' },
+            { question: 'Qual è lo scopo delle guarnizioni nei cuscinetti?', answer: 'Proteggere i corpi volventi da sporco e contaminanti esterni.' },
+            { question: 'Come vengono classificati i cuscinetti a rotolamento?', answer: 'In base alla modalità di trasferimento del carico: radiali, assiali e combinati.' },
+            { question: 'Che tipo di cuscinetto supporta carichi paralleli all\'asse?', answer: 'Un cuscinetto assiale.' },
+            { question: 'Quale ente italiano si occupa di normazione?', answer: 'L\'UNI (Ente Italiano di Normazione).' },
+            { question: 'Perché la normazione è importante nell\'ingegneria?', answer: 'Per garantire la sicurezza, l\'intercambiabilità dei componenti e la razionalizzazione della produzione.' },
+            { question: 'Qual è il contrario di "rotolamento"?', answer: 'Strisciamento.' },
+            { question: 'Qual è il materiale più comune per i corpi volventi?', answer: 'Acciaio, solitamente temperato per la durezza.' },
+            { question: 'Cosa si intende per "fedeltà" nel disegno tecnico?', answer: 'L\'univocità e la precisione nel rappresentare l\'oggetto.' },
+            { question: 'Che tipo di cuscinetti sopportano sia carichi radiali che assiali?', answer: 'Cuscinetti combinati.' },
+            { question: 'Come si rappresenta una pista in un cuscinetto?', answer: 'È la superficie degli anelli su cui rotolano i corpi volventi.' },
+            { question: 'Che cos\'è un cuscinetto radiale a due corone di sfere?', answer: 'Un cuscinetto che utilizza due serie di sfere per sopportare carichi radiali più elevati.' },
+            { question: 'Quale parte del cuscinetto è solidale al supporto?', answer: 'L\'anello esterno.' },
+            { question: 'Che cos\'è un "alloggiamento" in riferimento ai cuscinetti?', answer: 'La sede nel supporto dove viene montato il cuscinetto.' },
+            { question: 'Cosa permette la ricostruzione mentale del modello di un oggetto?', answer: 'La completezza e chiarezza del disegno tecnico.' },
+            { question: 'Cosa distingue un cuscinetto a rulli da uno a sfere?', answer: 'Il tipo di corpi volventi, che influisce sulla capacità di carico e sul tipo di attrito.' },
+            { question: 'Quali sono i componenti di base di un sistema di disegno?', answer: 'Progettista, disegnatore, fabbricante.' },
+            { question: 'Cosa si intende per "trasferibilità" nel disegno tecnico?', answer: 'La possibilità di inviare il disegno e riprodurre l\'oggetto in qualsiasi parte del mondo, senza perdita di informazioni.' },
+            { question: 'Che cos\'è la "grammatica" del disegno tecnico?', answer: 'Le regole di rappresentazione stabilite dalle norme.' },
+            { question: 'Come si definisce la sintassi del disegno tecnico?', answer: 'Le modalità con cui le regole vengono applicate per comunicare un\'idea in modo coerente.' },
+            { question: 'Perché è fondamentale l\'univocità nel disegno tecnico?', answer: 'Per evitare errori e incomprensioni nel processo di produzione.' },
+            { question: 'In che modo la normazione contribuisce alla sicurezza?', answer: 'Assicurando che i componenti siano prodotti in modo affidabile e interscambiabile.' },
+            { question: 'Cosa sono i "rulli" in un cuscinetto a rotolamento?', answer: 'Corpi volventi di forma cilindrica o conica, utilizzati per carichi più pesanti rispetto alle sfere.' },
+            { question: 'Cos\'è un cuscinetto radiale-obliquo?', answer: 'Un tipo di cuscinetto che può supportare sia carichi radiali che assiali in una direzione.' },
+            { question: 'Spiega la differenza tra albero e supporto in un sistema con cuscinetti.', answer: 'L\'albero è la parte che ruota, mentre il supporto è la parte fissa che lo sostiene.' },
+            { question: 'Perché il disegno tecnico è considerato un linguaggio visivo?', answer: 'Perché comunica informazioni complesse tramite simboli, linee e forme grafiche.' },
+            { question: 'Qual è il primo passo per un disegnatore tecnico?', answer: 'Tradurre graficamente le idee del progettista.' },
+            { question: 'Cosa sono i "dati da indicare" sui disegni?', answer: 'Le informazioni aggiuntive (come tolleranze, finiture, materiali) richieste dalle norme per rendere il disegno completo.' },
+            { question: 'Qual è l\'obiettivo finale di un disegno tecnico?', answer: 'La realizzazione fisica e corretta del pezzo rappresentato.' },
+            { question: 'Cosa fa un organismo di normazione?', answer: 'Approva e pubblica documenti che stabiliscono regole e linee guida consensuali.' },
+            { question: 'A cosa serve la "gabbia rotante"?', answer: 'A mantenere in posizione i corpi volventi, impedendo che si tocchino tra loro.' },
+            { question: 'Un cuscinetto assiale a sfere è adatto per carichi radiali?', answer: 'No, è progettato principalmente per carichi assiali.' },
+            { question: 'Come il disegno tecnico aiuta a "razionalizzare" un\'attività?', answer: 'Standardizzando le comunicazioni e i processi, riducendo gli sprechi e gli errori.' },
+            { question: 'Qual è la differenza principale tra UNI 7462 e 7463?', answer: 'Entrambe sono norme per i dati sui disegni, ma si applicano a contesti specifici, come indicato nel materiale.' },
+        ];
 
-            const partsData = {
-                outer: { name: 'Anello Esterno', description: 'Solidale al supporto, contiene i corpi volventi.' },
-                inner: { name: 'Anello Interno', description: 'Solidale all\'albero, la sua pista interna guida i corpi volventi.' },
-                balls: { name: 'Corpi Volventi (Sfere)', description: 'Elementi che rotolano sulle piste, riducendo l\'attrito.' },
-                cage: { name: 'Gabbia', description: 'Mantiene i corpi volventi equidistanti e in posizione.' },
-            };
-            
-            bearingParts.forEach(part => {
-                part.addEventListener('mouseenter', (e) => {
-                    const partKey = e.target.dataset.part;
-                    if(partsData[partKey]) {
-                        infoName.textContent = partsData[partKey].name;
-                        infoDesc.textContent = partsData[partKey].description;
-                    }
-                });
-                part.addEventListener('mouseleave', () => {
-                     infoName.textContent = 'Diagramma Interattivo';
-                     infoDesc.textContent = 'Seleziona un componente.';
-                });
-            });
+        let currentCardIndex = 0;
+        const flashcard = document.getElementById('flashcard');
+        const flashcardFront = document.getElementById('flashcard-front');
+        const flashcardBack = document.getElementById('flashcard-back');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const cardCounter = document.getElementById('card-counter');
 
-            // Logica per i tipi di carico
-            const loadBtns = document.querySelectorAll('.load-btn');
-            const loadDesc = document.getElementById('load-desc');
-            const loadData = {
-                radiale: 'Carico perpendicolare all\'asse di rotazione. Tipico per supportare alberi.',
-                assiale: 'Carico parallelo all\'asse di rotazione. Tipico per gestire spinte.',
-                combinato: 'Una combinazione di carichi radiali e assiali.'
-            };
+        function updateCardContent() {
+            flashcard.classList.remove('flipped');
+            setTimeout(() => {
+                flashcardFront.querySelector('p').textContent = flashcardData[currentCardIndex].question;
+                flashcardBack.querySelector('p').textContent = flashcardData[currentCardIndex].answer;
+                cardCounter.textContent = `${currentCardIndex + 1}/${flashcardData.length}`;
+            }, 300);
+        }
 
-            loadBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const loadKey = e.target.dataset.load;
-                    loadDesc.textContent = loadData[loadKey];
-                    loadBtns.forEach(b => b.classList.remove('bg-blue-500', 'text-white'));
-                    e.target.classList.add('bg-blue-500', 'text-white');
-                });
-            });
-
-            // Grafico Chart.js
-            const ctx = document.getElementById('bearingChart').getContext('2d');
-            const bearingChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Radiali a Sfere', 'Radiali a Rulli', 'Obliqui a Sfere', 'Assiali'],
-                    datasets: [{
-                        label: 'Capacità di Carico Radiale (kN)',
-                        data: [12, 19, 15, 2],
-                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Capacità di Carico Assiale (kN)',
-                        data: [6, 0, 10, 18],
-                        backgroundColor: 'rgba(16, 185, 129, 0.5)',
-                        borderColor: 'rgba(16, 185, 129, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Carico (kN)' }
-                        },
-                        x: {
-                            title: { display: true, text: 'Tipo di Cuscinetto' }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                             callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += context.parsed.y + ' kN';
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
         });
+
+        prevBtn.addEventListener('click', () => {
+            currentCardIndex = (currentCardIndex - 1 + flashcardData.length) % flashcardData.length;
+            updateCardContent();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentCardIndex = (currentCardIndex + 1) % flashcardData.length;
+            updateCardContent();
+        });
+        
+        // Initial load
+        updateCardContent();
     </script>
+
 </body>
 </html>
-
