@@ -77,6 +77,33 @@
             border: 1px solid #6b7280;
         }
         
+        /* Stili per i pulsanti di navigazione */
+        .nav-button {
+            background-color: #374151;
+            color: #d1d5db;
+            border-radius: 9999px;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .nav-button:hover {
+            background-color: #4b5563;
+            color: #fff;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: scale(1);
+            box-shadow: none;
+        }
+        
         /* Animazioni delle icone */
         @keyframes spin {
             from { transform: rotate(0deg); }
@@ -143,6 +170,20 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Pulsanti di navigazione a freccia -->
+            <div class="flex justify-center gap-8 mt-8">
+                <button id="prev-btn" onclick="previousQuestion()" class="nav-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <button id="next-btn" onclick="nextQuestion()" class="nav-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </button>
             </div>
         </div>
         
@@ -278,53 +319,20 @@
         const quizTitle = document.getElementById('quiz-title');
         const flashcard = document.getElementById('flashcard');
         const flashcardContainer = document.getElementById('flashcard-container');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
 
-        // Variabili per il rilevamento delle gesture
-        let startX = 0;
-        let diffX = 0;
-        const SWIPE_THRESHOLD = 50;
-        
-        // Listener per le gesture sui dispositivi touch
-        flashcardContainer.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            diffX = 0;
-            // Interrompe la transizione CSS per una risposta più immediata al movimento
-            flashcard.style.transition = 'none';
-        });
-
-        flashcardContainer.addEventListener('touchmove', (e) => {
-            diffX = e.touches[0].clientX - startX;
-            // Applica la traslazione per un feedback visivo immediato
-            flashcard.style.transform = `translateX(${diffX}px) rotateY(${isFlipped ? 180 : 0}deg)`;
-        });
-
-        flashcardContainer.addEventListener('touchend', () => {
-            // Ripristina la transizione CSS
-            flashcard.style.transition = 'transform 0.6s';
-            // Resetta la posizione della card
-            flashcard.style.transform = `rotateY(${isFlipped ? 180 : 0}deg)`; 
-            
-            if (diffX > SWIPE_THRESHOLD) {
-                // Swipe a destra (indietro)
-                previousQuestion();
-            } else if (diffX < -SWIPE_THRESHOLD) {
-                // Swipe a sinistra (avanti)
-                nextQuestion();
-            }
-        });
-        
         // Listener per i tasti freccia su desktop
         document.addEventListener('keydown', (e) => {
             if (quizScreen.classList.contains('hidden')) {
                 return; // Non fare nulla se non siamo nella schermata del quiz
             }
-            if (e.key === 'ArrowRight') {
+            if (e.key === 'ArrowRight' && !nextBtn.disabled) {
                 nextQuestion();
-            } else if (e.key === 'ArrowLeft') {
+            } else if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
                 previousQuestion();
             }
         });
-
 
         function startQuiz(button, subject) {
             // Attiva l'animazione sull'icona della card cliccata
@@ -360,13 +368,15 @@
                 isFlipped = false;
             }
             
-            // Non ci sono più i pulsanti, la navigazione è gestita da swipe o tasti freccia.
-
             const questionData = currentQuizData[currentQuestionIndex];
             questionText.innerText = questionData.question;
             answerText.innerText = questionData.answer;
             
             progressText.innerText = `Domanda ${currentQuestionIndex + 1} di ${currentQuizData.length}`;
+            
+            // Abilita/disabilita i pulsanti di navigazione
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === currentQuizData.length - 1;
         }
         
         function flipCard() {
