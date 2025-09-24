@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcard Interattive - Disegno Tecnico</title>
+    <title>Flashcard Interattive per Materia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,8 +11,8 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a1a1a; /* Dark background */
-            color: #e0e0e0; /* Light text */
+            background-color: #1a1a1a;
+            color: #e0e0e0;
         }
         .flashcard-container {
             width: 100%;
@@ -49,9 +49,13 @@
             z-index: 2;
         }
         .flashcard-back {
-            background-color: #6366f1; /* Indigo 500 */
+            background-color: #6366f1;
             color: #ffffff;
             transform: rotateY(180deg);
+        }
+        .tab-button.active {
+            background-color: #6366f1;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -60,6 +64,19 @@
     <h1 class="text-3xl md:text-4xl font-bold text-gray-100 mb-8">Flashcard Interattive</h1>
 
     <div class="w-full max-w-2xl bg-gray-800 rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center">
+        
+        <div class="flex flex-wrap items-center justify-center space-x-2 mb-6 p-1 bg-gray-700 rounded-full">
+            <button id="disegno-tecnico-btn" class="tab-button px-4 py-2 rounded-full font-medium transition-colors duration-200">
+                Disegno Tecnico
+            </button>
+            <button id="cuscinetti-btn" class="tab-button px-4 py-2 rounded-full font-medium transition-colors duration-200">
+                Cuscinetti
+            </button>
+            <button id="sicurezza-btn" class="tab-button px-4 py-2 rounded-full font-medium transition-colors duration-200">
+                Sicurezza
+            </button>
+        </div>
+
         <div class="flashcard-container w-full h-96 mb-6">
             <div id="flashcard" class="flashcard">
                 <div id="flashcard-front" class="flashcard-face flashcard-front">
@@ -75,7 +92,7 @@
             <button id="prev-btn" class="bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold py-2 px-4 rounded-full transition-colors duration-200">
                 Precedente
             </button>
-            <span id="card-counter" class="text-lg font-medium text-gray-400">0/50</span>
+            <span id="card-counter" class="text-lg font-medium text-gray-400">0/0</span>
             <button id="next-btn" class="bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold py-2 px-4 rounded-full transition-colors duration-200">
                 Successiva
             </button>
@@ -83,59 +100,69 @@
     </div>
 
     <script>
-        const flashcardData = [
-            { question: 'Qual è la duplice funzione di un disegno tecnico?', answer: 'Permette la ricostruzione mentale del modello e diffonde informazioni per la produzione.' },
-            { question: 'Quali sono le caratteristiche del linguaggio convenzionale del disegno tecnico?', answer: 'Facilità d\'interpretazione, univocità, completezza e trasferibilità.' },
-            { question: 'Chi stabilisce le norme per il disegno tecnico?', answer: 'Enti nazionali e internazionali di normazione e unificazione.' },
-            { question: 'Cos\'è una norma?', answer: 'Un documento che fornisce regole e linee guida per standardizzare attività e prodotti.' },
-            { question: 'Qual è lo scopo della normazione?', answer: 'Ordinare e razionalizzare un campo di attività per ottenere una situazione economica ottimale nel rispetto delle esigenze funzionali e di sicurezza.' },
-            { question: 'Quale norma definisce i dati da indicare sui disegni tecnici?', answer: 'UNI 7462 e UNI 7463.' },
-            { question: 'Qual è lo scopo principale dei cuscinetti a rotolamento?', answer: 'Permettere la rotazione relativa tra un componente (albero) e un altro (supporto) evitando lo strisciamento.' },
-            { question: 'Da quali componenti è formato un cuscinetto a rotolamento?', answer: 'Anello interno, anello esterno, corpi volventi e gabbia.' },
-            { question: 'A cosa serve l\'anello interno?', answer: 'È solidale all\'albero e la sua pista interna guida i corpi volventi.' },
-            { question: 'A cosa serve la gabbia?', answer: 'Mantiene i corpi volventi equidistanti e in posizione corretta.' },
-            { question: 'Quali tipi di cuscinetti sono citati in relazione al carico?', answer: 'Radiali, assiali e combinati.' },
-            { question: 'Descrivi un cuscinetto radiale.', answer: 'Un cuscinetto progettato per sopportare carichi perpendicolari all\'asse di rotazione.' },
-            { question: 'Qual è il ruolo dei corpi volventi?', answer: 'Rotolano sulle piste, riducendo l\'attrito tra l\'anello interno ed esterno.' },
-            { question: 'Cosa significa che un disegno è "univoco"?', answer: 'Significa che non può essere interpretato in modi diversi, garantendo fedeltà.' },
-            { question: 'Cos\'è il disegno tecnico industriale?', answer: 'La rappresentazione di oggetti tecnici e il documento che traduce graficamente le idee del progettista.' },
-            { question: 'Spiega la funzione di "diffusione di informazioni".', answer: 'Trasmette dati come dimensioni, materiali, tolleranze e finiture superficiali necessari per la produzione di un pezzo.' },
-            { question: 'Perché il disegno tecnico è considerato un "linguaggio internazionale"?', answer: 'Grazie alle convenzioni e alle norme stabilite da enti di normazione, che lo rendono universalmente comprensibile.' },
-            { question: 'Qual è lo scopo delle guarnizioni nei cuscinetti?', answer: 'Proteggere i corpi volventi da sporco e contaminanti esterni.' },
-            { question: 'Come vengono classificati i cuscinetti a rotolamento?', answer: 'In base alla modalità di trasferimento del carico: radiali, assiali e combinati.' },
-            { question: 'Che tipo di cuscinetto supporta carichi paralleli all\'asse?', answer: 'Un cuscinetto assiale.' },
-            { question: 'Quale ente italiano si occupa di normazione?', answer: 'L\'UNI (Ente Italiano di Normazione).' },
-            { question: 'Perché la normazione è importante nell\'ingegneria?', answer: 'Per garantire la sicurezza, l\'intercambiabilità dei componenti e la razionalizzazione della produzione.' },
-            { question: 'Qual è il contrario di "rotolamento"?', answer: 'Strisciamento.' },
-            { question: 'Qual è il materiale più comune per i corpi volventi?', answer: 'Acciaio, solitamente temperato per la durezza.' },
-            { question: 'Cosa si intende per "fedeltà" nel disegno tecnico?', answer: 'L\'univocità e la precisione nel rappresentare l\'oggetto.' },
-            { question: 'Che tipo di cuscinetti sopportano sia carichi radiali che assiali?', answer: 'Cuscinetti combinati.' },
-            { question: 'Come si rappresenta una pista in un cuscinetto?', answer: 'È la superficie degli anelli su cui rotolano i corpi volventi.' },
-            { question: 'Che cos\'è un cuscinetto radiale a due corone di sfere?', answer: 'Un cuscinetto che utilizza due serie di sfere per sopportare carichi radiali più elevati.' },
-            { question: 'Quale parte del cuscinetto è solidale al supporto?', answer: 'L\'anello esterno.' },
-            { question: 'Che cos\'è un "alloggiamento" in riferimento ai cuscinetti?', answer: 'La sede nel supporto dove viene montato il cuscinetto.' },
-            { question: 'Cosa permette la ricostruzione mentale del modello di un oggetto?', answer: 'La completezza e chiarezza del disegno tecnico.' },
-            { question: 'Cosa distingue un cuscinetto a rulli da uno a sfere?', answer: 'Il tipo di corpi volventi, che influisce sulla capacità di carico e sul tipo di attrito.' },
-            { question: 'Quali sono i componenti di base di un sistema di disegno?', answer: 'Progettista, disegnatore, fabbricante.' },
-            { question: 'Cosa si intende per "trasferibilità" nel disegno tecnico?', answer: 'La possibilità di inviare il disegno e riprodurre l\'oggetto in qualsiasi parte del mondo, senza perdita di informazioni.' },
-            { question: 'Che cos\'è la "grammatica" del disegno tecnico?', answer: 'Le regole di rappresentazione stabilite dalle norme.' },
-            { question: 'Come si definisce la sintassi del disegno tecnico?', answer: 'Le modalità con cui le regole vengono applicate per comunicare un\'idea in modo coerente.' },
-            { question: 'Perché è fondamentale l\'univocità nel disegno tecnico?', answer: 'Per evitare errori e incomprensioni nel processo di produzione.' },
-            { question: 'In che modo la normazione contribuisce alla sicurezza?', answer: 'Assicurando che i componenti siano prodotti in modo affidabile e interscambiabile.' },
-            { question: 'Cosa sono i "rulli" in un cuscinetto a rotolamento?', answer: 'Corpi volventi di forma cilindrica o conica, utilizzati per carichi più pesanti rispetto alle sfere.' },
-            { question: 'Cos\'è un cuscinetto radiale-obliquo?', answer: 'Un tipo di cuscinetto che può supportare sia carichi radiali che assiali in una direzione.' },
-            { question: 'Spiega la differenza tra albero e supporto in un sistema con cuscinetti.', answer: 'L\'albero è la parte che ruota, mentre il supporto è la parte fissa che lo sostiene.' },
-            { question: 'Perché il disegno tecnico è considerato un linguaggio visivo?', answer: 'Perché comunica informazioni complesse tramite simboli, linee e forme grafiche.' },
-            { question: 'Qual è il primo passo per un disegnatore tecnico?', answer: 'Tradurre graficamente le idee del progettista.' },
-            { question: 'Cosa sono i "dati da indicare" sui disegni?', answer: 'Le informazioni aggiuntive (come tolleranze, finiture, materiali) richieste dalle norme per rendere il disegno completo.' },
-            { question: 'Qual è l\'obiettivo finale di un disegno tecnico?', answer: 'La realizzazione fisica e corretta del pezzo rappresentato.' },
-            { question: 'Cosa fa un organismo di normazione?', answer: 'Approva e pubblica documenti che stabiliscono regole e linee guida consensuali.' },
-            { question: 'A cosa serve la "gabbia rotante"?', answer: 'A mantenere in posizione i corpi volventi, impedendo che si tocchino tra loro.' },
-            { question: 'Un cuscinetto assiale a sfere è adatto per carichi radiali?', answer: 'No, è progettato principalmente per carichi assiali.' },
-            { question: 'Come il disegno tecnico aiuta a "razionalizzare" un\'attività?', answer: 'Standardizzando le comunicazioni e i processi, riducendo gli sprechi e gli errori.' },
-            { question: 'Qual è la differenza principale tra UNI 7462 e 7463?', answer: 'Entrambe sono norme per i dati sui disegni, ma si applicano a contesti specifici, come indicato nel materiale.' },
-        ];
+        const flashcardData = {
+            disegnoTecnico: [
+                { question: 'Qual è la duplice funzione di un disegno tecnico?', answer: 'Permette la ricostruzione mentale del modello e diffonde informazioni per la produzione.' },
+                { question: 'Quali sono le caratteristiche del linguaggio convenzionale del disegno tecnico?', answer: 'Facilità d\'interpretazione, univocità, completezza e trasferibilità.' },
+                { question: 'Chi stabilisce le norme per il disegno tecnico?', answer: 'Enti nazionali e internazionali di normazione e unificazione.' },
+                { question: 'Cos\'è una norma?', answer: 'Un documento che fornisce regole e linee guida per standardizzare attività e prodotti.' },
+                { question: 'Qual è lo scopo della normazione?', answer: 'Ordinare e razionalizzare un campo di attività per ottenere una situazione economica ottimale nel rispetto delle esigenze funzionali e di sicurezza.' },
+                { question: 'Quale norma definisce i dati da indicare sui disegni tecnici?', answer: 'UNI 7462 e UNI 7463.' },
+                { question: 'Cosa si intende per "univocità" nel disegno?', answer: 'Significa che non può essere interpretato in modi diversi, garantendo fedeltà.' },
+                { question: 'Cos\'è il disegno tecnico industriale?', answer: 'La rappresentazione di oggetti tecnici e il documento che traduce graficamente le idee del progettista.' },
+                { question: 'Spiega la funzione di "diffusione di informazioni".', answer: 'Trasmette dati come dimensioni, materiali, tolleranze e finiture superficiali necessari per la produzione di un pezzo.' },
+                { question: 'Perché il disegno tecnico è considerato un "linguaggio internazionale"?', answer: 'Grazie alle convenzioni e alle norme stabilite da enti di normazione, che lo rendono universalmente comprensibile.' },
+                { question: 'Cosa si intende per "fedeltà" nel disegno tecnico?', answer: 'L\'univocità e la precisione nel rappresentare l\'oggetto.' },
+                { question: 'Quali sono i componenti di base di un sistema di disegno?', answer: 'Progettista, disegnatore, fabbricante.' },
+                { question: 'Cosa si intende per "trasferibilità" nel disegno tecnico?', answer: 'La possibilità di inviare il disegno e riprodurre l\'oggetto in qualsiasi parte del mondo, senza perdita di informazioni.' },
+                { question: 'Che cos\'è la "grammatica" del disegno tecnico?', answer: 'Le regole di rappresentazione stabilite dalle norme.' },
+                { question: 'Come si definisce la sintassi del disegno tecnico?', answer: 'Le modalità con cui le regole vengono applicate per comunicare un\'idea in modo coerente.' },
+                { question: 'Perché è fondamentale l\'univocità nel disegno tecnico?', answer: 'Per evitare errori e incomprensioni nel processo di produzione.' },
+                { question: 'In che modo la normazione contribuisce alla sicurezza?', answer: 'Assicurando che i componenti siano prodotti in modo affidabile e interscambiabile.' },
+                { question: 'Perché il disegno tecnico è considerato un linguaggio visivo?', answer: 'Perché comunica informazioni complesse tramite simboli, linee e forme grafiche.' },
+                { question: 'Qual è il primo passo per un disegnatore tecnico?', answer: 'Tradurre graficamente le idee del progettista.' },
+                { question: 'Cosa sono i "dati da indicare" sui disegni?', answer: 'Le informazioni aggiuntive (come tolleranze, finiture, materiali) richieste dalle norme per rendere il disegno completo.' },
+            ],
+            cuscinetti: [
+                { question: 'Qual è lo scopo principale dei cuscinetti a rotolamento?', answer: 'Permettere la rotazione relativa tra un componente (albero) e un altro (supporto) evitando lo strisciamento.' },
+                { question: 'Da quali componenti è formato un cuscinetto a rotolamento?', answer: 'Anello interno, anello esterno, corpi volventi e gabbia.' },
+                { question: 'A cosa serve l\'anello interno?', answer: 'È solidale all\'albero e la sua pista interna guida i corpi volventi.' },
+                { question: 'A cosa serve la gabbia?', answer: 'Mantiene i corpi volventi equidistanti e in posizione corretta.' },
+                { question: 'Quali tipi di cuscinetti sono citati in relazione al carico?', answer: 'Radiali, assiali e combinati.' },
+                { question: 'Descrivi un cuscinetto radiale.', answer: 'Un cuscinetto progettato per sopportare carichi perpendicolari all\'asse di rotazione.' },
+                { question: 'Qual è il ruolo dei corpi volventi?', answer: 'Rotolano sulle piste, riducendo l\'attrito tra l\'anello interno ed esterno.' },
+                { question: 'Qual è lo scopo delle guarnizioni nei cuscinetti?', answer: 'Proteggere i corpi volventi da sporco e contaminanti esterni.' },
+                { question: 'Come vengono classificati i cuscinetti a rotolamento?', answer: 'In base alla modalità di trasferimento del carico: radiali, assiali e combinati.' },
+                { question: 'Che tipo di cuscinetto supporta carichi paralleli all\'asse?', answer: 'Un cuscinetto assiale.' },
+                { question: 'Qual è il contrario di "rotolamento"?', answer: 'Strisciamento.' },
+                { question: 'Qual è il materiale più comune per i corpi volventi?', answer: 'Acciaio, solitamente temperato per la durezza.' },
+                { question: 'Che tipo di cuscinetti sopportano sia carichi radiali che assiali?', answer: 'Cuscinetti combinati.' },
+                { question: 'Come si rappresenta una pista in un cuscinetto?', answer: 'È la superficie degli anelli su cui rotolano i corpi volventi.' },
+                { question: 'Che cos\'è un cuscinetto radiale a due corone di sfere?', answer: 'Un cuscinetto che utilizza due serie di sfere per sopportare carichi radiali più elevati.' },
+                { question: 'Quale parte del cuscinetto è solidale al supporto?', answer: 'L\'anello esterno.' },
+                { question: 'Che cos\'è un "alloggiamento" in riferimento ai cuscinetti?', answer: 'La sede nel supporto dove viene montato il cuscinetto.' },
+                { question: 'Cosa distingue un cuscinetto a rulli da uno a sfere?', answer: 'Il tipo di corpi volventi, che influisce sulla capacità di carico e sul tipo di attrito.' },
+                { question: 'Cosa sono i "rulli" in un cuscinetto a rotolamento?', answer: 'Corpi volventi di forma cilindrica o conica, utilizzati per carichi più pesanti rispetto alle sfere.' },
+                { question: 'Cos\'è un cuscinetto radiale-obliquo?', answer: 'Un tipo di cuscinetto che può supportare sia carichi radiali che assiali in una direzione.' },
+                { question: 'Spiega la differenza tra albero e supporto in un sistema con cuscinetti.', answer: 'L\'albero è la parte che ruota, mentre il supporto è la parte fissa che lo sostiene.' },
+                { question: 'A cosa serve la "gabbia rotante"?', answer: 'A mantenere in posizione i corpi volventi, impedendo che si tocchino tra loro.' },
+                { question: 'Un cuscinetto assiale a sfere è adatto per carichi radiali?', answer: 'No, è progettato principalmente per carichi assiali.' },
+            ],
+            sicurezza: [
+                { question: 'Cosa si intende per "rischio" in un ambiente di lavoro?', answer: 'La probabilità che un pericolo causi un danno alla salute o un infortunio.' },
+                { question: 'Qual è l\'obiettivo principale della valutazione dei rischi?', answer: 'Identificare, analizzare e valutare i pericoli per implementare le misure di prevenzione e protezione necessarie.' },
+                { question: 'Chi è il "Datore di Lavoro" per la sicurezza?', answer: 'Il soggetto titolare del rapporto di lavoro che ha la responsabilità dell\'organizzazione aziendale e della sicurezza.' },
+                { question: 'Cosa sono i "DPI"?', answer: 'Dispositivi di Protezione Individuale, come caschi, guanti e scarpe antinfortunistiche.' },
+                { question: 'Cos\'è un infortunio sul lavoro?', answer: 'Un evento che avviene per causa violenta in occasione di lavoro, dal quale deriva un danno alla persona.' },
+                { question: 'Cosa significa "prevenzione" nel contesto della sicurezza sul lavoro?', answer: 'Evitare o ridurre al minimo i rischi prima che si verifichino, attraverso misure preventive.' },
+                { question: 'Qual è il ruolo del "Responsabile del Servizio di Prevenzione e Protezione" (RSPP)?', answer: 'Collaborare con il datore di lavoro per la valutazione dei rischi e l\'adozione di misure preventive e protettive.' },
+                { question: 'Cos\'è il rischio stress lavoro-correlato?', answer: 'Un rischio derivante da un prolungato squilibrio tra le richieste dell\'ambiente lavorativo e le capacità del lavoratore.' },
+                { question: 'Quali sono i principali doveri del lavoratore in materia di sicurezza?', answer: 'Contribuire alla sicurezza, rispettare le procedure, segnalare pericoli e utilizzare correttamente i DPI.' },
+                { question: 'Cosa sono i "dispositivi di comando" delle macchine?', answer: 'Componenti che permettono all\'operatore di avviare, arrestare o modificare il funzionamento di una macchina.' },
+            ]
+        };
 
+        let currentTopic = 'disegnoTecnico';
         let currentCardIndex = 0;
         const flashcard = document.getElementById('flashcard');
         const flashcardFront = document.getElementById('flashcard-front');
@@ -143,14 +170,42 @@
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const cardCounter = document.getElementById('card-counter');
+        const dtBtn = document.getElementById('disegno-tecnico-btn');
+        const cBtn = document.getElementById('cuscinetti-btn');
+        const sBtn = document.getElementById('sicurezza-btn');
 
         function updateCardContent() {
             flashcard.classList.remove('flipped');
-            setTimeout(() => {
-                flashcardFront.querySelector('p').textContent = flashcardData[currentCardIndex].question;
-                flashcardBack.querySelector('p').textContent = flashcardData[currentCardIndex].answer;
-                cardCounter.textContent = `${currentCardIndex + 1}/${flashcardData.length}`;
-            }, 300);
+            const data = flashcardData[currentTopic];
+            if (data.length === 0) {
+                flashcardFront.querySelector('p').textContent = 'Nessuna flashcard disponibile per questa sezione.';
+                flashcardBack.querySelector('p').textContent = 'Selezionare un altro argomento.';
+                cardCounter.textContent = `0/0`;
+            } else {
+                setTimeout(() => {
+                    flashcardFront.querySelector('p').textContent = data[currentCardIndex].question;
+                    flashcardBack.querySelector('p').textContent = data[currentCardIndex].answer;
+                    cardCounter.textContent = `${currentCardIndex + 1}/${data.length}`;
+                }, 300);
+            }
+        }
+
+        function switchTopic(topic) {
+            currentTopic = topic;
+            currentCardIndex = 0;
+            updateCardContent();
+            
+            // Update active button state
+            dtBtn.classList.remove('active');
+            cBtn.classList.remove('active');
+            sBtn.classList.remove('active');
+            if (topic === 'disegnoTecnico') {
+                dtBtn.classList.add('active');
+            } else if (topic === 'cuscinetti') {
+                cBtn.classList.add('active');
+            } else if (topic === 'sicurezza') {
+                sBtn.classList.add('active');
+            }
         }
 
         flashcard.addEventListener('click', () => {
@@ -158,17 +213,27 @@
         });
 
         prevBtn.addEventListener('click', () => {
-            currentCardIndex = (currentCardIndex - 1 + flashcardData.length) % flashcardData.length;
-            updateCardContent();
+            const data = flashcardData[currentTopic];
+            if (data.length > 0) {
+                currentCardIndex = (currentCardIndex - 1 + data.length) % data.length;
+                updateCardContent();
+            }
         });
 
         nextBtn.addEventListener('click', () => {
-            currentCardIndex = (currentCardIndex + 1) % flashcardData.length;
-            updateCardContent();
+            const data = flashcardData[currentTopic];
+            if (data.length > 0) {
+                currentCardIndex = (currentCardIndex + 1) % data.length;
+                updateCardContent();
+            }
         });
+
+        dtBtn.addEventListener('click', () => switchTopic('disegnoTecnico'));
+        cBtn.addEventListener('click', () => switchTopic('cuscinetti'));
+        sBtn.addEventListener('click', () => switchTopic('sicurezza'));
         
         // Initial load
-        updateCardContent();
+        switchTopic(currentTopic);
     </script>
 
 </body>
