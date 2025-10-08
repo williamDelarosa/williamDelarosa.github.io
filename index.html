@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App di Studio con Flashcard 3D</title>
+    <title>App di Studio con Flipbook e Flipcard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -142,33 +142,76 @@
         .comunicazione-icon.active-anim, .card-animation:hover .comunicazione-icon {
             animation: bounce 1s ease-in-out infinite;
         }
+
+        @keyframes scale-up {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .matematica-icon.active-anim, .card-animation:hover .matematica-icon {
+            animation: scale-up 1s ease-in-out infinite;
+        }
     </style>
 </head>
 <body class="bg-gradient-radial text-gray-200 flex items-center justify-center min-h-screen p-4">
 
-    <div id="app-container" class="w-full max-w-2xl mx-auto">
+    <div id="app-container" class="w-full max-w-4xl mx-auto">
 
         <!-- Schermata di selezione della materia -->
         <div id="selection-screen" class="text-center fade-in">
-            <h1 class="text-4xl font-extrabold mb-4 text-white">Flashcard di Studio</h1>
-            <p class="text-lg text-gray-400 mb-10">Scegli la materia per iniziare a ripassare.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <button onclick="startQuiz(this, 'meccanica')" class="bg-gray-800 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 card-animation">
+            <h1 class="text-4xl font-extrabold mb-4 text-white">Corso TAI '25/'26</h1>
+            <p class="text-lg text-gray-400 mb-10">Scegli una materia e accedi al Flipbook o alle Flipcard.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Progettazione Meccanica -->
+                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
                     <span class="text-6xl mb-4 block meccanica-icon">⚙️</span>
-                    <h2 class="text-2xl font-bold text-gray-100">Progettazione Meccanica</h2>
-                </button>
-                <button onclick="startQuiz(this, 'sicurezza')" class="bg-gray-800 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 card-animation">
+                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Progettazione Meccanica</h2>
+                    <div class="flex gap-4">
+                        <a href="https://www.calameo.com/read/0080586702a2803aacd1a" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
+                        <button onclick="startQuiz(this, 'meccanica')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
+                    </div>
+                </div>
+
+                <!-- Sicurezza sul Lavoro -->
+                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
                     <span class="text-6xl mb-4 block sicurezza-icon">⚠️</span>
-                    <h2 class="text-2xl font-bold text-gray-100">Sicurezza sul Lavoro</h2>
-                </button>
-                <button onclick="startQuiz(this, 'elettrotecnica')" class="bg-gray-800 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 card-animation">
+                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Sicurezza sul Lavoro</h2>
+                    <div class="flex gap-4">
+                        <a href="https://www.calameo.com/read/0080586704ac279277422" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
+                        <button onclick="startQuiz(this, 'sicurezza')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
+                    </div>
+                </div>
+
+                <!-- Elettrotecnica -->
+                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
                     <span class="text-6xl mb-4 block elettrotecnica-icon">⚡️</span>
-                    <h2 class="text-2xl font-bold text-gray-100">Elettrotecnica</h2>
-                </button>
-                <button onclick="startQuiz(this, 'comunicazione')" class="bg-gray-800 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 card-animation">
+                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Elettrotecnica</h2>
+                    <div class="flex gap-4">
+                        <a href="https://www.calameo.com/read/0080586706f297b0b127f" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
+                        <button onclick="startQuiz(this, 'elettrotecnica')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
+                    </div>
+                </div>
+
+                <!-- Soft Skills & Comunicazione -->
+                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
                     <span class="text-6xl mb-4 block comunicazione-icon">💬</span>
-                    <h2 class="text-2xl font-bold text-gray-100">Soft Skills & Comunicazione</h2>
-                </button>
+                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Soft Skills & Comunicazione</h2>
+                    <div class="flex gap-4">
+                        <a href="https://www.calameo.com/read/0080586704d243157c399" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
+                        <button onclick="startQuiz(this, 'comunicazione')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
+                    </div>
+                </div>
+
+                <!-- Matematica -->
+                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
+                    <span class="text-6xl mb-4 block matematica-icon">📐</span>
+                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Matematica</h2>
+                    <div class="flex gap-4">
+                        <a href="https://www.calameo.com/account/private/read/#code-0080586707940de0f2426" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
+                        <button onclick="startQuiz(this, 'matematica')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -176,7 +219,7 @@
         <div id="quiz-screen" class="hidden fade-in">
             <div class="flex justify-between items-center mb-4">
                  <h1 id="quiz-title" class="text-3xl font-bold text-gray-200"></h1>
-                 <button onclick="showSelectionScreen()" class="text-sm bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition-colors shadow-md">Cambia Materia</button>
+                 <button onclick="showSelectionScreen()" class="text-sm bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition-colors shadow-md">Home</button>
             </div>
 
             <div class="bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
@@ -219,13 +262,66 @@
              <p id="results-message" class="text-lg text-gray-400 mb-8"></p>
              <div class="flex flex-col sm:flex-row gap-4 justify-center">
                  <button onclick="restartQuiz()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-700 transition-colors shadow-lg">Riprova Quiz</button>
-                 <button onclick="showSelectionScreen()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg">Scegli un'altra materia</button>
+                 <button onclick="showSelectionScreen()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg">Home</button>
              </div>
         </div>
 
     </div>
 
     <script>
+        const matematicaQuestions = [
+    { "question": "Qual è il risultato di 2 + 2?", "answer": "4" },
+    { "question": "Qual è la radice quadrata di 9?", "answer": "3" },
+    { "question": "Cosa è il pi greco (π)?", "answer": "Una costante matematica, approssimativamente 3.14159." },
+    { "question": "Qual è la formula per l'area di un cerchio?", "answer": "A = π * r^2" },
+    { "question": "Cosa dice il teorema di Pitagora?", "answer": "In un triangolo rettangolo, il quadrato dell'ipotenusa è uguale alla somma dei quadrati dei due cateti." },
+    { "question": "Qual è il valore di 5! (fattoriale)?", "answer": "120 (5 * 4 * 3 * 2 * 1)" },
+    { "question": "Cosa è un numero primo?", "answer": "Un numero maggiore di 1 che ha solo due divisori: 1 e se stesso." },
+    { "question": "Qual è la derivata di x^2?", "answer": "2x" },
+    { "question": "Qual è l'integrale di 2x dx?", "answer": "x^2 + C" },
+    { "question": "Cosa rappresenta l'unità immaginaria 'i'?", "answer": "La radice quadrata di -1." },
+    { "question": "Qual è la pendenza della retta y = 2x + 3?", "answer": "2" },
+    { "question": "Cosa è un logaritmo?", "answer": "L'esponente a cui un'altra quantità fissa, la base, deve essere elevata per produrre quel numero." },
+    { "question": "Qual è il logaritmo in base 10 di 100?", "answer": "2" },
+    { "question": "Qual è la formula del volume di una sfera?", "answer": "V = (4/3) * π * r^3" },
+    { "question": "Cosa è una matrice?", "answer": "Una tabella rettangolare di numeri, simboli o espressioni, disposti in righe e colonne." },
+    { "question": "Qual è il determinante di una matrice 2x2 [[a, b], [c, d]]?", "answer": "ad - bc" },
+    { "question": "Cosa è un vettore?", "answer": "Un oggetto matematico che ha sia una grandezza che una direzione." },
+    { "question": "Come si calcola il prodotto scalare tra due vettori?", "answer": "Moltiplicando le loro componenti corrispondenti e sommando i risultati." },
+    { "question": "Cosa è una funzione?", "answer": "Una relazione tra un insieme di input e un insieme di output permissibili con la proprietà che ogni input è correlato a esattamente un output." },
+    { "question": "Qual è il dominio di una funzione?", "answer": "L'insieme di tutti gli input possibili per la funzione." },
+    { "question": "Qual è il codominio di una funzione?", "answer": "L'insieme di tutti gli output possibili della funzione." },
+    { "question": "Cosa è una serie di Taylor?", "answer": "Una rappresentazione di una funzione come una somma infinita di termini, calcolati dai valori delle derivate della funzione in un singolo punto." },
+    { "question": "Qual è il limite di (1/x) quando x tende all'infinito?", "answer": "0" },
+    { "question": "Cosa sono i numeri complessi?", "answer": "Numeri che possono essere espressi nella forma a + bi, dove a e b sono numeri reali e i è l'unità immaginaria." },
+    { "question": "Qual è il coniugato di un numero complesso a + bi?", "answer": "a - bi" },
+    { "question": "Cosa è un'equazione differenziale?", "answer": "Un'equazione che mette in relazione una funzione con le sue derivate." },
+    { "question": "Qual è la soluzione di y' = y?", "answer": "y = Ce^x" },
+    { "question": "Cosa è la trasformata di Laplace?", "answer": "Un operatore integrale che trasforma una funzione di una variabile reale (solitamente il tempo) in una funzione di una variabile complessa (frequenza)." },
+    { "question": "A cosa serve la trasformata di Fourier?", "answer": "A scomporre una funzione nelle sue frequenze costituenti." },
+    { "question": "Qual è la probabilità di ottenere testa lanciando una moneta non truccata?", "answer": "1/2" },
+    { "question": "Cosa è la media di un insieme di numeri?", "answer": "La somma dei numeri divisa per il conteggio dei numeri." },
+    { "question": "Cosa è la mediana di un insieme di numeri?", "answer": "Il valore centrale di un insieme di dati quando i numeri sono disposti in ordine di grandezza." },
+    { "question": "Cosa è la moda di un insieme di numeri?", "answer": "Il numero che appare più frequentemente in un insieme di dati." },
+    { "question": "Qual è la formula per la combinazione C(n, k)?", "answer": "n! / (k!(n-k)!)" },
+    { "question": "Qual è la formula per la permutazione P(n, k)?", "answer": "n! / (n-k)!" },
+    { "question": "Cosa è la deviazione standard?", "answer": "Una misura della quantità di variazione o dispersione di un insieme di valori." },
+    { "question": "Cosa afferma il Teorema del Limite Centrale?", "answer": "La distribuzione della media di un gran numero di variabili casuali indipendenti e identicamente distribuite sarà approssimativamente normale." },
+    { "question": "Qual è l'area di un triangolo?", "answer": "(base * altezza) / 2" },
+    { "question": "Qual è il perimetro di un rettangolo?", "answer": "2 * (lunghezza + larghezza)" },
+    { "question": "Cosa è un radiante?", "answer": "Un'unità di misura degli angoli, basata sul raggio di un cerchio." },
+    { "question": "Quanti gradi ci sono in π radianti?", "answer": "180 gradi" },
+    { "question": "Qual è il valore di sin(90°)?", "answer": "1" },
+    { "question": "Qual è il valore di cos(0°)?", "answer": "1" },
+    { "question": "Qual è il valore di tan(45°)?", "answer": "1" },
+    { "question": "Cosa è un'identità trigonometrica?", "answer": "Un'uguaglianza che coinvolge funzioni trigonometriche e che è vera per ogni valore delle variabili." },
+    { "question": "Qual è l'identità pitagorica fondamentale?", "answer": "sin^2(x) + cos^2(x) = 1" },
+    { "question": "Cosa sono le coordinate polari?", "answer": "Un sistema di coordinate bidimensionale in cui ogni punto su un piano è determinato da una distanza da un punto di riferimento e un angolo da una direzione di riferimento." },
+    { "question": "Come si convertono le coordinate polari (r, θ) in coordinate cartesiane (x, y)?", "answer": "x = r * cos(θ), y = r * sin(θ)" },
+    { "question": "Cosa è il prodotto vettoriale?", "answer": "Un'operazione binaria su due vettori in uno spazio tridimensionale, il cui risultato è un vettore perpendicolare ai due vettori di partenza." },
+    { "question": "Qual è la derivata della funzione f(x) = e^x?", "answer": "e^x" }
+];
+
         const progettazioneMeccanicaQuestions = [
     { "question": "Qual è lo scopo principale dei cuscinetti a rotolamento?", "answer": "Ridurre l'attrito e permettere la rotazione relativa di un albero rispetto a un supporto." },
     { "question": "Da quali componenti è formato un cuscinetto a rotolamento?", "answer": "Anello interno, anello esterno, corpi volventi e una gabbia." },
@@ -329,7 +425,8 @@
     { "question": "Cosa si intende per 'rischio di incendio'?'", "answer": "La possibilità che si sviluppi un incendio." },
     { "question": "Qual è la funzione del 'piano di emergenza'?'", "answer": "Definire le procedure per evacuare l'edificio in caso di pericolo." },
     { "question": "Cosa si intende per 'dispositivo di protezione collettiva' (DPC)?", "answer": "Un dispositivo che protegge più lavoratori contemporaneamente." },
-    { "question": "Qual è il principale rischio legato al lavoro notturno?", "answer": "Sfasamento dei ritmi biologici e affaticamento." }
+    { "question": "Qual è il principale rischio legato al lavoro notturno?", "answer": "Sfasamento dei ritmi biologici e affaticamento." },
+    { "question": "Cosa si intende per 'movimentazione manuale dei carichi'?", "answer": "Qualsiasi operazione di trasporto o di sostegno di un carico che richieda uno sforzo fisico, anche con l'aiuto di attrezzature." }
 ];
 
         const elettrotecnicaQuestions = [
@@ -601,10 +698,12 @@
         const selectionScreen = document.getElementById('selection-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const resultsScreen = document.getElementById('results-screen');
+
         const questionText = document.getElementById('question-text');
         const answerText = document.getElementById('answer-text');
         const progressText = document.getElementById('progress-text');
         const quizTitle = document.getElementById('quiz-title');
+
         const flashcard = document.getElementById('flashcard');
         const flashcardContainer = document.getElementById('flashcard-container');
         const nextBtn = document.getElementById('next-btn');
@@ -625,12 +724,17 @@
         function startQuiz(button, subject) {
             // Attiva l'animazione sull'icona della card cliccata
             if (button) {
-                const icon = button.querySelector('span');
-                icon.classList.add('active-anim');
-                // Rimuovi la classe di animazione dopo un breve ritardo per consentire l'animazione
-                setTimeout(() => {
-                    icon.classList.remove('active-anim');
-                }, 500);
+                const card = button.closest('.card-animation');
+                if (card) {
+                    const icon = card.querySelector('span');
+                    if (icon) {
+                        icon.classList.add('active-anim');
+                        // Rimuovi la classe di animazione dopo un breve ritardo per consentire l'animazione
+                        setTimeout(() => {
+                            icon.classList.remove('active-anim');
+                        }, 500);
+                    }
+                }
             }
 
             if (subject === 'meccanica') {
@@ -642,9 +746,12 @@
             } else if (subject === 'elettrotecnica') {
                 currentQuizData = [...elettrotecnicaQuestions].sort(() => Math.random() - 0.5);
                 quizTitle.innerText = "Elettrotecnica";
-            } else {
+            } else if (subject === 'comunicazione') {
                 currentQuizData = [...comunicazioneQuestions].sort(() => Math.random() - 0.5);
                 quizTitle.innerText = "Soft Skills & Comunicazione";
+            } else if (subject === 'matematica') {
+                currentQuizData = [...matematicaQuestions].sort(() => Math.random() - 0.5);
+                quizTitle.innerText = "Matematica";
             }
 
             currentQuestionIndex = 0;
@@ -720,6 +827,8 @@
                 subject = 'elettrotecnica';
             } else if (quizTitle.innerText.includes("Comunicazione")) {
                 subject = 'comunicazione';
+            } else if (quizTitle.innerText.includes("Matematica")) {
+                subject = 'matematica';
             }
             startQuiz(null, subject);
         }
