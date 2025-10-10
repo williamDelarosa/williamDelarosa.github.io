@@ -1,848 +1,1090 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App di Studio con Flipbook e Flipcard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App di Studio TAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        /* Animazione per le card di selezione */
-        .card-animation {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .card-animation:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
+  <!-- PWA & iOS support -->
+  <meta name="theme-color" content="#111827"/>
+  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkFwcCBkaSBTdHVkaW8gVEFJIiwKICAic2hvcnRfbmFtZSI6ICJTdHVkaW8gVEFJIiwKICAiZGVzY3JpcHRpb24iOiAiQXBwIGRpIFN0dWRpbyBwZXIgaWwgY29yc28gVEFJICcyNS8nMjYiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzExMTgyNyIsCiAgInRoZW1lX2NvbG9yIjogIiMxMTE4MjciLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vd2lsbGlhbURlbGFyb3NhL3dpbGxpYW1EZWxhcm9zYS5naXRodWIuaW8vbWFpbi9sb2dvLWZvZXIucG5nIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9LAogICAgewogICAgICAic3JjIjogImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS93aWxsaWFtRGVsYXJvc2Evd2lsbGlhbURlbGFyb3NhLmdpdGh1Yi5pby9tYWluL2xvZ28tZm9lci5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0K">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Studio TAI">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/main/logo-foer.png">
 
-        /* Animazione per il fade-in */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
 
-        /* Sfondo a gradiente */
-        .bg-gradient-radial {
-            background-image: radial-gradient(circle at center, #1f2937 0%, #111827 100%);
-        }
+    /* Contenitore principale degli sfondi (Carosello e Sfondo Statico) */
+    #background-container {
+      background-color: #000; /* Sfondo di riserva */
+    }
 
-        /* Stili per la flashcard 3D */
-        .flashcard-container {
-            perspective: 1000px;
-        }
-        .flashcard {
-            width: 100%;
-            height: 300px;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-        .flashcard.flipped {
-            transform: rotateY(180deg);
-        }
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        .flashcard-front {
-            background-color: #1f2937;
-            border: 1px solid #374151;
-        }
-        .flashcard-back {
-            background-color: #4b5563; /* Colore più chiaro per le risposte */
-            transform: rotateY(180deg);
-            border: 1px solid #6b7280;
-        }
+    /* SFONDO STATICO (USATO PER LE MATERIE) */
+    #static-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 0.7s ease-in-out;
+      opacity: 0;
+    }
 
-        /* Stili per i pulsanti di navigazione */
-        .nav-button {
-            background-color: #374151;
-            color: #d1d5db;
-            border-radius: 9999px;
-            width: 4rem;
-            height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .nav-button:hover {
-            background-color: #4b5563;
-            color: #fff;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-            transform: scale(1.1);
-        }
+    /* CAROSELLO PER LA HOME: Contenitore delle slide */
+    #image-carousel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none; /* Nascosto di default */
+        overflow: hidden;
+    }
 
-        .nav-button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: scale(1);
-            box-shadow: none;
-        }
+    /* Immagine singola del carosello */
+    .carousel-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0; /* Nascosta di default */
+        /* Rimosse le animazioni di slide, solo fade (1.0s) */
+        transition: opacity 1.0s ease-in-out;
+        transform: translateX(0) !important; /* Assicura che non ci sia spostamento */
+    }
 
-        /* Animazioni delle icone */
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .meccanica-icon.active-anim, .card-animation:hover .meccanica-icon {
-            animation: spin 1.5s linear infinite;
-        }
+    /* Classe per l'immagine attualmente visibile */
+    .carousel-image.active {
+        opacity: 1; /* Resa visibile */
+        /* Rimosso transform: translateX(0); */
+    }
 
-        @keyframes shake {
-            0% { transform: translateX(0) rotate(0); }
-            20% { transform: translateX(-3px) rotate(-3deg); }
-            40% { transform: translateX(3px) rotate(3deg); }
-            60% { transform: translateX(-3px) rotate(-3deg); }
-            80% { transform: translateX(3px) rotate(3deg); }
-            100% { transform: translateX(0) rotate(0); }
-        }
-        .sicurezza-icon.active-anim, .card-animation:hover .sicurezza-icon {
-            animation: shake 0.5s ease-in-out infinite;
-        }
+    /* Overlay che gestisce la sfocatura e l'oscuramento */
+    #background-overlay {
+        transition: backdrop-filter 0.3s ease-in-out;
+    }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .elettrotecnica-icon.active-anim, .card-animation:hover .elettrotecnica-icon {
-            animation: pulse 1s ease-in-out infinite;
-        }
+    /* Stile base per la sfocatura (usato nelle pagine interne) */
+    .blurred-overlay {
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-15px); }
-            60% { transform: translateY(-5px); }
-        }
-        .comunicazione-icon.active-anim, .card-animation:hover .comunicazione-icon {
-            animation: bounce 1s ease-in-out infinite;
-        }
+    #sidebar {
+      transition: transform 0.3s ease-in-out;
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      /* Aggiunge la z-index più alta della sidebar per stare sopra l'overlay */
+      z-index: 50;
+    }
+    /* Classe helper per mostrare la sidebar */
+    .sidebar-open {
+        transform: translateX(0) !important;
+    }
 
-        @keyframes scale-up {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+    /* Regolazione del margine per desktop quando la sidebar è aperta */
+    @media (min-width: 768px) {
+        .main-content-shifted {
+            margin-left: 18rem; /* w-72 è 18rem */
         }
-        .matematica-icon.active-anim, .card-animation:hover .matematica-icon {
-            animation: scale-up 1s ease-in-out infinite;
+        /* Aggiunta: Rende l'overlay trasparente su desktop quando la sidebar è aperta,
+           ma NON deve reagire a click esterni (perché li abbiamo eliminati) */
+        #overlay.desktop-transparent {
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
-    </style>
+    }
+
+    .content-panel {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .flashcard-container {
+      perspective: 1000px;
+    }
+    .flashcard {
+      width: 100%;
+      height: 300px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+    .flashcard-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .flashcard-front {
+      background-color: #1f2937;
+      border: 1px solid #374151;
+    }
+    .flashcard-back {
+      background-color: #4b5563;
+      transform: rotateY(180deg);
+      border: 1px solid #6b7280;
+    }
+    .nav-button {
+      background-color: #374151;
+      color: #d1d5db;
+      border-radius: 9999px;
+      width: 4rem;
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .nav-button:hover {
+      background-color: #4b5563;
+      color: #fff;
+      box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+      transform: scale(1.1);
+    }
+    .nav-button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: scale(1);
+      box-shadow: none;
+    }
+
+    /* Animazioni standard */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+    .fade-out { animation: fadeOut 0.3s ease-out forwards; }
+    .fade-in { animation: fadeIn 0.5s ease-in-out; }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .animated-button {
+      opacity: 0;
+      animation: popIn 0.4s ease-out forwards;
+    }
+    .sidebar-item {
+      cursor: pointer;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      transition: background-color 0.2s;
+    }
+    .sidebar-item:hover {
+      background-color: #2d3748;
+    }
+    .sidebar-item.active {
+      background-color: #4b5563;
+      color: #fff;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.3; }
+    }
+
+    #menu-toggle.blink {
+      animation: blink 1.5s ease-in-out infinite;
+    }
+  </style>
 </head>
-<body class="bg-gradient-radial text-gray-200 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-900 text-gray-200 flex min-h-screen overflow-hidden">
 
-    <div id="app-container" class="w-full max-w-4xl mx-auto">
+  <div id="background-container" class="fixed inset-0 z-0" data-current-key="">
+    <!-- Immagine di sfondo statica per le pagine interne -->
+    <div id="static-background"></div>
 
-        <!-- Schermata di selezione della materia -->
-        <div id="selection-screen" class="text-center fade-in">
-            <h1 class="text-4xl font-extrabold mb-4 text-white">Corso TAI '25/'26</h1>
-            <p class="text-lg text-gray-400 mb-10">Scegli una materia e accedi al Flipbook o alle Flipcard.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                <!-- Progettazione Meccanica -->
-                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
-                    <span class="text-6xl mb-4 block meccanica-icon">⚙️</span>
-                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Progettazione Meccanica</h2>
-                    <div class="flex gap-4">
-                        <a href="https://www.calameo.com/read/0080586702a2803aacd1a" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
-                        <button onclick="startQuiz(this, 'meccanica')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
-                    </div>
-                </div>
-
-                <!-- Sicurezza sul Lavoro -->
-                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
-                    <span class="text-6xl mb-4 block sicurezza-icon">⚠️</span>
-                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Sicurezza sul Lavoro</h2>
-                    <div class="flex gap-4">
-                        <a href="https://www.calameo.com/read/0080586704ac279277422" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
-                        <button onclick="startQuiz(this, 'sicurezza')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
-                    </div>
-                </div>
-
-                <!-- Elettrotecnica -->
-                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
-                    <span class="text-6xl mb-4 block elettrotecnica-icon">⚡️</span>
-                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Elettrotecnica</h2>
-                    <div class="flex gap-4">
-                        <a href="https://www.calameo.com/read/0080586706f297b0b127f" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
-                        <button onclick="startQuiz(this, 'elettrotecnica')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
-                    </div>
-                </div>
-
-                <!-- Soft Skills & Comunicazione -->
-                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
-                    <span class="text-6xl mb-4 block comunicazione-icon">💬</span>
-                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Soft Skills & Comunicazione</h2>
-                    <div class="flex gap-4">
-                        <a href="https://www.calameo.com/read/0080586704d243157c399" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
-                        <button onclick="startQuiz(this, 'comunicazione')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
-                    </div>
-                </div>
-
-                <!-- Matematica -->
-                <div class="bg-gray-800 p-6 rounded-3xl shadow-xl transition-all duration-300 card-animation flex flex-col items-center">
-                    <span class="text-6xl mb-4 block matematica-icon">📐</span>
-                    <h2 class="text-2xl font-bold text-gray-100 mb-4">Matematica</h2>
-                    <div class="flex gap-4">
-                        <a href="https://www.calameo.com/account/private/read/#code-0080586707940de0f2426" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition-colors">Flipbook</a>
-                        <button onclick="startQuiz(this, 'matematica')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Flipcard</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Schermata del Quiz -->
-        <div id="quiz-screen" class="hidden fade-in">
-            <div class="flex justify-between items-center mb-4">
-                 <h1 id="quiz-title" class="text-3xl font-bold text-gray-200"></h1>
-                 <button onclick="showSelectionScreen()" class="text-sm bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-2 px-4 rounded-lg transition-colors shadow-md">Home</button>
-            </div>
-
-            <div class="bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
-                <div class="flex justify-between items-baseline mb-6">
-                    <div id="progress-text" class="text-sm font-medium text-gray-400"></div>
-                </div>
-
-                <div id="flashcard-container" class="flashcard-container">
-                    <div id="flashcard" class="flashcard cursor-pointer" onclick="flipCard()">
-                        <!-- Fronte della card -->
-                        <div id="flashcard-front" class="flashcard-face flashcard-front">
-                            <p id="question-text" class="text-2xl font-semibold text-gray-100"></p>
-                        </div>
-                        <!-- Retro della card -->
-                        <div id="flashcard-back" class="flashcard-face flashcard-back">
-                            <p id="answer-text" class="text-lg text-gray-300"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pulsanti di navigazione a freccia -->
-            <div class="flex justify-center gap-8 mt-8">
-                <button id="prev-btn" onclick="previousQuestion()" class="nav-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <button id="next-btn" onclick="nextQuestion()" class="nav-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- Schermata dei Risultati -->
-        <div id="results-screen" class="hidden text-center bg-gray-800 p-10 rounded-2xl shadow-xl fade-in">
-             <h1 id="results-title" class="text-3xl font-bold mb-4 text-white"></h1>
-             <p id="results-message" class="text-lg text-gray-400 mb-8"></p>
-             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                 <button onclick="restartQuiz()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-700 transition-colors shadow-lg">Riprova Quiz</button>
-                 <button onclick="showSelectionScreen()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg">Home</button>
-             </div>
-        </div>
-
+    <!-- CAROSELLO PER LA HOME -->
+    <div id="image-carousel">
+      <!-- Le immagini saranno iniettate qui dal JS -->
     </div>
+    <!-- FINE CAROSELLO -->
 
-    <script>
-        const matematicaQuestions = [
-    { "question": "Qual è il risultato di 2 + 2?", "answer": "4" },
-    { "question": "Qual è la radice quadrata di 9?", "answer": "3" },
-    { "question": "Cosa è il pi greco (π)?", "answer": "Una costante matematica, approssimativamente 3.14159." },
-    { "question": "Qual è la formula per l'area di un cerchio?", "answer": "A = π * r^2" },
-    { "question": "Cosa dice il teorema di Pitagora?", "answer": "In un triangolo rettangolo, il quadrato dell'ipotenusa è uguale alla somma dei quadrati dei due cateti." },
-    { "question": "Qual è il valore di 5! (fattoriale)?", "answer": "120 (5 * 4 * 3 * 2 * 1)" },
-    { "question": "Cosa è un numero primo?", "answer": "Un numero maggiore di 1 che ha solo due divisori: 1 e se stesso." },
-    { "question": "Qual è la derivata di x^2?", "answer": "2x" },
-    { "question": "Qual è l'integrale di 2x dx?", "answer": "x^2 + C" },
-    { "question": "Cosa rappresenta l'unità immaginaria 'i'?", "answer": "La radice quadrata di -1." },
-    { "question": "Qual è la pendenza della retta y = 2x + 3?", "answer": "2" },
-    { "question": "Cosa è un logaritmo?", "answer": "L'esponente a cui un'altra quantità fissa, la base, deve essere elevata per produrre quel numero." },
-    { "question": "Qual è il logaritmo in base 10 di 100?", "answer": "2" },
-    { "question": "Qual è la formula del volume di una sfera?", "answer": "V = (4/3) * π * r^3" },
-    { "question": "Cosa è una matrice?", "answer": "Una tabella rettangolare di numeri, simboli o espressioni, disposti in righe e colonne." },
-    { "question": "Qual è il determinante di una matrice 2x2 [[a, b], [c, d]]?", "answer": "ad - bc" },
-    { "question": "Cosa è un vettore?", "answer": "Un oggetto matematico che ha sia una grandezza che una direzione." },
-    { "question": "Come si calcola il prodotto scalare tra due vettori?", "answer": "Moltiplicando le loro componenti corrispondenti e sommando i risultati." },
-    { "question": "Cosa è una funzione?", "answer": "Una relazione tra un insieme di input e un insieme di output permissibili con la proprietà che ogni input è correlato a esattamente un output." },
-    { "question": "Qual è il dominio di una funzione?", "answer": "L'insieme di tutti gli input possibili per la funzione." },
-    { "question": "Qual è il codominio di una funzione?", "answer": "L'insieme di tutti gli output possibili della funzione." },
-    { "question": "Cosa è una serie di Taylor?", "answer": "Una rappresentazione di una funzione come una somma infinita di termini, calcolati dai valori delle derivate della funzione in un singolo punto." },
-    { "question": "Qual è il limite di (1/x) quando x tende all'infinito?", "answer": "0" },
-    { "question": "Cosa sono i numeri complessi?", "answer": "Numeri che possono essere espressi nella forma a + bi, dove a e b sono numeri reali e i è l'unità immaginaria." },
-    { "question": "Qual è il coniugato di un numero complesso a + bi?", "answer": "a - bi" },
-    { "question": "Cosa è un'equazione differenziale?", "answer": "Un'equazione che mette in relazione una funzione con le sue derivate." },
-    { "question": "Qual è la soluzione di y' = y?", "answer": "y = Ce^x" },
-    { "question": "Cosa è la trasformata di Laplace?", "answer": "Un operatore integrale che trasforma una funzione di una variabile reale (solitamente il tempo) in una funzione di una variabile complessa (frequenza)." },
-    { "question": "A cosa serve la trasformata di Fourier?", "answer": "A scomporre una funzione nelle sue frequenze costituenti." },
-    { "question": "Qual è la probabilità di ottenere testa lanciando una moneta non truccata?", "answer": "1/2" },
-    { "question": "Cosa è la media di un insieme di numeri?", "answer": "La somma dei numeri divisa per il conteggio dei numeri." },
-    { "question": "Cosa è la mediana di un insieme di numeri?", "answer": "Il valore centrale di un insieme di dati quando i numeri sono disposti in ordine di grandezza." },
-    { "question": "Cosa è la moda di un insieme di numeri?", "answer": "Il numero che appare più frequentemente in un insieme di dati." },
-    { "question": "Qual è la formula per la combinazione C(n, k)?", "answer": "n! / (k!(n-k)!)" },
-    { "question": "Qual è la formula per la permutazione P(n, k)?", "answer": "n! / (n-k)!" },
-    { "question": "Cosa è la deviazione standard?", "answer": "Una misura della quantità di variazione o dispersione di un insieme di valori." },
-    { "question": "Cosa afferma il Teorema del Limite Centrale?", "answer": "La distribuzione della media di un gran numero di variabili casuali indipendenti e identicamente distribuite sarà approssimativamente normale." },
-    { "question": "Qual è l'area di un triangolo?", "answer": "(base * altezza) / 2" },
-    { "question": "Qual è il perimetro di un rettangolo?", "answer": "2 * (lunghezza + larghezza)" },
-    { "question": "Cosa è un radiante?", "answer": "Un'unità di misura degli angoli, basata sul raggio di un cerchio." },
-    { "question": "Quanti gradi ci sono in π radianti?", "answer": "180 gradi" },
-    { "question": "Qual è il valore di sin(90°)?", "answer": "1" },
-    { "question": "Qual è il valore di cos(0°)?", "answer": "1" },
-    { "question": "Qual è il valore di tan(45°)?", "answer": "1" },
-    { "question": "Cosa è un'identità trigonometrica?", "answer": "Un'uguaglianza che coinvolge funzioni trigonometriche e che è vera per ogni valore delle variabili." },
-    { "question": "Qual è l'identità pitagorica fondamentale?", "answer": "sin^2(x) + cos^2(x) = 1" },
-    { "question": "Cosa sono le coordinate polari?", "answer": "Un sistema di coordinate bidimensionale in cui ogni punto su un piano è determinato da una distanza da un punto di riferimento e un angolo da una direzione di riferimento." },
-    { "question": "Come si convertono le coordinate polari (r, θ) in coordinate cartesiane (x, y)?", "answer": "x = r * cos(θ), y = r * sin(θ)" },
-    { "question": "Cosa è il prodotto vettoriale?", "answer": "Un'operazione binaria su due vettori in uno spazio tridimensionale, il cui risultato è un vettore perpendicolare ai due vettori di partenza." },
-    { "question": "Qual è la derivata della funzione f(x) = e^x?", "answer": "e^x" }
-];
+    <!-- Overlay che può avere o non avere il blur -->
+    <div id="background-overlay" class="absolute inset-0 bg-black/60"></div>
+  </div>
 
-        const progettazioneMeccanicaQuestions = [
-    { "question": "Qual è lo scopo principale dei cuscinetti a rotolamento?", "answer": "Ridurre l'attrito e permettere la rotazione relativa di un albero rispetto a un supporto." },
-    { "question": "Da quali componenti è formato un cuscinetto a rotolamento?", "answer": "Anello interno, anello esterno, corpi volventi e una gabbia." },
-    { "question": "Cosa rappresenta la sigla 'UNI'?", "answer": "Unificazione Italiana." },
-    { "question": "Quali sono i principali tipi di cuscinetti in base al carico che possono sopportare?", "answer": "Radiali, assiali e combinati." },
-    { "question": "Qual è la funzione di un disegno tecnico?", "answer": "Tradurre graficamente le idee del progettista e fornire indicazioni per la realizzazione di un pezzo." },
-    { "question": "Quali sono le caratteristiche principali che rendono un linguaggio convenzionale come il disegno tecnico efficace?", "answer": "Univocità, fedeltà, completezza e trasferibilità." },
-    { "question": "Quale entità ha stabilito la 'grammatica e sintassi' del disegno tecnico?", "answer": "Gli enti nazionali e internazionali di normazione e unificazione." },
-    { "question": "A cosa serve la gabbia in un cuscinetto a rotolamento?", "answer": "A mantenere in posizione i corpi volventi." },
-    { "question": "I cuscinetti radiali ad una corona di sfere sono progettati per sopportare quale tipo di carico?", "answer": "Carico radiale." },
-    { "question": "Cosa definisce una 'norma' nel contesto del disegno tecnico?", "answer": "Un documento approvato che fornisce regole e linee guida per usi comuni." },
-    { "question": "Qual è la funzione principale di un albero in meccanica?", "answer": "Trasmettere il movimento rotatorio." },
-    { "question": "Qual è il principale vantaggio dei cuscinetti a rotolamento rispetto a quelli a strisciamento?", "answer": "Minore attrito all'avviamento e maggiore velocità." },
-    { "question": "Cosa si intende per 'tolleranza' in un disegno tecnico?", "answer": "La massima variazione accettabile di una dimensione." },
-    { "question": "Quale tipo di cuscinetto è ideale per sopportare un carico assiale in una sola direzione?", "answer": "Cuscinetto assiale a sfere." },
-    { "question": "In un cuscinetto a rotolamento, cosa sono i 'corpi volventi'?'", "answer": "Le sfere o i rulli che riducono l'attrito." },
-    { "question": "Cosa indica il simbolo del 'diametro' (ø) su un disegno tecnico?", "answer": "Il diametro di una superficie circolare." },
-    { "question": "Qual è la funzione di una 'chiavetta' in un albero?", "answer": "Evitare la rotazione relativa tra albero e mozzo." },
-    { "question": "A cosa serve la rappresentazione in 'sezione' in un disegno tecnico?", "answer": "A evidenziare i dettagli nascosti all'interno dell'oggetto." },
-    { "question": "Qual è la differenza tra un cuscinetto a sfere e uno a rulli?", "answer": "I cuscinetti a rulli sopportano carichi maggiori." },
-    { "question": "In quale caso si utilizza un cuscinetto a due corone di sfere?", "answer": "Quando si vuole una maggiore capacità di carico radiale." },
-    { "question": "Cosa indica il simbolo 'R' su un disegno tecnico?", "answer": "Raggio." },
-    { "question": "Quale tipo di cuscinetto è più adatto per carichi combinati (radiali e assiali)?", "answer": "Cuscinetto a rulli conici." },
-    { "question": "In un disegno tecnico, a cosa serve la 'linea di mezzeria'?'", "answer": "A rappresentare l'asse di simmetria di un pezzo." },
-    { "question": "Cosa è la 'normalizzazione' nel contesto industriale?", "answer": "L'atto di stabilire e applicare regole per unificare prodotti e processi." },
-    { "question": "Qual è il principale vantaggio dei cuscinetti a rotolamento con guarnizioni integrate?", "answer": "Protezione da polvere e umidità." },
-    { "question": "A cosa servono le 'proiezioni ortogonali' nel disegno tecnico?", "answer": "A rappresentare l'oggetto da più punti di vista (viste principali)." },
-    { "question": "Qual è la funzione di un 'mozzetto' in un sistema meccanico?", "answer": "Collegare un albero a un altro componente (es. puleggia)." },
-    { "question": "Cosa si intende per 'UNI 7462'?'", "answer": "Norma sui dati da indicare sui disegni." },
-    { "question": "Quale tipo di cuscinetto ha una maggiore capacità di sopportare carichi assiali rispetto ai cuscinetti radiali ad una corona di sfere?", "answer": "Cuscinetto a sfere a contatto obliquo." },
-    { "question": "Cosa si intende per 'univocità' in un disegno tecnico?", "answer": "Il disegno deve essere interpretato in un solo modo." },
-    { "question": "Qual è la differenza tra un cuscinetto a rulli conici e uno a rulli cilindrici?", "answer": "Il cuscinetto a rulli conici sopporta carichi assiali e radiali." },
-    { "question": "Come si rappresenta un foro cieco su un disegno tecnico?", "answer": "Con una linea tratteggiata." },
-    { "question": "Cosa indica una 'quota' su un disegno tecnico?", "answer": "La dimensione di un elemento." },
-    { "question": "Quale tipo di 'filettatura' è più comune per scopi di fissaggio?", "answer": "Filettatura metrica ISO." },
-    { "question": "Qual è la funzione di un 'ingranaggio'?'", "answer": "Trasmettere potenza e movimento tra alberi." },
-    { "question": "Cosa si intende per 'gioco' in un cuscinetto?", "answer": "Il gioco tra i corpi volventi e le piste." },
-    { "question": "A cosa serve una 'molla' in un sistema meccanico?", "answer": "A immagazzinare energia elastica." },
-    { "question": "Qual è la funzione di un 'freno'?'", "answer": "Fermare il movimento di un albero." },
-    { "question": "Cosa indica un 'ruotino' su un disegno tecnico?", "answer": "Un ingranaggio." },
-    { "question": "Qual è la differenza tra una 'puleggia' e un 'ingranaggio'?'", "answer": "La puleggia trasmette il movimento tramite una cinghia." },
-    { "question": "Cosa si intende per 'montaggio a pressione'?'", "answer": "Un metodo di montaggio senza viti." },
-    { "question": "Cosa indica il 'simbolo del grado' (°)?", "answer": "L'angolo di un cono." },
-    { "question": "Qual è la funzione di una 'guarnizione' in un cuscinetto?", "answer": "Proteggere il cuscinetto da agenti esterni." },
-    { "question": "Quale tipo di 'lubrificazione' è più comune per i cuscinetti?", "answer": "Lubrificazione a grasso." },
-    { "question": "Cosa si intende per 'serie dimensionale' di un cuscinetto?", "answer": "Il suo ingombro in base a diametro e larghezza." },
-    { "question": "Qual è il principale tipo di 'usura' in un cuscinetto?", "answer": "L'usura da fatica." },
-    { "question": "Cosa si intende per 'accoppiamento' in meccanica?", "answer": "Il sistema di due pezzi accoppiati tra loro." },
-    { "question": "Qual è la funzione di un 'pignone' in un ingranaggio?", "answer": "Trasmettere il movimento all'albero." },
-    { "question": "Cosa si intende per 'filettatura' interna ed esterna?", "answer": "La filettatura esterna è sulla superficie esterna di un albero." },
-    { "question": "Quale norma definisce i simboli grafici per la saldatura?", "answer": "UNI EN ISO 2553" },
-    { "question": "A cosa serve una 'guida' in un sistema meccanico?", "answer": "Limitare la corsa di un componente." }
-];
 
-        const sicurezzaLavoroQuestions = [
-    { "question": "Chi è il 'Datore di Lavoro' secondo la normativa sulla sicurezza?", "answer": "Il soggetto titolare del rapporto di lavoro che ha la responsabilità dell'impresa." },
-    { "question": "Qual è l'obiettivo del 'Testo Unico sulla Sicurezza'?'", "answer": "Raccogliere e riordinare le disposizioni legislative in materia di sicurezza." },
-    { "question": "Quale figura ha il compito di organizzare il servizio di prevenzione e protezione (SPP)?", "answer": "Il datore di lavoro." },
-    { "question": "Qual è il ruolo del 'Responsabile del Servizio di Prevenzione e Protezione' (RSPP)?", "answer": "Collaborare con il datore di lavoro per la valutazione dei rischi e la stesura del DVR." },
-    { "question": "Cosa si intende per 'rischio'?'", "answer": "La combinazione della probabilità e della gravità dei possibili effetti di un evento dannoso." },
-    { "question": "Chi ha il dovere di segnalare al datore di lavoro le condizioni di pericolo?", "answer": "Tutti i lavoratori, ciascuno per le proprie competenze." },
-    { "question": "Qual è l'obiettivo della 'valutazione dei rischi'?'", "answer": "Individuare i fattori di rischio, valutare i pericoli e pianificare le misure di prevenzione." },
-    { "question": "Cosa sono i 'dispositivi di protezione individuale' (DPI)?", "answer": "Attrezzature destinate a essere indossate o tenute dal lavoratore per proteggerlo dai rischi." },
-    { "question": "Quando è obbligatoria la sorveglianza sanitaria?", "answer": "Quando i lavoratori sono esposti a rischi specifici per la salute." },
-    { "question": "Chi deve redigere il 'Documento di Valutazione dei Rischi' (DVR)?", "answer": "Il datore di lavoro." },
-    { "question": "Chi può svolgere il ruolo di 'Responsabile del Servizio di Prevenzione e Protezione' (RSPP)?", "answer": "Una persona in possesso delle capacità e dei requisiti professionali previsti dalla legge." },
-    { "question": "Qual è il principale obbligo del datore di lavoro in materia di sicurezza?", "answer": "Valutare tutti i rischi presenti in azienda." },
-    { "question": "A cosa serve il 'Documento di Valutazione dei Rischi' (DVR)?", "answer": "A individuare, valutare e gestire i rischi aziendali." },
-    { "question": "Qual è il ruolo del 'Rappresentante dei Lavoratori per la Sicurezza' (RLS)?", "answer": "Rappresentare i dipendenti in materia di salute e sicurezza." },
-    { "question": "Cosa si intende per 'pericolo'?'", "answer": "Una situazione che può causare un danno." },
-    { "question": "Qual è la differenza tra rischio e pericolo?", "answer": "Il pericolo è la causa, il rischio è la probabilità del danno." },
-    { "question": "Cosa si intende per 'formazione' dei lavoratori?", "answer": "Un processo educativo per acquisire conoscenze e procedure per la sicurezza." },
-    { "question": "Qual è la durata minima della formazione generale per i lavoratori a basso rischio?", "answer": "4 ore." },
-    { "question": "Cosa indica il simbolo di 'obbligo' sulla segnaletica di sicurezza?", "answer": "Un'azione da compiere." },
-    { "question": "Chi nomina il 'Medico Competente'?'", "answer": "Il datore di lavoro." },
-    { "question": "Qual è il compito principale del 'Medico Competente'?'", "answer": "Effettuare la sorveglianza sanitaria." },
-    { "question": "Cosa si intende per 'stress lavoro-correlato'?'", "answer": "Un rischio psicosociale legato al lavoro." },
-    { "question": "Qual è la prima misura da adottare per la prevenzione dei rischi?", "answer": "Eliminare il rischio alla fonte." },
-    { "question": "Cosa si intende per 'informazione' dei lavoratori?", "answer": "Fornire conoscenze su rischi, misure di prevenzione e procedure." },
-    { "question": "Qual è l'obbligo principale dei lavoratori in materia di sicurezza?", "answer": "Collaborare con il datore di lavoro per la sicurezza." },
-    { "question": "Quando deve essere aggiornato il DVR?", "answer": "In caso di modifiche del processo produttivo." },
-    { "question": "A cosa serve l''addestramento' dei lavoratori?", "answer": "A mettere in pratica le procedure di lavoro sicure." },
-    { "question": "Cosa si intende per 'infortunio sul lavoro'?'", "answer": "Qualsiasi lesione avvenuta in occasione di lavoro." },
-    { "question": "Chi è responsabile dell'attuazione delle misure di prevenzione in azienda?", "answer": "Il Preposto." },
-    { "question": "Qual è la differenza tra 'prevenzione' e 'protezione'?'", "answer": "La prevenzione elimina o riduce i rischi, la protezione riduce i danni." },
-    { "question": "Cosa si intende per 'rischio chimico'?'", "answer": "Rischio legato all'uso di sostanze pericolose." },
-    { "question": "Qual è l'organo di vigilanza per la sicurezza sul lavoro?", "answer": "L'ASL (Azienda Sanitaria Locale)." },
-    { "question": "Qual è il ruolo del 'Preposto'?'", "answer": "Sorvegliare l'applicazione delle disposizioni di sicurezza." },
-    { "question": "Cosa si intende per 'rischio biologico'?'", "answer": "Rischio legato all'esposizione a microrganismi." },
-    { "question": "Qual è la funzione del 'Comitato Paritetico Territoriale'?'", "answer": "Collaborare per la sicurezza tra sindacati e imprese." },
-    { "question": "Cosa si intende per 'segnaletica di sicurezza'?'", "answer": "Cartelli o segnali per informare e avvertire sui rischi." },
-    { "question": "Qual è il principio di base per l'uso dei DPI?", "answer": "Usarli solo se il rischio non può essere eliminato con altre misure." },
-    { "question": "Quando un lavoratore può chiedere una verifica sulla sicurezza?", "answer": "Quando ritiene che il suo lavoro presenti un rischio grave e immediato." },
-    { "question": "Qual è il principale tipo di rischio in un ambiente di lavoro d'ufficio?", "answer": "Rischio da videoterminali." },
-    { "question": "Cosa si intende per 'primo soccorso'?'", "answer": "Le prime cure da prestare a un infortunato in attesa di soccorsi qualificati." },
-    { "question": "Chi è responsabile della manutenzione delle macchine?", "answer": "Il Datore di Lavoro e il Preposto." },
-    { "question": "Cosa si intende per 'rischio ergonomico'?'", "answer": "Rischio legato all'interazione tra l'uomo e l'ambiente di lavoro." },
-    { "question": "Qual è il ruolo del 'dirigente' in materia di sicurezza?", "answer": "Organizza e dirige l'attività secondo le norme di sicurezza." },
-    { "question": "Cosa si intende per 'sorveglianza sanitaria'?'", "answer": "Un'azione di prevenzione che tutela la salute del lavoratore." },
-    { "question": "Qual è il principale rischio legato all'uso di scale portatili?", "answer": "Caduta dall'alto." },
-    { "question": "Cosa si intende per 'rischio di incendio'?'", "answer": "La possibilità che si sviluppi un incendio." },
-    { "question": "Qual è la funzione del 'piano di emergenza'?'", "answer": "Definire le procedure per evacuare l'edificio in caso di pericolo." },
-    { "question": "Cosa si intende per 'dispositivo di protezione collettiva' (DPC)?", "answer": "Un dispositivo che protegge più lavoratori contemporaneamente." },
-    { "question": "Qual è il principale rischio legato al lavoro notturno?", "answer": "Sfasamento dei ritmi biologici e affaticamento." },
-    { "question": "Cosa si intende per 'movimentazione manuale dei carichi'?", "answer": "Qualsiasi operazione di trasporto o di sostegno di un carico che richieda uno sforzo fisico, anche con l'aiuto di attrezzature." }
-];
+  <div class="relative z-10 flex min-h-screen w-full">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="w-72 min-h-screen p-4 fixed top-0 left-0 transform -translate-x-full">
+      <div onclick="showHomeScreen()" class="cursor-pointer mb-8">
+        <img src="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/main/logo-foer.png"
+             alt="Logo FOER" class="mx-auto w-32" />
+      </div>
+      <!-- Titolo sidebar MANTENUTO come da richiesta -->
+      <h1 class="text-xl font-semibold text-white mb-6 text-center">Corso TAI '25/'26</h1>
+      <div id="sidebar-list" class="space-y-2">
+        <div id="item-meccanica" class="sidebar-item" onclick="showSubjectPage('meccanica', 'Progettazione Meccanica', 'https://www.calameo.com/read/0080586702a2803aacd1a')">
+          <h3 class="font-semibold">Progettazione Meccanica</h3>
+        </div>
+        <div id="item-sicurezza" class="sidebar-item" onclick="showSubjectPage('sicurezza', 'Sicurezza sul Lavoro', 'https://www.calameo.com/read/0080586704ac279277422')">
+          <h3 class="font-semibold">Sicurezza sul Lavoro</h3>
+        </div>
+        <div id="item-elettrotecnica" class="sidebar-item" onclick="showSubjectPage('elettrotecnica', 'Elettrotecnica', 'https://www.calameo.com/read/0080586706f297b0b127f')">
+          <h3 class="font-semibold">Elettrotecnica</h3>
+        </div>
+        <div id="item-comunicazione" class="sidebar-item" onclick="showSubjectPage('comunicazione', 'Soft Skills & Comunicazione', 'https://www.calameo.com/read/0080586704d243157c399')">
+          <h3 class="font-semibold">Soft Skills & Comunicazione</h3>
+        </div>
+        <div id="item-matematica" class="sidebar-item" onclick="showSubjectPage('matematica', 'Matematica', 'https://www.calameo.com/account/private/read/#code-0080586707940de0f2426')">
+          <h3 class="font-semibold">Matematica</h3>
+        </div>
+        <div id="item-solidworks" class="sidebar-item" onclick="showSubjectPage('solidworks', 'Solidworks', 'https://www.calameo.com/read/0080586708c1eaef6408f')">
+          <h3 class="font-semibold">Solidworks</h3>
+        </div>
+      </div>
+    </nav>
 
-        const elettrotecnicaQuestions = [
-    { "question": "Che cosa è la legge di Ohm?", "answer": "La legge di Ohm afferma che la corrente che scorre attraverso un conduttore tra due punti è direttamente proporzionale alla tensione attraverso i due punti." },
-    { "question": "Che cosa è un circuito in serie?", "answer": "Un circuito in serie è un circuito in cui i componenti sono collegati end-to-end, quindi la corrente ha solo un percorso da seguire." },
-    { "question": "Che cosa è un circuito in parallelo?", "answer": "Un circuito in parallelo è un circuito in cui i componenti sono collegati su rami separati, quindi la corrente si divide e scorre attraverso più percorsi." },
-    {
-    "question": "Cos'è la corrente elettrica?",
-    "answer": "La corrente elettrica è il flusso ordinato di cariche elettriche (solitamente elettroni) attraverso un conduttore."
-  },
-  {
-    "question": "Qual è l'unità di misura della corrente elettrica?",
-    "answer": "L'unità di misura della corrente elettrica è l'Ampere (A)."
-  },
-  {
-    "question": "Cos'è la tensione elettrica?",
-    "answer": "La tensione elettrica (o differenza di potenziale) è la forza che spinge le cariche elettriche a muoversi, misurata in Volt (V)."
-  },
-  {
-    "question": "Qual è l'unità di misura della tensione elettrica?",
-    "answer": "L'unità di misura della tensione elettrica è il Volt (V)."
-  },
-  {
-    "question": "Cos'è la resistenza elettrica?",
-    "answer": "La resistenza elettrica è l'opposizione che un materiale offre al passaggio della corrente elettrica."
-  },
-  {
-    "question": "Qual è l'unità di misura della resistenza elettrica?",
-    "answer": "L'unità di misura della resistenza elettrica è l'Ohm (Ω)."
-  },
-  {
-    "question": "Enuncia la Legge di Ohm.",
-    "answer": "La Legge di Ohm afferma che la corrente (I) che scorre attraverso un conduttore tra due punti è direttamente proporzionale alla tensione (V) tra i due punti e inversamente proporzionale alla resistenza (R) del conduttore (V = I * R)."
-  },
-  {
-    "question": "Cos'è la potenza elettrica?",
-    "answer": "La potenza elettrica è la velocità con cui l'energia elettrica viene trasferita o convertita, misurata in Watt (W)."
-  },
-  {
-    "question": "Qual è la formula per calcolare la potenza elettrica in un circuito DC?",
-    "answer": "La formula per calcolare la potenza elettrica è P = V * I, dove P è la potenza, V è la tensione e I è la corrente."
-  },
-  {
-    "question": "Qual è la differenza tra corrente continua (DC) e corrente alternata (AC)?",
-    "answer": "La corrente continua (DC) scorre in una sola direzione costante, mentre la corrente alternata (AC) cambia periodicamente direzione."
-  },
-  {
-    "question": "Cosa stabiliscono le Leggi di Kirchhoff?",
-    "answer": "Le Leggi di Kirchhoff sono due leggi fondamentali per l'analisi dei circuiti: la Legge delle Correnti (KCL) afferma che la somma algebrica delle correnti che entrano in un nodo è zero, e la Legge delle Tensioni (KVL) afferma che la somma algebrica delle tensioni lungo qualsiasi maglia chiusa è zero."
-  },
-  {
-    "question": "Cos'è un resistore?",
-    "answer": "Un resistore è un componente elettronico passivo che limita il flusso di corrente e divide le tensioni in un circuito."
-  },
-  {
-    "question": "Cos'è un condensatore?",
-    "answer": "Un condensatore è un componente elettronico che immagazzina energia elettrica in un campo elettrico."
-  },
-  {
-    "question": "Qual è l'unità di misura della capacità?",
-    "answer": "L'unità di misura della capacità è il Farad (F)."
-  },
-  {
-    "question": "Cos'è un induttore?",
-    "answer": "Un induttore è un componente elettronico che immagazzina energia in un campo magnetico quando la corrente lo attraversa."
-  },
-  {
-    "question": "Qual è l'unità di misura dell'induttanza?",
-    "answer": "L'unità di misura dell'induttanza è l'Henry (H)."
-  },
-  {
-    "question": "Come si calcola la resistenza totale di resistori in serie?",
-    "answer": "La resistenza totale di resistori in serie è la somma delle singole resistenze (R_tot = R1 + R2 + ... + Rn)."
-  },
-  {
-    "question": "Come si calcola la resistenza totale di resistori in parallelo?",
-    "answer": "La resistenza totale di resistori in parallelo è l'inverso della somma degli inversi delle singole resistenze (1/R_tot = 1/R1 + 1/R2 + ... + 1/Rn)."
-  },
-  {
-    "question": "Cos'è un trasformatore?",
-    "answer": "Un trasformatore è un dispositivo elettrico che trasferisce energia elettrica tra due o più circuiti attraverso l'induzione elettromagnetica, modificando i livelli di tensione e corrente."
-  },
-  {
-    "question": "Su quale principio si basa il funzionamento di un trasformatore?",
-    "answer": "Il funzionamento di un trasformatore si basa sulla Legge di Faraday dell'induzione elettromagnetica."
-  },
-  {
-    "question": "Cos'è l'impedenza in un circuito AC?",
-    "answer": "L'impedenza (Z) è la misura dell'opposizione che un circuito presenta alla corrente quando viene applicata una tensione, includendo sia la resistenza che la reattanza. È misurata in Ohm (Ω)."
-  },
-  {
-    "question": "Cos'è la reattanza capacitiva?",
-    "answer": "La reattanza capacitiva (Xc) è l'opposizione di un condensatore al flusso di corrente alternata, inversamente proporzionale alla frequenza e alla capacità."
-  },
-  {
-    "question": "Cos'è la reattanza induttiva?",
-    "answer": "La reattanza induttiva (Xl) è l'opposizione di un induttore al flusso di corrente alternata, direttamente proporzionale alla frequenza e all'induttanza."
-  },
-  {
-    "question": "Cos'è il fattore di potenza?",
-    "answer": "Il fattore di potenza è una misura dell'efficienza con cui la potenza elettrica viene convertita in lavoro utile. È il rapporto tra la potenza reale e la potenza apparente."
-  },
-  {
-    "question": "Quando un circuito RLC è in risonanza?",
-    "answer": "Un circuito RLC è in risonanza quando la reattanza induttiva e la reattanza capacitiva si annullano a vicenda, risultando in un'impedenza puramente resistiva."
-  },
-  {
-    "question": "Cos'è un diodo?",
-    "answer": "Un diodo è un componente elettronico che permette alla corrente di fluire principalmente in una sola direzione."
-  },
-  {
-    "question": "Cos'è un transistor?",
-    "answer": "Un transistor è un dispositivo semiconduttore utilizzato per amplificare o commutare segnali elettronici e potenza elettrica."
-  },
-  {
-    "question": "Quali sono i tre tipi principali di motori elettrici?",
-    "answer": "I tre tipi principali di motori elettrici sono i motori a corrente continua (DC), i motori a corrente alternata (AC) e i motori passo-passo."
-  },
-  {
-    "question": "Cos'è un generatore elettrico?",
-    "answer": "Un generatore elettrico è una macchina che converte energia meccanica in energia elettrica."
-  },
-  {
-    "question": "Qual è la funzione di un alternatore?",
-    "answer": "Un alternatore è un tipo di generatore elettrico che produce corrente alternata."
-  },
-  {
-    "question": "Cos'è un sistema trifase?",
-    "answer": "Un sistema trifase è un sistema di distribuzione di energia elettrica che utilizza tre conduttori per trasportare tre correnti alternate sfasate di 120 gradi l'una rispetto all'altra."
-  },
-  {
-    "question": "Quali sono i vantaggi di un sistema trifase rispetto a un monofase?",
-    "answer": "I vantaggi includono una trasmissione di potenza più efficiente, motori più piccoli e autoavvianti, e una potenza costante."
-  },
-  {
-    "question": "Cos'è l'elettromagnetismo?",
-    "answer": "L'elettromagnetismo è la branca della fisica che studia le interazioni tra cariche elettriche e campi magnetici."
-  },
-  {
-    "question": "Enuncia la Legge di Faraday dell'induzione elettromagnetica.",
-    "answer": "La Legge di Faraday afferma che una variazione del flusso magnetico attraverso un circuito induce una forza elettromotrice (tensione) nel circuito."
-  },
-  {
-    "question": "Cos'è un circuito aperto?",
-    "answer": "Un circuito aperto è un circuito in cui c'è un'interruzione nel percorso della corrente, impedendone il flusso."
-  },
-  {
-    "question": "Cos'è un cortocircuito?",
-    "answer": "Un cortocircuito è un collegamento a bassa resistenza tra due punti di un circuito che normalmente hanno una differenza di potenziale significativa, causando un flusso di corrente eccessivo."
-  },
-  {
-    "question": "Cos'è la messa a terra?",
-    "answer": "La messa a terra è la connessione di un circuito elettrico o di un dispositivo alla terra per fornire un percorso sicuro per la corrente in caso di guasto, proteggendo dalle scosse elettriche."
-  },
-  {
-    "question": "Qual è la funzione di un fusibile?",
-    "answer": "Un fusibile è un dispositivo di sicurezza che protegge un circuito da sovracorrenti interrompendo il flusso di corrente quando questa supera un valore predeterminato."
-  },
-  {
-    "question": "Qual è la funzione di un interruttore automatico (breaker)?",
-    "answer": "Un interruttore automatico è un dispositivo di sicurezza che interrompe automaticamente un circuito in caso di sovraccarico o cortocircuito, e può essere ripristinato manualmente."
-  },
-  {
-    "question": "Cos'è l'energia elettrica?",
-    "answer": "L'energia elettrica è la capacità di compiere lavoro grazie al movimento delle cariche elettriche, misurata in Joule (J) o kilowattora (kWh)."
-  },
-  {
-    "question": "Qual è la differenza tra potenza attiva e potenza reattiva?",
-    "answer": "La potenza attiva (misurata in Watt) è la potenza effettivamente utilizzata per compiere lavoro, mentre la potenza reattiva (misurata in Volt-Ampere reattivi, VAR) è la potenza che oscilla tra la sorgente e il carico senza compiere lavoro utile."
-  },
-  {
-    "question": "Cos'è un raddrizzatore?",
-    "answer": "Un raddrizzatore è un circuito che converte la corrente alternata (AC) in corrente continua (DC)."
-  },
-  {
-    "question": "Cos'è un inverter?",
-    "answer": "Un inverter è un dispositivo che converte la corrente continua (DC) in corrente alternata (AC)."
-  },
-  {
-    "question": "Qual è il ruolo dei semiconduttori in elettronica?",
-    "answer": "I semiconduttori sono materiali con una conduttività elettrica intermedia tra quella dei conduttori e degli isolanti, fondamentali per la realizzazione di diodi, transistor e circuiti integrati."
-  },
-  {
-    "question": "Cos'è un circuito integrato (IC)?",
-    "answer": "Un circuito integrato è un chip semiconduttore che contiene migliaia o milioni di componenti elettronici (transistor, resistori, condensatori) miniaturizzati e interconnessi."
-  },
-  {
-    "question": "Cos'è l'analisi nodale?",
-    "answer": "L'analisi nodale è una tecnica di analisi dei circuiti che utilizza le Leggi di Kirchhoff per determinare le tensioni ai nodi di un circuito."
-  },
-  {
-    "question": "Cos'è l'analisi di maglia?",
-    "answer": "L'analisi di maglia è una tecnica di analisi dei circuiti che utilizza le Leggi di Kirchhoff per determinare le correnti di maglia in un circuito."
-  }
-];
+    <!-- Main Content -->
+    <!-- Rimosso md:ml-72 da qui e gestito dinamicamente in JS e CSS con main-content-shifted -->
+    <main id="main-content" class="flex-1 transition-all duration-300 ease-in-out h-screen overflow-y-auto">
+      <div class="p-4 md:p-8">
+        <button id="menu-toggle"
+                class="p-2 rounded-md bg-gray-800 hover:bg-gray-700 fixed top-4 left-4 z-50 blink">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor"
+               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
 
-        const comunicazioneQuestions = [
-    { "question": "Cosa si intende per comunicazione non verbale?", "answer": "La comunicazione non verbale è il trasferimento di informazioni attraverso l'uso del linguaggio del corpo, inclusi il contatto visivo, le espressioni facciali, i gesti e altro." },
-    { "question": "Quali sono le 5 C della comunicazione efficace?", "answer": "Chiarezza, Correttezza, Completezza, Concisività, Cortesia." },
-    { "question": "Che cos'è l'ascolto attivo?", "answer": "L'ascolto attivo è una tecnica di comunicazione che richiede all'ascoltatore di concentrarsi, comprendere, rispondere e quindi ricordare ciò che viene detto." },
-    {
-    "question": "Descrivi un momento in cui hai dovuto comunicare un'informazione complessa a un pubblico non tecnico. Come hai gestito la situazione?",
-    "answer": "In una precedente esperienza, ho dovuto spiegare i dettagli tecnici di un nuovo software a un team di marketing. Ho utilizzato analogie semplici, evitato il gergo tecnico e ho fornito esempi pratici di come il software avrebbe beneficiato il loro lavoro. Ho anche incoraggiato le domande per assicurarmi che tutti avessero compreso."
-  },
-  {
-    "question": "Come gestisci i conflitti all'interno di un team?",
-    "answer": "Affronto i conflitti in modo proattivo e costruttivo. Inizialmente, cerco di capire le diverse prospettive ascoltando attentamente tutte le parti coinvolte. Poi, facilito una discussione aperta per trovare un terreno comune e una soluzione che soddisfi gli interessi di tutti, concentrandomi sugli obiettivi del team piuttosto che sulle posizioni individuali."
-  },
-  {
-    "question": "Parlami di un'occasione in cui hai dovuto adattare il tuo stile di comunicazione. Perché è stato necessario e qual è stato il risultato?",
-    "answer": "Durante un progetto, mi sono trovato a lavorare con un collega che preferiva comunicazioni brevi e dirette, mentre io tendevo a fornire più contesto. Ho adattato il mio stile per essere più conciso e focalizzato sui punti chiave, utilizzando elenchi puntati e messaggi più brevi. Questo ha migliorato notevolmente la nostra efficienza e la chiarezza della comunicazione."
-  },
-  {
-    "question": "Come ti assicuri che il tuo messaggio sia compreso quando comunichi per iscritto?",
-    "answer": "Quando comunico per iscritto, mi concentro sulla chiarezza e sulla concisione. Utilizzo una struttura logica, paragrafi brevi e un linguaggio semplice. Rileggo sempre il messaggio per eliminare ambiguità e, se necessario, chiedo a un collega di leggerlo per un feedback prima di inviarlo, specialmente per comunicazioni importanti."
-  },
-  {
-    "question": "Descrivi la tua capacità di lavorare in team. Qual è il tuo ruolo tipico in un gruppo?",
-    "answer": "Sono un forte sostenitore del lavoro di squadra e mi piace contribuire attivamente. Il mio ruolo tipico è quello di facilitatore, assicurandomi che tutti abbiano voce in capitolo e che le idee vengano condivise apertamente. Sono anche bravo a organizzare i compiti e a mantenere il team focalizzato sugli obiettivi comuni, offrendo supporto dove necessario."
-  },
-  { "question": "Cosa sono le soft skills?", "answer": "Le soft skills sono attributi personali, abilità comunicative e abilità sociali che consentono agli individui di interagire efficacemente con gli altri e di navigare nel loro ambiente." },
-    { "question": "Perché le soft skills sono importanti sul posto di lavoro?", "answer": "Le soft skills migliorano la collaborazione del team, migliorano la soddisfazione del cliente e sono cruciali per sfruttare al meglio le hard skills, portando a migliori prestazioni lavorative e prospettive di carriera." },
-    { "question": "Come definisci la comunicazione efficace?", "answer": "La comunicazione efficace è il processo di scambio di informazioni e significato tra individui o gruppi, garantendo chiarezza e comprensione reciproca." },
-    { "question": "Quali sono i componenti chiave della comunicazione efficace?", "answer": "I componenti chiave includono un'espressione chiara, l'ascolto attivo, segnali non verbali appropriati e feedback." },
-    { "question": "Descrivi un momento in cui le tue capacità di comunicazione hanno portato a un risultato positivo.", "answer": "In un progetto, ho articolato chiaramente i complessi requisiti del cliente al team di sviluppo, assicurandomi che tutti capissero gli obiettivi, il che ha portato a una consegna puntuale e alla soddisfazione del cliente." },
-    { "question": "Come affronti la risoluzione dei conflitti all'interno di un team?", "answer": "Affronto la risoluzione dei conflitti ascoltando attivamente tutte le parti, identificando un terreno comune e facilitando una discussione per trovare una soluzione reciprocamente accettabile." },
-    { "question": "Descrivi una situazione in cui hai dovuto adattarti rapidamente ai cambiamenti.", "answer": "Quando l'ambito del progetto è cambiato inaspettatamente, ho rapidamente ri-prioritizzato le attività, comunicato il nuovo piano al team e adattato il nostro flusso di lavoro per raggiungere gli obiettivi rivisti." },
-    { "question": "Come dai la priorità alle attività quando tutto sembra avere la massima priorità?", "answer": "Do la priorità alle attività valutando l'urgenza e l'impatto, utilizzando strumenti come calendari e sistemi di gestione dei progetti e comunicando con le parti interessate su scadenze realistiche." },
-    { "question": "Puoi fornire un esempio di come le tue capacità di lavoro di squadra hanno contribuito al raggiungimento di un obiettivo?", "answer": "Ho collaborato con un team eterogeneo a una presentazione, assicurandomi che i punti di forza di tutti fossero utilizzati, il che ha portato a un risultato molto coinvolgente e di successo." },
-    { "question": "Come gestisci la ricezione di critiche costruttive?", "answer": "Considero le critiche costruttive come un'opportunità di crescita. Ascolto attentamente, faccio domande di chiarimento e rifletto su come applicare il feedback per migliorare." },
-    { "question": "Descrivi uno scenario in cui le tue capacità di problem solving sono state messe alla prova.", "answer": "Quando un sistema critico si è guastato, ho analizzato rapidamente il problema, ho identificato le possibili soluzioni e ho implementato una soluzione temporanea mentre lavoravo a una risoluzione permanente, riducendo al minimo i tempi di inattività." },
-    { "question": "Come mantieni un atteggiamento positivo durante le situazioni di stress?", "answer": "Pratico la consapevolezza, faccio brevi pause, mi concentro sul quadro generale e comunico apertamente con il mio team per gestire lo stress e mantenere una prospettiva positiva." },
-    { "question": "Come ti approcci alla delega di compiti e responsabilità?", "answer": "Delego valutando i punti di forza dei membri del team, comunicando chiaramente le aspettative, fornendo le risorse necessarie e conducendo check-in regolari per garantire i progressi." },
-    { "question": "Che cos'è l'ascolto attivo?", "answer": "L'ascolto attivo implica prestare la massima attenzione a chi parla, mantenere il contatto visivo, evitare interruzioni e porre domande di chiarimento per garantire una comprensione accurata." },
-    { "question": "Perché la comunicazione non verbale è importante?", "answer": "I segnali non verbali trasmettono emozioni e intenzioni, aggiungendo profondità e sfumature ai messaggi verbali e influenzano in modo significativo le percezioni." },
-    { "question": "In che modo il linguaggio del corpo influisce sulla comunicazione?", "answer": "Il linguaggio del corpo influenza le percezioni, trasmettendo sicurezza o incertezza, e contribuisce in modo significativo a una comunicazione efficace rafforzando o contraddicendo i messaggi verbali." },
-    { "question": "Come spieghi argomenti nuovi o complessi a colleghi che non li conoscono?", "answer": "Scompongo le informazioni complesse in termini più semplici, uso analogie o esempi e incoraggio le domande per garantire la comprensione, adattando la mia spiegazione al loro livello di conoscenza." },
-    { "question": "Descrivi un momento in cui hai dovuto persuadere qualcuno a vedere le cose a modo tuo.", "answer": "Ho presentato argomenti basati sui dati e ho evidenziato i vantaggi a lungo termine della mia soluzione proposta, affrontando direttamente le loro preoccupazioni, il che alla fine li ha convinti." },
-    { "question": "Come gestisci le situazioni in cui devi comunicare un messaggio a un pubblico vasto o eterogeneo?", "answer": "Personalizzo il messaggio utilizzando esempi e analogie facilmente riconoscibili, incoraggio l'interazione e garantisco la chiarezza per coinvolgere efficacemente diversi segmenti di pubblico." },
-    { "question": "Che cos'è l'intelligenza emotiva?", "answer": "L'intelligenza emotiva implica il riconoscimento e la gestione delle proprie emozioni, nonché la comprensione e l'influenza delle emozioni degli altri." },
-    { "question": "Perché la consapevolezza culturale è importante nella comunicazione?", "answer": "La consapevolezza culturale è importante per evitare incomprensioni, mostrare rispetto e adattare gli stili di comunicazione per interagire efficacemente con individui di diversa provenienza." },
-    { "question": "Come ti assicuri di ascoltare attivamente durante le conversazioni o le riunioni?", "answer": "Mi assicuro di ascoltare attivamente mettendo via le distrazioni, stabilendo un contatto visivo, annuendo per mostrare coinvolgimento e riassumendo ciò che ho sentito per confermare la comprensione." },
-    { "question": "Condividi un esempio di un'occasione in cui hai dovuto fornire un feedback costruttivo a un collega.", "answer": "Ho fornito un feedback a un collega su un errore ricorrente concentrandomi sul comportamento, spiegandone l'impatto e offrendo supporto per il miglioramento, portando a un cambiamento positivo." },
-    { "question": "Come gestisci le situazioni in cui devi comunicare con persone che parlano una lingua madre diversa?", "answer": "Uso un linguaggio semplice e chiaro, evito il gergo, parlo lentamente e sono paziente. Uso anche ausili visivi o cerco l'assistenza di colleghi bilingui, se necessario." },
-    { "question": "Qual è lo scopo del feedback nella comunicazione?", "answer": "Lo scopo del feedback è confermare la comprensione, chiarire i messaggi e fornire informazioni per il miglioramento, rendendo la comunicazione un processo a due vie." },
-    { "question": "Come descriveresti il tuo stile di comunicazione?", "answer": "Descriverei il mio stile di comunicazione come diretto e chiaro, ma anche empatico e aperto all'ascolto delle prospettive altrui." },
-    { "question": "Come usi le capacità di comunicazione per costruire solide relazioni con i membri del team?", "answer": "Costruisco solide relazioni promuovendo un dialogo aperto, ascoltando attivamente le preoccupazioni, fornendo aggiornamenti chiari e offrendo supporto e incoraggiamento." },
-    { "question": "Come decidi se comunicare per iscritto o verbalmente?", "answer": "Decido in base all'urgenza, alla complessità, alla necessità di documentazione e alle preferenze del pubblico. Le questioni urgenti o complesse spesso beneficiano di una discussione verbale seguita da una conferma scritta." },
-    { "question": "In che modo presti attenzione alla comunicazione non verbale?", "answer": "Osservo il linguaggio del corpo, le espressioni facciali e il tono di voce per valutare i veri sentimenti di una persona e assicurarmi che il mio messaggio venga ricevuto come previsto." },
-    { "question": "Qual è il tuo livello di abilità nell'ascolto attivo?", "answer": "Considero le mie capacità di ascolto attivo forti. Faccio uno sforzo cosciente per assorbire completamente ciò che gli altri dicono, sia verbalmente che non verbalmente, prima di formulare la mia risposta." },
-    { "question": "Come cerchi il contributo degli altri?", "answer": "Cerco il contributo ponendo domande aperte, creando uno spazio sicuro per opinioni diverse e assicurandomi che tutti abbiano l'opportunità di contribuire con le proprie idee." },
-    { "question": "In che misura sei in grado di ascoltare persone diverse da te o che non sono d'accordo con te?", "answer": "Sono pienamente in grado di ascoltare opinioni diverse. Credo che prospettive diverse portino a soluzioni migliori e mi concentro sulla comprensione del loro punto di vista, anche se non sono d'accordo." },
-    { "question": "Quale feedback hai ricevuto sulle tue capacità di ascolto?", "answer": "Ho ricevuto feedback sul fatto che sono un buon ascoltatore, spesso elogiato per la mia capacità di comprendere questioni complesse e far sentire gli altri ascoltati." },
-    { "question": "Parlami di un'occasione in cui hai dovuto lavorare con un collega con cui non andavi d'accordo.", "answer": "Mi sono concentrato sui nostri obiettivi professionali condivisi, ho mantenuto una comunicazione rispettosa e ho limitato le interazioni ad argomenti di lavoro per garantire il successo del progetto nonostante le differenze personali." },
-    { "question": "Cosa faresti se il tuo team rifiutasse tutte le tue idee?", "answer": "Chiederei un feedback specifico sul motivo per cui le mie idee sono state respinte, ascolterei le loro preoccupazioni e quindi lavorerei in modo collaborativo per sviluppare nuove soluzioni che incorporino il contributo di tutti." },
-    { "question": "Come comunicheresti informazioni difficili o cattive notizie a qualcuno?", "answer": "Darei la notizia in modo diretto ed empatico, fornirei contesto e ragioni e sarei pronto a rispondere alle domande e offrire supporto o passi successivi." },
-    { "question": "Quali sono le maggiori sfide che affronti quando inizi un nuovo lavoro?", "answer": "Le maggiori sfide spesso implicano l'apprendimento rapido di nuovi sistemi e processi, la comprensione delle dinamiche del team e la creazione di un rapporto con i nuovi colleghi, che affronto attraverso la comunicazione e l'osservazione proattive." },
-    { "question": "Parlami di un'occasione in cui l'ambito di un progetto a cui stavi lavorando è cambiato in modo significativo. Come ti sei adattato?", "answer": "Quando l'ambito di un progetto è cambiato, ho immediatamente valutato l'impatto, ho comunicato le modifiche alle parti interessate e ho adattato di conseguenza il piano e le risorse del progetto per mantenerlo in carreggiata." },
-    { "question": "Descrivi un'occasione in cui hai preso una decisione impopolare. Come hai gestito il feedback?", "answer": "Una volta ho preso una decisione impopolare ma necessaria per l'efficienza a lungo termine. Ho spiegato chiaramente la mia logica, ho ascoltato il feedback e ho affrontato le preoccupazioni pur mantenendo la decisione." },
-    { "question": "Qual è il modo migliore per prendere decisioni quando si lavora a un progetto di gruppo?", "answer": "Il modo migliore è attraverso la discussione collaborativa, in cui vengono ascoltate tutte le prospettive, seguita da un chiaro processo decisionale, che sia per consenso, voto di maggioranza o un leader designato." },
-    { "question": "Come tieni traccia dei tuoi progressi quando lavori a un progetto?", "answer": "Uso strumenti di gestione dei progetti, check-in regolari con i membri del team e liste di controllo personali per monitorare i progressi, identificare gli ostacoli e garantire il rispetto delle scadenze." },
-    { "question": "Parlami di te in tre frasi.", "answer": "Sono un individuo molto motivato con una passione per l'apprendimento continuo e la risoluzione dei problemi. Eccello in ambienti collaborativi, sfruttando forti capacità di comunicazione per promuovere il lavoro di squadra e raggiungere obiettivi condivisi. Il mio obiettivo è contribuire in modo significativo ai progetti e crescere professionalmente." }
-];
+        <div id="app-container" class="w-full max-w-5xl mx-auto">
+          <!-- Home Screen -->
+          <div id="home-screen" class="hidden text-center fade-in h-screen flex flex-col justify-center items-center">
+            <h2 class="text-5xl font-extrabold text-white mb-6">CORSO TAI '25/'26</h2>
+            <p class="text-xl font-semibold italic text-gray-300 mb-12">"fatti non foste a viver come bruti, ma per seguir virtute e canoscenza"</p>
+          </div>
 
-        let currentQuizData = [];
-        let currentQuestionIndex = 0;
-        let isFlipped = false;
+          <!-- Subject Screen: Verrà animato completamente ad ogni cambio materia -->
+          <div id="subject-screen" class="hidden">
+            <div class="mb-12 pt-20 text-center">
+              <!-- TITOLO DELLA MATERIA -->
+              <h2 id="subject-title" class="text-4xl font-extrabold text-white uppercase mb-6"></h2>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-10 justify-center items-center">
+              <a id="flipbook-btn" href="#" target="_blank"
+                 class="animated-button subject-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">
+                Flipbook
+              </a>
+              <button id="flashcard-btn" onclick=""
+                      class="animated-button subject-button bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-xl">
+                Flashcard
+              </button>
+            </div>
+          </div>
 
-        const selectionScreen = document.getElementById('selection-screen');
-        const quizScreen = document.getElementById('quiz-screen');
-        const resultsScreen = document.getElementById('results-screen');
+          <!-- Quiz Screen -->
+          <div id="quiz-screen" class="hidden fade-in">
+            <div class="content-panel p-6 md:p-8 rounded-2xl mt-8">
+              <div id="progress-text" class="text-sm font-medium text-gray-400 mb-6 text-right"></div>
+              <div class="flashcard-container">
+                <div id="flashcard" class="flashcard cursor-pointer" onclick="flipCard()">
+                  <div class="flashcard-face flashcard-front">
+                    <p id="question-text" class="text-2xl font-semibold"></p>
+                  </div>
+                  <div class="flashcard-face flashcard-back">
+                    <p id="answer-text" class="text-lg"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center gap-8 mt-8">
+              <button id="prev-btn" onclick="previousQuestion()" class="nav-button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8"
+                     viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                        clip-rule="evenodd" />
+                </svg>
+              </button>
+              <button id="next-btn" onclick="nextQuestion()" class="nav-button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8"
+                     viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-        const questionText = document.getElementById('question-text');
-        const answerText = document.getElementById('answer-text');
-        const progressText = document.getElementById('progress-text');
-        const quizTitle = document.getElementById('quiz-title');
+          <!-- Results Screen -->
+          <div id="results-screen" class="hidden text-center content-panel p-10 rounded-2xl fade-in">
+            <p id="results-message" class="text-3xl font-bold text-white mb-8"></p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <button onclick="restartQuiz()"
+                      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
+                Riprova Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- L'Overlay serve solo per oscurare su mobile quando la sidebar è aperta, NON gestisce i click. -->
+    <div id="overlay"
+         class="hidden fixed inset-0 bg-black/50 z-30"></div>
+  </div>
 
-        const flashcard = document.getElementById('flashcard');
-        const flashcardContainer = document.getElementById('flashcard-container');
-        const nextBtn = document.getElementById('next-btn');
-        const prevBtn = document.getElementById('prev-btn');
+  <script>
+    const questions = {
+      meccanica: [
+        { question: "Cos'è la 'Deformazione Plastica'?", answer: "È la deformazione permanente di un materiale, che non recupera la sua forma originale dopo la rimozione del carico." },
+        { question: "Qual è la funzione principale di un cuscinetto?", answer: "Ridurre l'attrito tra parti in movimento rotatorio o lineare e supportare i carichi." },
+        { question: "Definisci il 'Modulo di Young'.", answer: "È una misura della rigidità di un materiale, ovvero il rapporto tra lo sforzo (stress) e la deformazione elastica (strain)." },
+        { question: "Cosa rappresenta il 'carico di snervamento'?", answer: "Il punto oltre il quale un materiale inizia a deformarsi plasticamente." },
+        { question: "Qual è la differenza tra 'durezza' e 'resilienza'?", answer: "La durezza è la resistenza alla penetrazione, la resilienza è la capacità di assorbire energia in campo elastico." },
+        { question: "A cosa serve una 'chiavetta' in meccanica?", answer: "A trasmettere un momento torcente tra un albero e un mozzo." },
+        { question: "Cos'è la 'fatica' di un materiale?", answer: "Il progressivo danneggiamento di un materiale sottoposto a carichi ciclici." },
+        { question: "Qual è lo scopo di una 'saldatura'?", answer: "Unire permanentemente due o più pezzi metallici tramite fusione." },
+        { question: "Cosa si intende per 'tolleranza dimensionale'?", answer: "L'intervallo di variazione ammesso per una quota dimensionale di un pezzo." },
+        { question: "Qual è la funzione di una 'molla'?", answer: "Immagazzinare energia elastica e restituirla quando viene scaricata." },
+        { question: "Cosa differenzia un 'moto alternativo' da un 'moto rotatorio'?", answer: "Il moto alternativo è un movimento periodico avanti e indietro, quello rotatorio è un movimento circolare continuo." },
+        { question: "Cos'è un 'accoppiamento' in meccanica?", answer: "Un organo di collegamento tra due alberi per trasmettere il moto." },
+        { question: "Qual è il principio di funzionamento di una 'vite'?", answer: "Trasformare un moto rotatorio in un moto lineare." },
+        { question: "Cosa si intende per 'lubrificazione'?", answer: "L'interposizione di uno strato di lubrificante tra due superfici in moto relativo per ridurre l'attrito." },
+        { question: "Qual è la differenza tra 'ghisa' e 'acciaio'?", answer: "L'acciaio ha un tenore di carbonio inferiore al 2%, la ghisa superiore." },
+        { question: "Cos'è un 'disegno tecnico'?", answer: "Una rappresentazione grafica di un oggetto secondo norme e convenzioni standardizzate." },
+        { question: "A cosa serve la 'quotatura' in un disegno tecnico?", answer: "A specificare le dimensioni e le tolleranze di un pezzo." },
+        { question: "Cosa indica la 'rugosità superficiale'?", answer: "Il grado di finitura di una superficie lavorata." },
+        { question: "Qual è la funzione di un 'ingranaggio'?", answer: "Trasmettere il moto rotatorio e la potenza tra due alberi." },
+        { question: "Cosa si intende per 'rapporto di trasmissione'?", answer: "Il rapporto tra le velocità angolari di due ingranaggi accoppiati." },
+        { question: "Qual è la differenza tra 'forza' e 'pressione'?", answer: "La forza è un'azione che tende a modificare lo stato di quiete o di moto di un corpo, la pressione è la forza per unità di superficie." },
+        { question: "Cos'è l''attrito radente'?", answer: "La forza che si oppone al movimento tra due superfici a contatto." },
+        { question: "Qual è lo scopo di un 'freno'?", answer: "Rallentare o arrestare il movimento di un corpo." },
+        { question: "Cosa si intende per 'momento di una forza'?", answer: "La capacità di una forza di provocare la rotazione di un corpo attorno a un punto." },
+        { question: "Qual è la differenza tra 'lavoro' ed 'energia'?", answer: "Il lavoro è il trasferimento di energia, l'energia è la capacità di compiere lavoro." },
+        { question: "Cos'è la 'potenza' in meccanica?", answer: "Il lavoro compiuto nell'unità di tempo." },
+        { question: "Qual è la funzione di un 'volano'?", answer: "Regolarizzare la velocità di rotazione di un albero motore." },
+        { question: "Cosa si intende per 'centro di massa'?", answer: "Il punto geometrico in cui si può considerare concentrata tutta la massa di un corpo." },
+        { question: "Qual è la differenza tra 'velocità' e 'accelerazione'?", answer: "La velocità è la rapidità con cui un corpo cambia posizione, l'accelerazione è la rapidità con cui cambia velocità." },
+        { question: "Cos'è un 'sistema iperstatico'?", answer: "Un sistema con un numero di vincoli superiore a quello strettamente necessario per garantirne l'equilibrio." },
+        { question: "A cosa serve un 'giunto cardanico'?", answer: "A trasmettere il moto tra due alberi i cui assi non sono allineati." },
+        { question: "Cos'è la 'flessione' in una trave?", answer: "La deformazione di una trave soggetta a carichi trasversali." },
+        { question: "Qual è la differenza tra 'trazione' e 'compressione'?", answer: "La trazione tende ad allungare un corpo, la compressione a schiacciarlo." },
+        { question: "Cosa si intende per 'taglio' in meccanica?", answer: "L'azione di due forze parallele e discordi che tendono a far scorrere una parte di un corpo rispetto all'altra." },
+        { question: "Qual è la funzione di un 'albero a camme'?", answer: "Trasformare il moto rotatorio in moto alternativo." },
+        { question: "Cos'è un 'accoppiamento a frizione'?", answer: "Un accoppiamento che permette di collegare e scollegare gradualmente due alberi." },
+        { question: "Qual è la differenza tra 'moto uniforme' e 'moto uniformemente accelerato'?", answer: "Nel moto uniforme la velocità è costante, in quello uniformemente accelerato l'accelerazione è costante." },
+        { question: "Cosa si intende per 'inerzia'?", answer: "La tendenza di un corpo a mantenere il proprio stato di quiete o di moto." },
+        { question: "Qual è la funzione di una 'biella'?", answer: "Collegare un pistone a un albero a gomiti." },
+        { question: "Cos'è un 'manovellismo di spinta rotativa'?", answer: "Un meccanismo che trasforma il moto rotatorio in moto alternativo o viceversa." },
+        { question: "A cosa serve un 'riduttore di velocità'?", answer: "A ridurre la velocità di rotazione di un albero aumentandone la coppia." },
+        { question: "Cos'è la 'risonanza' in un sistema meccanico?", answer: "Il fenomeno per cui un sistema oscilla con ampiezza crescente se sottoposto a una forzante periodica con frequenza pari alla sua frequenza naturale." },
+        { question: "Qual è la differenza tra 'statica' e 'dinamica'?", answer: "La statica studia l'equilibrio dei corpi, la dinamica il loro movimento." },
+        { question: "Cosa si intende per 'vincolo' in meccanica?", answer: "Una limitazione alla libertà di movimento di un corpo." },
+        { question: "Qual è la funzione di un 'perno'?", answer: "Realizzare un vincolo di cerniera tra due corpi." },
+        { question: "Cos'è un 'diagramma di corpo libero'?", answer: "Una rappresentazione di un corpo isolato con tutte le forze esterne che agiscono su di esso." },
+        { question: "A cosa serve un 'tensore degli sforzi'?", answer: "A descrivere lo stato di sforzo in un punto di un corpo." },
+        { question: "Cos'è il 'criterio di resistenza di von Mises'?", answer: "Un criterio per prevedere la rottura di un materiale duttile." },
+        { question: "Qual è la differenza tra 'progettazione' e 'verifica'?", answer: "La progettazione consiste nel dimensionare un componente, la verifica nel controllare che un componente esistente resista ai carichi." },
+        { question: "Cosa si intende per 'coefficiente di sicurezza'?", answer: "Un fattore di maggiorazione dei carichi o di riduzione della resistenza per garantire la sicurezza di una struttura." }
+      ],
+      sicurezza: [
+        { question: "Cosa si intende per 'sicurezza sul lavoro'?", answer: "L'insieme delle misure preventive da adottare per garantire la salute e la sicurezza dei lavoratori." },
+        { question: "Chi è il 'datore di lavoro' ai fini della sicurezza?", answer: "Il soggetto titolare del rapporto di lavoro con il lavoratore." },
+        { question: "Qual è il ruolo del 'Responsabile del Servizio di Prevenzione e Protezione' (RSPP)?", answer: "Coordina il servizio di prevenzione e protezione dai rischi." },
+        { question: "Cosa si intende per 'valutazione dei rischi'?", answer: "L'analisi di tutti i rischi presenti in azienda per la salute e la sicurezza dei lavoratori." },
+        { question: "Cos'è il 'Documento di Valutazione dei Rischi' (DVR)?", answer: "Il documento che raccoglie la valutazione di tutti i rischi e le misure di prevenzione." },
+        { question: "Chi è il 'Rappresentante dei Lavoratori per la Sicurezza' (RLS)?", answer: "La persona eletta o designata per rappresentare i lavoratori per quanto concerne la sicurezza." },
+        { question: "Cosa sono i 'Dispositivi di Protezione Individuale' (DPI)?", answer: "Attrezzature destinate ad essere indossate dal lavoratore per proteggerlo da uno o più rischi." },
+        { question: "Qual è la differenza tra 'pericolo' e 'rischio'?", answer: "Il pericolo è una proprietà intrinseca di un fattore avente il potenziale di causare danni, il rischio è la probabilità che tale danno si verifichi." },
+        { question: "Cosa si intende per 'formazione dei lavoratori' in materia di sicurezza?", answer: "Il processo educativo attraverso il quale i lavoratori apprendono le procedure di sicurezza." },
+        { question: "Chi è il 'medico competente'?", answer: "Il medico che collabora con il datore di lavoro per la sorveglianza sanitaria dei lavoratori." },
+        { question: "Cosa si intende per 'sorveglianza sanitaria'?", answer: "L'insieme degli atti medici finalizzati alla tutela dello stato di salute dei lavoratori." },
+        { question: "Quali sono gli obblighi del 'lavoratore' in materia di sicurezza?", answer: "Prendersi cura della propria sicurezza e di quella delle altre persone presenti sul luogo di lavoro." },
+        { question: "Cosa si intende per 'primo soccorso'?", answer: "L'insieme delle azioni che permettono di aiutare una o più persone in difficoltà." },
+        { question: "Qual è lo scopo della 'prevenzione incendi'?", answer: "Ridurre la probabilità che si verifichi un incendio e limitarne le conseguenze." },
+        { question: "Cosa si intende per 'rischio chimico'?", answer: "Il rischio associato all'esposizione ad agenti chimici pericolosi." },
+        { question: "Cos'è il 'rischio biologico'?", answer: "Il rischio di esposizione ad agenti biologici che possono causare infezioni, allergie o intossicazioni." },
+        { question: "Cosa si intende per 'rischio rumore'?", answer: "Il rischio di danni all'udito a causa dell'esposizione a livelli eccessivi di rumore." },
+        { question: "Qual è il 'rischio vibrazioni'?", answer: "Il rischio associato all'esposizione a vibrazioni meccaniche trasmesse al corpo." },
+        { question: "Cosa si intende per 'movimentazione manuale dei carichi'?", answer: "Le operazioni di trasporto o di sostegno di un carico ad opera di uno o più lavoratori." },
+        { question: "Qual è il 'rischio elettrico'?", answer: "Il rischio di folgorazione, ustioni o incendi a causa del contatto con parti in tensione." },
+        { question: "Cosa si intende per 'lavori in quota'?", answer: "L'attività lavorativa che espone il lavoratore al rischio di caduta da una quota posta ad altezza superiore a 2 m." },
+        { question: "Quali sono le principali misure di 'protezione collettiva'?", answer: "Misure che proteggono più lavoratori contemporaneamente, come i parapetti o le reti di sicurezza." },
+        { question: "Cosa si intende per 'ergonomia'?", answer: "La scienza che si occupa dell'interazione tra gli esseri umani e gli altri elementi di un sistema." },
+        { question: "Qual è lo scopo della 'segnaletica di sicurezza'?", answer: "Fornire indicazioni o prescrizioni concernenti la sicurezza sul lavoro." },
+        { question: "Cosa si intende per 'stress lavoro-correlato'?", answer: "La percezione di squilibrio avvertita dal lavoratore quando le richieste lavorative superano le sue capacità." },
+        { question: "Chi è il 'preposto' alla sicurezza?", answer: "La persona che sovrintende all'attività lavorativa e garantisce l'attuazione delle direttive ricevute." },
+        { question: "Cosa si intende per 'near miss' o 'quasi infortunio'?", answer: "Un qualsiasi evento che avrebbe potuto causare un infortunio ma non lo ha fatto." },
+        { question: "Qual è la gerarchia delle 'misure di prevenzione'?", answer: "Eliminazione del rischio, sostituzione, misure di protezione collettiva, misure di protezione individuale." },
+        { question: "Cosa si intende per 'piano di emergenza'?", answer: "Il documento che stabilisce le procedure da attuare in caso di emergenza." },
+        { question: "Qual è il ruolo degli 'addetti all'emergenza'?", answer: "Intervenire in caso di emergenza per gestire la situazione e prestare soccorso." },
+        { question: "Cosa si intende per 'rischio da atmosfere esplosive' (ATEX)?", answer: "Il rischio di esplosione dovuto alla presenza di miscele di aria e sostanze infiammabili." },
+        { question: "Qual è la differenza tra 'informazione' e 'formazione'?", answer: "L'informazione fornisce notizie, la formazione mira a creare competenze." },
+        { question: "Cosa si intende per 'rischio videoterminali' (VDT)?", answer: "I rischi per la vista e per l'apparato muscolo-scheletrico legati all'uso di videoterminali." },
+        { question: "Quali sono i principali 'diritti dei lavoratori' in materia di sicurezza?", answer: "Diritto alla sicurezza, all'informazione, alla formazione e alla rappresentanza." },
+        { question: "Cosa si intende per 'infortunio sul lavoro'?", answer: "Un evento traumatico avvenuto per causa violenta in occasione di lavoro, da cui sia derivata la morte o un'inabilità." },
+        { question: "Qual è la differenza tra 'infortunio' e 'malattia professionale'?", answer: "L'infortunio ha una causa violenta ed immediata, la malattia professionale è contratta gradualmente a causa dell'esposizione a rischi." },
+        { question: "Cosa si intende per 'agenti fisici' di rischio?", answer: "Rumore, vibrazioni, radiazioni, microclima, ecc." },
+        { question: "Qual è lo scopo dell' 'addestramento'?", answer: "Far apprendere al lavoratore l'uso corretto di attrezzature, macchine o DPI." },
+        { question: "Cosa si intende per 'rischio incendio'?", answer: "La probabilità che si verifichi un incendio e le sue possibili conseguenze." },
+        { question: "Quali sono le 'classi di incendio'?", answer: "A (solidi), B (liquidi), C (gas), D (metalli), F (oli e grassi)." },
+        { question: "Cosa si intende per 'lavori in ambienti confinati'?", answer: "Lavori in spazi con limitate aperture di accesso e ventilazione naturale sfavorevole." },
+        { question: "Qual è il 'rischio stradale'?", answer: "Il rischio di incidenti durante gli spostamenti lavorativi." },
+        { question: "Cosa si intende per 'manutenzione' ai fini della sicurezza?", answer: "L'insieme delle operazioni per mantenere in efficienza macchine e impianti." },
+        { question: "Qual è il ruolo dell' 'Organismo Paritetico'?", answer: "Supportare le imprese nell'individuazione di soluzioni tecniche e organizzative per la sicurezza." },
+        { question: "Cosa si intende per 'rischio biologico deliberato'?", answer: "L'uso intenzionale di agenti biologici per nuocere." },
+        { question: "Quali sono le sanzioni per il mancato rispetto delle norme di sicurezza?", answer: "Sanzioni penali (arresto o ammenda) e amministrative." },
+        { question: "Cosa si intende per 'buone prassi' in materia di sicurezza?", answer: "Soluzioni organizzative o procedurali coerenti con la normativa e le norme di buona tecnica." },
+        { question: "Qual è il 'principio di precauzione'?", answer: "Adottare misure protettive anche in assenza di certezze scientifiche su un rischio." },
+        { question: "Cosa si intende per 'salute' secondo l'OMS?", answer: "Uno stato di completo benessere fisico, mentale e sociale." },
+        { question: "Qual è l'importanza della 'comunicazione' nella sicurezza sul lavoro?", answer: "È fondamentale per trasferire informazioni, procedure e promuovere una cultura della sicurezza." }
+      ],
+      elettrotecnica: [
+        { question: "Cos'è la 'tensione elettrica'?", answer: "La differenza di potenziale elettrico tra due punti di un circuito." },
+        { question: "Cosa si intende per 'corrente elettrica'?", answer: "Un flusso ordinato di cariche elettriche." },
+        { question: "Qual è la 'legge di Ohm'?", answer: "V = I * R (Tensione = Corrente * Resistenza)." },
+        { question: "Cos'è la 'resistenza elettrica'?", answer: "L'opposizione di un materiale al passaggio della corrente elettrica." },
+        { question: "Qual è la differenza tra 'corrente continua' (CC) e 'corrente alternata' (CA)?", answer: "La corrente continua ha un flusso costante in una direzione, la corrente alternata inverte periodicamente la sua direzione." },
+        { question: "Cosa si intende per 'potenza elettrica'?", answer: "Il lavoro elettrico compiuto nell'unità di tempo (P = V * I)." },
+        { question: "Cos'è un 'circuito elettrico'?", answer: "Un percorso chiuso in cui può fluire la corrente elettrica." },
+        { question: "Qual è la differenza tra un 'collegamento in serie' e un 'collegamento in parallelo'?", answer: "In serie i componenti sono uno dopo l'altro, in parallelo sono su rami diversi." },
+        { question: "Cosa si intende per 'effetto Joule'?", answer: "La trasformazione di energia elettrica in calore per il passaggio di corrente in un resistore." },
+        { question: "Cos'è un 'condensatore'?", answer: "Un componente che immagazzina energia in un campo elettrico." },
+        { question: "Cos'è un 'induttore'?", answer: "Un componente che immagazzina energia in un campo magnetico." },
+        { question: "Cosa si intende per 'frequenza' in un circuito in CA?", answer: "Il numero di cicli completi che l'onda compie in un secondo (misurata in Hertz)." },
+        { question: "Cos'è un 'trasformatore'?", answer: "Una macchina elettrica che trasferisce energia elettrica da un circuito a un altro modificando i valori di tensione e corrente." },
+        { question: "Qual è il principio di funzionamento di un 'motore elettrico'?", answer: "Converte l'energia elettrica in energia meccanica." },
+        { question: "Cosa si intende per 'messa a terra'?", answer: "Il collegamento di una parte di un impianto elettrico a un dispersore nel terreno per motivi di sicurezza." },
+        { question: "Qual è la funzione di un 'interruttore differenziale' (salvavita)?", answer: "Interrompere il flusso di corrente in caso di dispersione verso terra, proteggendo dalle folgorazioni." },
+        { question: "Cosa si intende per 'cortocircuito'?", answer: "Un collegamento a bassissima resistenza tra due punti di un circuito a potenziale diverso." },
+        { question: "Qual è la differenza tra 'materiali conduttori' e 'materiali isolanti'?", answer: "I conduttori lasciano passare facilmente la corrente, gli isolanti la bloccano." },
+        { question: "Cos'è un 'diodo'?", answer: "Un componente a semiconduttore che permette il passaggio della corrente in una sola direzione." },
+        { question: "Cos'è un 'transistor'?", answer: "Un dispositivo a semiconduttore usato per amplificare o commutare segnali elettrici." },
+        { question: "Cosa si intende per 'campo elettrico'?", answer: "La regione dello spazio in cui una carica elettrica risente di una forza." },
+        { question: "Cos'è il 'campo magnetico'?", answer: "La regione dello spazio in cui una calamita o una corrente elettrica risentono di una forza." },
+        { question: "Cosa si intende per 'elettromagnetismo'?", answer: "La branca della fisica che studia i fenomeni elettrici e magnetici e le loro correlazioni." },
+        { question: "Qual è la funzione di un 'fusibile'?", answer: "Interrompere un circuito fondendosi quando la corrente supera un valore di sicurezza." },
+        { question: "Cosa si intende per 'impianto elettrico civile'?", answer: "L'insieme di componenti elettrici per la distribuzione di energia in un'abitazione." },
+        { question: "Qual è la differenza tra 'tensione monofase' e 'tensione trifase'?", answer: "La monofase ha una sola fase, la trifase ha tre fasi sfasate tra loro di 120°." },
+        { question: "Cosa si intende per 'cabina di trasformazione'?", answer: "L'impianto che riceve l'energia in alta o media tensione e la trasforma in bassa tensione per la distribuzione." },
+        { question: "Qual è il ruolo delle 'centrali elettriche'?", answer: "Produrre energia elettrica su larga scala." },
+        { question: "Cosa si intende per 'energie rinnovabili'?", answer: "Fonti di energia che si rigenerano naturalmente, come il sole, il vento, l'acqua." },
+        { question: "Cos'è un 'inverter'?", answer: "Un dispositivo che converte la corrente continua in corrente alternata." },
+        { question: "Qual è la funzione di un 'gruppo di continuità' (UPS)?", answer: "Fornire alimentazione elettrica in caso di blackout." },
+        { question: "Cosa si intende per 'domotica'?", answer: "L'automazione delle funzioni di un'abitazione." },
+        { question: "Qual è la differenza tra 'potenza attiva', 'potenza reattiva' e 'potenza apparente'?", answer: "La potenza attiva compie lavoro, la reattiva è scambiata con il campo elettromagnetico, l'apparente è la somma vettoriale delle due." },
+        { question: "Cos'è il 'fattore di potenza' (cos φ)?", answer: "Il rapporto tra la potenza attiva e la potenza apparente." },
+        { question: "A cosa serve il 'rifasamento'?", answer: "A ridurre l'assorbimento di potenza reattiva per migliorare l'efficienza di un impianto." },
+        { question: "Cosa si intende per 'armonica' in un segnale elettrico?", answer: "Una componente sinusoidale con frequenza multipla della frequenza fondamentale." },
+        { question: "Qual è il 'rischio elettrico'?", answer: "Il rischio di folgorazione, ustioni o incendi a causa dell'elettricità." },
+        { question: "Cosa si intende per 'contatto diretto' e 'contatto indiretto'?", answer: "Contatto diretto con una parte attiva, contatto indiretto con una massa in tensione per un guasto." },
+        { question: "Qual è la 'legge di Faraday' sull'induzione elettromagnetica?", answer: "Un campo magnetico variabile nel tempo genera una forza elettromotrice." },
+        { question: "Cosa si intende per 'autoinduzione'?", answer: "La generazione di una forza elettromotrice in un circuito a causa della variazione della corrente che lo attraversa." },
+        { question: "Cos'è un 'relè'?", answer: "Un interruttore azionato da un elettromagnete." },
+        { question: "Qual è la funzione di un 'contattore'?", answer: "Un interruttore per il comando di carichi di potenza elevata." },
+        { question: "Cosa si intende per 'quadro elettrico'?", answer: "Il centro di comando e protezione di un impianto elettrico." },
+        { question: "Qual è la 'norma CEI 64-8'?", answer: "La principale norma tecnica per gli impianti elettrici in Italia." },
+        { question: "Cosa si intende per 'grado di protezione IP'?", answer: "Indica il livello di protezione di un involucro contro la penetrazione di corpi solidi e liquidi." },
+        { question: "Qual è la differenza tra 'motore sincrono' e 'motore asincrono'?", answer: "Nel motore sincrono il rotore gira alla stessa velocità del campo magnetico rotante, nell'asincrono gira a una velocità inferiore." },
+        { question: "Cosa si intende per 'PLC' (Controllore a Logica Programmabile)?", answer: "Un computer industriale per l'automazione di processi." },
+        { question: "Qual è la funzione di un 'sensore' in automazione?", answer: "Rilevare una grandezza fisica e trasformarla in un segnale elettrico." },
+        { question: "Cosa si intende per 'attuatore'?", answer: "Un dispositivo che converte un segnale di comando in un'azione fisica." },
+        { question: "Qual è il futuro della 'distribuzione elettrica'?", answer: "Le 'smart grid', reti intelligenti per una gestione efficiente dell'energia." }
+      ],
+      comunicazione: [
+        { question: "Cos'è la 'comunicazione efficace'?", answer: "La capacità di trasmettere un messaggio in modo chiaro, conciso e comprensibile, ottenendo il risultato desiderato." },
+        { question: "Quali sono i tre elementi principali della comunicazione?", answer: "Emittente, ricevente e messaggio." },
+        { question: "Cosa si intende per 'comunicazione verbale'?", answer: "La comunicazione che avviene tramite l'uso delle parole, sia parlate che scritte." },
+        { question: "Cos'è la 'comunicazione non verbale'?", answer: "La comunicazione che avviene attraverso il linguaggio del corpo, i gesti, le espressioni facciali." },
+        { question: "Cosa si intende per 'comunicazione paraverbale'?", answer: "L'uso della voce per comunicare, includendo tono, volume, ritmo e pause." },
+        { question: "Qual è l'importanza dell''ascolto attivo'?", answer: "Permette di comprendere appieno il messaggio dell'interlocutore, mostrando interesse e rispetto." },
+        { question: "Cosa si intende per 'feedback' nella comunicazione?", answer: "La risposta che il ricevente dà all'emittente, indicando se il messaggio è stato ricevuto e compreso." },
+        { question: "Qual è la differenza tra 'comunicazione assertiva', 'passiva' e 'aggressiva'?", answer: "L'assertività esprime le proprie idee rispettando gli altri, la passività le subisce, l'aggressività le impone." },
+        { question: "Cosa si intende per 'empatia'?", answer: "La capacità di mettersi nei panni degli altri e comprendere i loro sentimenti." },
+        { question: "Qual è il ruolo delle 'domande aperte' in una conversazione?", answer: "Incoraggiano l'interlocutore a fornire risposte dettagliate e articolate." },
+        { question: "Cosa sono le 'barriere alla comunicazione'?", answer: "Fattori che ostacolano o distorcono la comunicazione, come pregiudizi, rumore o linguaggio tecnico." },
+        { question: "Come si può superare il 'conflitto' in un team?", answer: "Attraverso la negoziazione, il compromesso e la ricerca di soluzioni vantaggiose per tutti." },
+        { question: "Cos'è il 'team building'?", answer: "Un insieme di attività finalizzate a migliorare la coesione e la collaborazione all'interno di un gruppo di lavoro." },
+        { question: "Qual è l'importanza della 'chiarezza' in un messaggio?", answer: "Evita fraintendimenti e assicura che il messaggio venga interpretato correttamente." },
+        { question: "Cosa si intende per 'intelligenza emotiva'?", answer: "La capacità di riconoscere, comprendere e gestire le proprie emozioni e quelle degli altri." },
+        { question: "Qual è la differenza tra 'fatto' e 'opinione'?", answer: "Un fatto è oggettivo e verificabile, un'opinione è una valutazione soggettiva." },
+        { question: "Come si può dare un 'feedback costruttivo'?", answer: "Focalizzandosi sul comportamento e non sulla persona, essendo specifici e offrendo suggerimenti per migliorare." },
+        { question: "Cos'è la 'persuasione'?", answer: "L'arte di convincere gli altri ad adottare un'idea o un comportamento." },
+        { question: "Qual è il ruolo della 'fiducia' in un team?", answer: "È fondamentale per una comunicazione aperta, onesta e una collaborazione efficace." },
+        { question: "Cosa si intende per 'public speaking'?", answer: "La capacità di parlare in pubblico in modo efficace e coinvolgente." },
+        { question: "Come si può gestire l' 'ansia da prestazione' nel parlare in pubblico?", answer: "Con una buona preparazione, tecniche di respirazione e focalizzandosi sul messaggio." },
+        { question: "Qual è l'importanza del 'contatto visivo'?", answer: "Crea connessione con l'interlocutore e dimostra sicurezza e onestà." },
+        { question: "Cosa si intende per 'netiquette'?", answer: "L'insieme delle regole di buona educazione da seguire nella comunicazione online." },
+        { question: "Qual è la differenza tra 'collaborazione' e 'cooperazione'?", answer: "La cooperazione è lavorare insieme per un obiettivo comune, la collaborazione implica anche la creazione di qualcosa di nuovo insieme." },
+        { question: "Come si può migliorare la 'comunicazione interculturale'?", answer: "Essendo consapevoli delle differenze culturali, evitando stereotipi e mostrando rispetto." },
+        { question: "Cos'è lo 'storytelling'?", answer: "L'arte di raccontare storie per comunicare un messaggio in modo memorabile ed emozionante." },
+        { question: "Qual è il ruolo del 'leader' nella comunicazione di un team?", answer: "Facilitare la comunicazione, promuovere un ambiente aperto e dare l'esempio." },
+        { question: "Cosa si intende per 'problem solving'?", answer: "Il processo di analisi di un problema per trovare la soluzione migliore." },
+        { question: "Qual è la tecnica del 'brainstorming'?", answer: "Una tecnica di gruppo per generare un gran numero di idee in modo creativo e senza giudizio." },
+        { question: "Cosa si intende per 'pensiero critico'?", answer: "La capacità di analizzare le informazioni in modo oggettivo e valutare gli argomenti." },
+        { question: "Qual è l'importanza della 'gestione del tempo'?", answer: "Permette di organizzare le attività in modo efficiente, riducendo lo stress e aumentando la produttività." },
+        { question: "Cosa si intende per 'delega'?", answer: "Affidare ad altri la responsabilità e l'autorità per svolgere un compito." },
+        { question: "Qual è la differenza tra 'efficacia' ed 'efficienza'?", answer: "L'efficacia è fare le cose giuste, l'efficienza è fare le cose nel modo giusto." },
+        { question: "Come si può costruire un 'rapport' con l'interlocutore?", answer: "Trovando punti in comune, usando un linguaggio simile e mostrando empatia." },
+        { question: "Cos'è la 'Programmazione Neuro-Linguistica' (PNL)?", answer: "Un approccio alla comunicazione e allo sviluppo personale che si concentra sulla connessione tra processi neurologici, linguaggio e schemi comportamentali." },
+        { question: "Qual è il 'modello di Shannon-Weaver' della comunicazione?", answer: "Un modello lineare che descrive la comunicazione come un processo di trasmissione di informazioni da una fonte a un destinatario." },
+        { question: "Cosa si intende per 'comunicazione di massa'?", answer: "La comunicazione rivolta a un pubblico vasto ed eterogeneo attraverso i mass media." },
+        { question: "Qual è il ruolo dei 'social media' nella comunicazione odierna?", answer: "Hanno rivoluzionato il modo in cui le persone e le aziende comunicano, creando nuove opportunità e sfide." },
+        { question: "Cosa si intende per 'brand identity'?", answer: "L'insieme degli elementi visivi e verbali che definiscono e differenziano un marchio." },
+        { question: "Qual è l'importanza della 'coerenza' nella comunicazione aziendale?", answer: "Garantisce che tutti i messaggi siano allineati con i valori e l'immagine del brand." },
+        { question: "Cosa si intende per 'crisis communication'?", answer: "La gestione della comunicazione durante una crisi per proteggere la reputazione di un'organizzazione." },
+        { question: "Qual è la differenza tra 'marketing' e 'pubblicità'?", answer: "Il marketing è il processo di creazione di valore per i clienti, la pubblicità è una forma di comunicazione a pagamento per promuovere un prodotto." },
+        { question: "Cosa si intende per 'target audience'?", answer: "Il gruppo specifico di persone a cui si rivolge un messaggio o una campagna di comunicazione." },
+        { question: "Qual è il ruolo della 'creatività' nella comunicazione?", answer: "Permette di creare messaggi originali e memorabili che catturano l'attenzione." },
+        { question: "Cosa si intende per 'comunicazione interna'?", answer: "La comunicazione che avviene all'interno di un'organizzazione tra i suoi membri." },
+        { question: "Qual è l'importanza di una 'cultura aziendale' forte?", answer: "Guida i comportamenti dei dipendenti e crea un senso di appartenenza." },
+        { question: "Come si può promuovere l' 'innovazione' in un team?", answer: "Incoraggiando la sperimentazione, accettando il fallimento e premiando le nuove idee." },
+        { question: "Cosa si intende per 'leadership situazionale'?", answer: "Adattare il proprio stile di leadership alla situazione e al livello di maturità dei collaboratori." },
+        { question: "Qual è il ruolo del 'mentoring'?", answer: "Un professionista esperto (mentor) guida e supporta lo sviluppo di un'altra persona (mentee)." },
+        { question: "Come si può costruire una 'rete di contatti' (networking) efficace?", answer: "Partecipando a eventi, coltivando relazioni autentiche e offrendo valore agli altri." }
+      ],
+      matematica: [
+        { question: "Cos'è un 'numero primo'?", answer: "Un numero naturale maggiore di 1 che ha solo due divisori: 1 e se stesso." },
+        { question: "Qual è il 'teorema di Pitagora'?", answer: "In un triangolo rettangolo, il quadrato costruito sull'ipotenusa è uguale alla somma dei quadrati costruiti sui cateti (a² + b² = c²)." },
+        { question: "Cosa si intende per 'derivata' di una funzione?", answer: "Il tasso di variazione istantanea di una funzione, o la pendenza della retta tangente al grafico della funzione in un punto." },
+        { question: "Cos'è un 'integrale'?", answer: "L'operazione inversa della derivata, che permette di calcolare l'area sottesa al grafico di una funzione." },
+        { question: "Qual è la differenza tra 'equazione' e 'disequazione'?", answer: "Un'equazione stabilisce un'uguaglianza, una disequazione stabilisce una disuguaglianza (maggiore, minore, ecc.)." },
+        { question: "Cosa si intende per 'funzione' in matematica?", answer: "Una relazione tra due insiemi che associa a ogni elemento del primo insieme uno e un solo elemento del secondo." },
+        { question: "Cos'è il 'pi greco' (π)?", answer: "Una costante matematica che rappresenta il rapporto tra la circonferenza di un cerchio e il suo diametro (circa 3.14159)." },
+        { question: "Qual è la formula per l'area di un 'cerchio'?", answer: "A = π * r², dove r è il raggio." },
+        { question: "Cosa si intende per 'matrice'?", answer: "Una tabella rettangolare di numeri, simboli o espressioni, disposti per righe e colonne." },
+        { question: "Cos'è un 'vettore'?", answer: "Un ente matematico caratterizzato da modulo (o intensità), direzione e verso." },
+        { question: "Qual è la differenza tra 'scalare' e 'vettore'?", answer: "Uno scalare è definito da un solo numero (es. temperatura), un vettore da modulo, direzione e verso (es. forza)." },
+        { question: "Cosa si intende per 'limite' di una funzione?", answer: "Il valore a cui la funzione si avvicina quando la sua variabile indipendente si avvicina a un certo valore." },
+        { question: "Cos'è un 'logaritmo'?", answer: "L'esponente da dare a un numero (la base) per ottenere un altro numero (l'argomento)." },
+        { question: "Qual è la differenza tra 'probabilità' e 'statistica'?", answer: "La probabilità si occupa di prevedere la verosimiglianza di eventi futuri, la statistica di analizzare dati passati." },
+        { question: "Cosa si intende per 'media', 'mediana' e 'moda'?", answer: "Sono indici di posizione in statistica: la media è la somma dei valori divisa per il loro numero, la mediana è il valore centrale, la moda è il valore più frequente." },
+        { question: "Cos'è un 'numero complesso'?", answer: "Un numero che può essere espresso nella forma a + bi, dove a e b sono numeri reali e i è l'unità immaginaria (√-1)." },
+        { question: "Qual è il 'principio di induzione'?", answer: "Un metodo di dimostrazione matematica usato per provare che una certa proprietà vale per tutti i numeri naturali." },
+        { question: "Cosa si intende per 'serie numerica'?", answer: "La somma degli infiniti termini di una successione." },
+        { question: "Qual è la differenza tra 'geometria euclidea' e 'geometrie non euclidee'?", answer: "La geometria euclidea si basa sui postulati di Euclide, le geometrie non euclidee ne negano almeno uno (tipicamente il quinto, quello delle rette parallele)." },
+        { question: "Cosa si intende per 'trigonometria'?", answer: "La branca della matematica che studia le relazioni tra i lati e gli angoli dei triangoli." },
+        { question: "Quali sono le principali 'funzioni trigonometriche'?", answer: "Seno (sin), coseno (cos) e tangente (tan)." },
+        { question: "Cos'è un 'polinomio'?", answer: "Un'espressione algebrica composta dalla somma di più monomi." },
+        { question: "Cosa si intende per 'fattorizzazione' di un polinomio?", answer: "Scomporre un polinomio nel prodotto di polinomi di grado inferiore." },
+        { question: "Qual è il 'teorema fondamentale dell'algebra'?", answer: "Ogni polinomio a coefficienti complessi di grado n ≥ 1 ha esattamente n radici complesse (contate con la loro molteplicità)." },
+        { question: "Cosa si intende per 'spazio vettoriale'?", answer: "Un insieme di vettori in cui sono definite le operazioni di somma tra vettori e di prodotto di un vettore per uno scalare." },
+        { question: "Cos'è un 'autovalore' di una matrice?", answer: "Uno scalare λ tale che, per un dato vettore non nullo v, Av = λv." },
+        { question: "Cosa si intende per 'equazione differenziale'?", answer: "Un'equazione che lega una funzione incognita alle sue derivate." },
+        { question: "Qual è la differenza tra 'algebra' e 'analisi'?", answer: "L'algebra si occupa di strutture algebriche e manipolazione di simboli, l'analisi si occupa di limiti, continuità, derivate e integrali." },
+        { question: "Cosa si intende per 'topologia'?", answer: "La branca della matematica che studia le proprietà delle figure che non cambiano per deformazioni continue." },
+        { question: "Cos'è un 'frattale'?", answer: "Un oggetto geometrico che si ripete nella sua forma allo stesso modo su scale diverse." },
+        { question: "Qual è la 'sezione aurea' (φ)?", answer: "Un rapporto numerico (circa 1.618) che si ritrova in natura e nell'arte, definito dalla proporzione (a+b)/a = a/b." },
+        { question: "Cosa si intende per 'calcolo combinatorio'?", answer: "Il calcolo del numero di modi in cui si possono raggruppare o ordinare gli elementi di un insieme." },
+        { question: "Qual è la differenza tra 'permutazioni' e 'combinazioni'?", answer: "Nelle permutazioni conta l'ordine degli elementi, nelle combinazioni no." },
+        { question: "Cosa si intende per 'teoria dei grafi'?", answer: "Lo studio dei grafi, strutture matematiche usate per modellare relazioni tra oggetti." },
+        { question: "Cos'è un 'algoritmo'?", answer: "Una sequenza finita di istruzioni per risolvere un problema o eseguire un calcolo." },
+        { question: "Qual è la 'congettura di Goldbach'?", answer: "Un'ipotesi non dimostrata secondo cui ogni numero pari maggiore di 2 può essere scritto come somma di due numeri primi." },
+        { question: "Cosa si intende per 'teoria dei numeri'?", answer: "La branca della matematica che si occupa delle proprietà dei numeri interi." },
+        { question: "Cos'è l''ultimo teorema di Fermat'?", answer: "L'affermazione, dimostrata da Andrew Wiles, che non esistono soluzioni intere positive all'equazione aⁿ + bⁿ = cⁿ per n > 2." },
+        { question: "Cosa si intende per 'cardinalità' di un insieme?", answer: "Il numero di elementi di un insieme." },
+        { question: "Qual è la differenza tra 'insieme finito' e 'insieme infinito'?", answer: "Un insieme finito ha un numero di elementi che può essere contato, un insieme infinito no." },
+        { question: "Cosa si intende per 'logica matematica'?", answer: "Lo studio formale della logica e della sua applicazione in matematica." },
+        { question: "Qual è il 'paradosso di Russell'?", answer: "Un paradosso della teoria degli insiemi che riguarda l'insieme di tutti gli insiemi che non contengono se stessi." },
+        { question: "Cosa si intende per 'assioma'?", answer: "Un'affermazione considerata vera senza bisogno di dimostrazione, che serve come punto di partenza per una teoria." },
+        { question: "Qual è la differenza tra 'teorema' e 'corollario'?", answer: "Un teorema è un'affermazione importante che viene dimostrata, un corollario è una conseguenza diretta di un teorema." },
+        { question: "Cosa si intende per 'dimostrazione per assurdo'?", answer: "Un metodo di dimostrazione in cui si assume la negazione della tesi e si arriva a una contraddizione." },
+        { question: "Cos'è un 'sistema di equazioni lineari'?", answer: "Un insieme di due o più equazioni lineari con le stesse incognite." },
+        { question: "Cosa si intende per 'interpolazione'?", answer: "Stimare il valore di una funzione in un punto interno a un intervallo di cui si conoscono i valori agli estremi." },
+        { question: "Qual è la differenza tra 'interpolazione' ed 'estrapolazione'?", answer: "L'interpolazione stima valori interni a un intervallo noto, l'estrapolazione stima valori esterni." },
+        { question: "Cosa si intende per 'ottimizzazione'?", answer: "La ricerca del valore massimo o minimo di una funzione, soggetta a eventuali vincoli." },
+        { question: "Qual è il 'metodo di Newton'?", answer: "Un algoritmo iterativo per trovare le radici di una funzione." }
+      ],
+      solidworks: [
+        { question: "Cos'è SolidWorks?", answer: "Un software di progettazione assistita dal computer (CAD) e di ingegneria assistita dal computer (CAE)." },
+        { question: "Qual è la differenza tra 'schizzo' e 'feature' (funzione)?", answer: "Lo schizzo è un profilo 2D, la feature è un'operazione 3D che modifica la forma di una parte (es. estrusione, taglio)." },
+        { question: "Cosa si intende per 'progettazione parametrica'?", answer: "Un approccio in cui le dimensioni e le relazioni geometriche sono utilizzate per definire e modificare i modelli." },
+        { question: "Qual è la funzione dell''estrusione base'?", answer: "Aggiungere materiale estendendo un profilo 2D lungo una direzione." },
+        { question: "Cosa fa la funzione 'taglio estruso'?", answer: "Rimuovere materiale estendendo un profilo 2D per tagliare una parte." },
+        { question: "A cosa serve la 'rivoluzione base'?", answer: "Creare una geometria 3D ruotando un profilo 2D attorno a un asse." },
+        { question: "Cos'è un 'raccordo' (fillet)?", answer: "Un'operazione che crea un arrotondamento su uno spigolo vivo." },
+        { question: "Qual è la funzione di uno 'smusso' (chamfer)?", answer: "Creare uno spigolo smussato (piatto) su un bordo." },
+        { question: "Cosa si intende per 'assieme' in SolidWorks?", answer: "Un file che contiene due o più parti assemblate insieme." },
+        { question: "A cosa servono gli 'accoppiamenti' (mates) in un assieme?", answer: "A definire le relazioni spaziali e i gradi di libertà tra le parti." },
+        { question: "Qual è la differenza tra un accoppiamento 'coincidente' e uno 'parallelo'?", answer: "Coincidente allinea due facce o piani, parallelo li mantiene a una distanza costante." },
+        { question: "Cosa si intende per 'messa in tavola' (drawing)?", answer: "La creazione di un disegno tecnico 2D a partire da un modello 3D di parte o assieme." },
+        { question: "Cos'è la 'distinta materiali' (BOM - Bill of Materials)?", answer: "Un elenco di tutte le parti e i sottoassiemi che compongono un assieme." },
+        { question: "A cosa serve la funzione 'sweep' (estrusione su percorso)?", answer: "Creare una forma estrudendo un profilo lungo un percorso." },
+        { question: "Qual è la funzione del 'loft' (estrusione multicorpo)?", answer: "Creare una forma di transizione tra due o più profili diversi." },
+        { question: "Cosa si intende per 'configurazioni'?", answer: "Variazioni di una parte o di un assieme all'interno di un singolo file." },
+        { question: "A cosa serve la 'ripetizione lineare' (linear pattern)?", answer: "Creare copie multiple di una feature o di un corpo lungo una o due direzioni lineari." },
+        { question: "Qual è la funzione della 'ripetizione circolare' (circular pattern)?", answer: "Creare copie multiple di una feature o di un corpo attorno a un asse." },
+        { question: "Cosa si intende per 'lamiera' (sheet metal)?", answer: "Un modulo di SolidWorks per la progettazione di parti in lamiera che possono essere appiattite." },
+        { question: "A cosa serve la funzione 'sviluppo' (flatten) in una parte in lamiera?", answer: "A visualizzare la parte in lamiera nel suo stato appiattito, prima della piegatura." },
+        { question: "Cos'è 'SolidWorks Simulation'?", answer: "Un insieme di strumenti di analisi ad elementi finiti (FEA) per simulare il comportamento di parti e assiemi sotto carico." },
+        { question: "Cosa si intende per 'analisi statica'?", answer: "Una simulazione per determinare le sollecitazioni, le deformazioni e gli spostamenti in una struttura soggetta a carichi statici." },
+        { question: "Cos'è 'SolidWorks Flow Simulation'?", answer: "Un software di fluidodinamica computazionale (CFD) per analizzare il flusso di liquidi e gas." },
+        { question: "A cosa serve la funzione 'specchia' (mirror)?", answer: "Creare una copia speculare di feature, facce o corpi rispetto a un piano o una faccia." },
+        { question: "Qual è la differenza tra una 'parte' e un 'corpo'?", answer: "Una parte è un singolo file (.sldprt), che può contenere uno o più corpi solidi distinti." },
+        { question: "Cosa si intende per 'relazioni di schizzo'?", answer: "Vincoli geometrici (es. orizzontale, verticale, tangente) che definiscono il comportamento dello schizzo." },
+        { question: "Perché è importante avere uno 'schizzo completamente definito'?", answer: "Perché garantisce che la geometria sia stabile e non possa muoversi o cambiare dimensione inaspettatamente." },
+        { question: "A cosa serve l' 'albero di disegno FeatureManager'?", answer: "A visualizzare la cronologia di tutte le operazioni e le feature utilizzate per creare il modello." },
+        { question: "Cosa si intende per 'progettazione top-down' (dall'alto verso il basso)?", answer: "Un metodo di progettazione di assiemi in cui le parti vengono create nel contesto dell'assieme stesso." },
+        { question: "Qual è il vantaggio della 'progettazione top-down'?", answer: "Permette di garantire che le parti si adattino correttamente tra loro, poiché vengono progettate in relazione l'una con l'altra." },
+        { question: "Cosa si intende per 'progettazione bottom-up' (dal basso verso l'alto)?", answer: "Un metodo di progettazione in cui le parti vengono create individualmente e poi inserite in un assieme." },
+        { question: "A cosa serve la 'libreria del progetto' (Design Library)?", answer: "A memorizzare e riutilizzare feature, schizzi, parti e altre entità di uso comune." },
+        { question: "Cos'è 'SolidWorks PDM' (Product Data Management)?", answer: "Un sistema per la gestione dei dati di progetto, che controlla le revisioni e facilita la collaborazione." },
+        { question: "A cosa serve la funzione 'shell' (svuota)?", answer: "A svuotare una parte solida, lasciando un guscio di spessore specificato." },
+        { question: "Qual è la funzione del 'piano di riferimento'?", answer: "Creare un nuovo piano su cui disegnare o da usare come riferimento per altre feature." },
+        { question: "A cosa serve un 'asse di riferimento'?", answer: "A creare un asse da usare per rivoluzioni, ripetizioni circolari o accoppiamenti." },
+        { question: "Cosa si intende per 'rendering'?", answer: "Il processo di creazione di un'immagine fotorealistica di un modello 3D." },
+        { question: "Cos'è 'PhotoView 360'?", answer: "Un componente aggiuntivo di SolidWorks per la creazione di rendering fotorealistici." },
+        { question: "A cosa serve la funzione 'spline'?", answer: "A creare una curva morbida che passa attraverso una serie di punti." },
+        { question: "Qual è la differenza tra 'sopprimere' e 'cancellare' una feature?", answer: "Sopprimere nasconde temporaneamente la feature, cancellare la rimuove permanentemente." },
+        { question: "Cosa si intende per 'stato di visualizzazione'?", answer: "Un modo per salvare diverse combinazioni di visibilità, colore e trasparenza dei componenti in un assieme." },
+        { question: "A cosa serve la 'valutazione interferenze'?", answer: "A controllare se ci sono collisioni o sovrapposizioni tra i componenti di un assieme." },
+        { question: "Cos'è 'eDrawings'?", answer: "Un software gratuito per visualizzare e condividere file 2D e 3D di SolidWorks e altri formati CAD." },
+        { question: "A cosa serve la funzione 'nervatura' (rib)?", answer: "A creare un sottile rinforzo strutturale all'interno di una parte." },
+        { question: "Qual è la funzione del 'foro guidato' (Hole Wizard)?", answer: "Uno strumento per creare fori standard (es. filettati, svasati) in modo rapido e preciso." },
+        { question: "Cosa si intende per 'filettatura cosmetica'?", answer: "Una rappresentazione grafica di una filettatura, che non ne modella la geometria effettiva per risparmiare risorse." },
+        { question: "A cosa serve la funzione 'combina' (combine)?", answer: "A unire, sottrarre o trovare l'intersezione di più corpi solidi." },
+        { question: "Cos'è 'SolidWorks Composer'?", answer: "Un software per creare documentazione tecnica, istruzioni di montaggio e animazioni a partire da modelli 3D." },
+        { question: "A cosa serve la funzione 'sposta/copia corpo'?", answer: "A spostare, ruotare o copiare corpi solidi all'interno di un file di parte." },
+        { question: "Qual è l'importanza di utilizzare 'template' personalizzati?", answer: "Permettono di standardizzare le impostazioni del documento (unità, norme di disegno, proprietà) e di risparmiare tempo." }
+      ]
+    };
 
-        // Listener per i tasti freccia su desktop
-        document.addEventListener('keydown', (e) => {
-            if (quizScreen.classList.contains('hidden')) {
-                return; // Non fare nulla se non siamo nella schermata del quiz
-            }
-            if (e.key === 'ArrowRight' && !nextBtn.disabled) {
-                nextQuestion();
-            } else if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
-                previousQuestion();
-            }
+    const backgroundImages = {
+      meccanica: 'https://images.pexels.com/photos/716661/pexels-photo-716661.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      sicurezza: 'https://images.pexels.com/photos/209230/pexels-photo-209230.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      elettrotecnica: 'https://images.pexels.com/photos/6477203/pexels-photo-6477203.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      comunicazione: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      matematica: 'https://images.pexels.com/photos/3729557/pexels-photo-3729557.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      solidworks: 'https://images.pexels.com/photos/7504612/pexels-photo-7504612.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
+    };
+
+    // --- Configurazione Immagini Cicliche per la Home ---
+    const homeCycleImages = Object.values(backgroundImages);
+    // --- Fine Configurazione Immagini Cicliche ---
+
+
+    const bgContainer = document.getElementById('background-container');
+    const bgOverlay = document.getElementById('background-overlay');
+    const staticBackground = document.getElementById('static-background');
+    const carouselContainer = document.getElementById('image-carousel');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const menuToggle = document.getElementById('menu-toggle');
+    const overlay = document.getElementById('overlay');
+    const homeScreen = document.getElementById('home-screen');
+    const subjectScreen = document.getElementById('subject-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultsScreen = document.getElementById('results-screen');
+
+    // Riferimenti pulsanti e elementi del Quiz/Flashcard
+    const subjectTitle = document.getElementById('subject-title'); // Riferimento al nuovo H2
+    const flipbookBtn = document.getElementById('flipbook-btn');
+    const flashcardBtn = document.getElementById('flashcard-btn');
+    const flashcard = document.getElementById('flashcard');
+    const questionText = document.getElementById('question-text');
+    const answerText = document.getElementById('answer-text');
+    const progressText = document.getElementById('progress-text');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const resultsMessage = document.getElementById('results-message');
+
+    // Variabile per gestire il ciclo dello sfondo automatico
+    let homeBackgroundInterval = null;
+    let currentHomeImageIndex = 0;
+
+    // Costante CSS per l'effetto blur
+    const BLURRED_CLASS = 'blurred-overlay';
+    // Costante CSS per lo shift del contenuto principale su desktop
+    const SHIFTED_CLASS = 'main-content-shifted';
+    // Classe per rendere l'overlay trasparente su desktop (gestita in JS/CSS)
+    const DESKTOP_TRANSPARENT_CLASS = 'desktop-transparent';
+
+    /**
+     * Controlla se lo schermo è in modalità desktop (larghezza >= 768px).
+     */
+    const isDesktop = () => window.matchMedia('(min-width: 768px)').matches;
+
+
+    /**
+     * Inietta i div delle immagini nel carosello una sola volta.
+     */
+    function initializeHomeCarousel() {
+        if (carouselContainer.children.length === 0) {
+            homeCycleImages.forEach((url, index) => {
+                const div = document.createElement('div');
+                div.className = 'carousel-image';
+                div.style.backgroundImage = `url('${url}')`;
+                div.dataset.index = index;
+                carouselContainer.appendChild(div);
+            });
+        }
+    }
+
+
+    /**
+     * Avvia il ciclo di cambio dello sfondo della Home con transizione a dissolvenza (fade).
+     */
+    function startHomeBackgroundCycle() {
+        if (homeBackgroundInterval) {
+            clearInterval(homeBackgroundInterval);
+        }
+
+        const images = Array.from(carouselContainer.children);
+        if (images.length === 0) return;
+
+        images.forEach(img => {
+            img.classList.remove('active');
         });
 
-        function startQuiz(button, subject) {
-            // Attiva l'animazione sull'icona della card cliccata
-            if (button) {
-                const card = button.closest('.card-animation');
-                if (card) {
-                    const icon = card.querySelector('span');
-                    if (icon) {
-                        icon.classList.add('active-anim');
-                        // Rimuovi la classe di animazione dopo un breve ritardo per consentire l'animazione
-                        setTimeout(() => {
-                            icon.classList.remove('active-anim');
-                        }, 500);
-                    }
-                }
-            }
+        currentHomeImageIndex = 0;
+        images[currentHomeImageIndex].classList.add('active');
 
-            if (subject === 'meccanica') {
-                currentQuizData = [...progettazioneMeccanicaQuestions].sort(() => Math.random() - 0.5);
-                quizTitle.innerText = "Progettazione Meccanica";
-            } else if (subject === 'sicurezza') {
-                currentQuizData = [...sicurezzaLavoroQuestions].sort(() => Math.random() - 0.5);
-                quizTitle.innerText = "Sicurezza sul Lavoro";
-            } else if (subject === 'elettrotecnica') {
-                currentQuizData = [...elettrotecnicaQuestions].sort(() => Math.random() - 0.5);
-                quizTitle.innerText = "Elettrotecnica";
-            } else if (subject === 'comunicazione') {
-                currentQuizData = [...comunicazioneQuestions].sort(() => Math.random() - 0.5);
-                quizTitle.innerText = "Soft Skills & Comunicazione";
-            } else if (subject === 'matematica') {
-                currentQuizData = [...matematicaQuestions].sort(() => Math.random() - 0.5);
-                quizTitle.innerText = "Matematica";
-            }
 
-            currentQuestionIndex = 0;
-            isFlipped = false;
+        homeBackgroundInterval = setInterval(() => {
+            const prevIndex = currentHomeImageIndex;
+            const nextIndex = (currentHomeImageIndex + 1) % homeCycleImages.length;
 
-            selectionScreen.classList.add('hidden');
-            resultsScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
+            const currentImage = images[prevIndex];
+            const nextImage = images[nextIndex];
 
-            displayQuestion();
+            currentImage.classList.remove('active');
+            nextImage.classList.add('active');
+
+            currentHomeImageIndex = nextIndex;
+
+        }, 5000); // Intervallo a 5 secondi
+    }
+
+    /**
+     * Ferma il ciclo di cambio dello sfondo della Home.
+     */
+    function stopHomeBackgroundCycle() {
+        if (homeBackgroundInterval) {
+            clearInterval(homeBackgroundInterval);
+            homeBackgroundInterval = null;
+        }
+        Array.from(carouselContainer.children).forEach(img => {
+            img.classList.remove('active');
+        });
+    }
+
+
+    function clearActiveSidebar() {
+      const items = document.querySelectorAll('.sidebar-item');
+      items.forEach(item => {
+        item.classList.remove('active');
+      });
+    }
+
+    function markActiveSidebar(subjectId) {
+      clearActiveSidebar();
+      const item = document.getElementById(`item-${subjectId}`);
+      if (item) item.classList.add('active');
+    }
+
+    /**
+     * Gestisce il cambio di sfondo principale, mostrando le immagini statiche o attivando il carosello.
+     */
+    function changeBackground(subjectKey) {
+      const needsBlur = (subjectKey !== 'home');
+
+      // Gestione Blur dell'overlay
+      if (needsBlur) {
+          bgOverlay.classList.add(BLURRED_CLASS);
+      } else {
+          bgOverlay.classList.remove(BLURRED_CLASS);
+      }
+
+      // Gestione Carosello vs Sfondo Statico
+      if (subjectKey === 'home') {
+          // Attiva il carosello e nasconde lo sfondo statica
+          staticBackground.style.opacity = 0;
+          carouselContainer.style.display = 'block';
+          startHomeBackgroundCycle();
+      } else {
+          // Disattiva il carosello e mostra lo sfondo statico
+          stopHomeBackgroundCycle();
+          carouselContainer.style.display = 'none';
+
+          const newImageUrl = backgroundImages[subjectKey];
+
+          // Transizione per immagini statiche
+          if (bgContainer.dataset.currentKey !== subjectKey) {
+              staticBackground.style.opacity = 0;
+              setTimeout(() => {
+                staticBackground.style.backgroundImage = `url('${newImageUrl}')`;
+                staticBackground.style.opacity = 1;
+              }, 100);
+          } else {
+              staticBackground.style.opacity = 1;
+          }
+      }
+
+      bgContainer.dataset.currentKey = subjectKey;
+    }
+
+
+    // --- Funzioni di Navigazione e Sidebar ---
+    function isSidebarOpen() {
+        // Controlla se la sidebar ha la classe 'sidebar-open'
+        return sidebar.classList.contains('sidebar-open');
+    }
+
+    function toggleSidebar() {
+        const isOpen = isSidebarOpen();
+        const shouldOpen = !isOpen; // Stiamo tentando di aprire?
+
+        // 1. Toggle delle classi della Sidebar
+        sidebar.classList.toggle('sidebar-open', shouldOpen);
+        sidebar.classList.toggle('-translate-x-full', isOpen);
+
+        // 2. Toggle del margine del Contenuto Principale
+        mainContent.classList.toggle(SHIFTED_CLASS, shouldOpen);
+
+        // 3. Toggle dell'Overlay (adesso è sempre attivo quando la sidebar è aperta)
+        overlay.classList.toggle('hidden', isOpen);
+
+        // 4. Gestione Trasparenza Overlay (per il click fuori su desktop)
+        if (shouldOpen && isDesktop()) {
+            // L'overlay è trasparente su desktop ma rimane visibile
+            overlay.classList.add(DESKTOP_TRANSPARENT_CLASS);
+        } else if (isOpen) {
+            overlay.classList.remove(DESKTOP_TRANSPARENT_CLASS);
         }
 
-        function displayQuestion() {
-            // Assicurati che la card sia sempre girata sul fronte (domanda) quando ne viene caricata una nuova
-            if (isFlipped) {
-                flashcard.classList.remove('flipped');
-                isFlipped = false;
-            }
+        // Aggiunge o rimuove l'animazione di blink
+        menuToggle.classList.toggle('blink', !shouldOpen);
+    }
 
-            const questionData = currentQuizData[currentQuestionIndex];
-            questionText.innerText = questionData.question;
-            answerText.innerText = questionData.answer;
+    /**
+     * Chiude la sidebar forzatamente. Utilizzata per i click interni.
+     */
+    function closeSidebar() {
+        if (isSidebarOpen()) {
+            toggleSidebar(); // La funzione toggle esegue la chiusura se è aperta
+        }
+    }
 
-            progressText.innerText = `Domanda ${currentQuestionIndex + 1} di ${currentQuizData.length}`;
 
-            // Abilita/disabilita i pulsanti di navigazione
-            prevBtn.disabled = currentQuestionIndex === 0;
-            nextBtn.disabled = currentQuestionIndex === currentQuizData.length - 1;
+    menuToggle.addEventListener('click', toggleSidebar);
+
+    // RIMOSSO: overlay.addEventListener('click', closeMobileSidebar);
+    // La chiusura tramite click esterno è stata disabilitata.
+
+
+    function showHomeScreen() {
+      changeBackground('home');
+      subjectScreen.classList.add('hidden');
+      homeScreen.classList.remove('hidden');
+      quizScreen.classList.add('hidden');
+      resultsScreen.classList.add('hidden');
+      clearActiveSidebar();
+      // Chiude la sidebar se aperta (anche se si clicca sul logo che è un click interno)
+      closeSidebar();
+    }
+
+    function animateSubjectButtons() {
+        const buttons = document.querySelectorAll('.subject-button');
+        buttons.forEach(btn => {
+            btn.style.animationDelay = '';
+            btn.classList.remove('animated-button');
+            void btn.offsetWidth;
+            btn.classList.add('animated-button');
+        });
+        flipbookBtn.style.animationDelay = '0.1s';
+        flashcardBtn.style.animationDelay = '0.2s';
+    }
+
+    function showSubjectPage(subjectId, subjectName, flipbookUrl) {
+        stopHomeBackgroundCycle();
+        changeBackground(subjectId);
+
+        if (!subjectScreen.classList.contains('hidden')) {
+            subjectScreen.classList.add('fade-out');
         }
 
-        function flipCard() {
-            if (!isFlipped) {
-                flashcard.classList.add('flipped');
-                isFlipped = true;
-            } else {
-                flashcard.classList.remove('flipped');
-                isFlipped = false;
-            }
-        }
-
-        function nextQuestion() {
-            if (currentQuestionIndex < currentQuizData.length - 1) {
-                currentQuestionIndex++;
-                displayQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function previousQuestion() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                displayQuestion();
-            }
-        }
-
-        function showResults() {
+        setTimeout(() => {
+            homeScreen.classList.add('hidden');
             quizScreen.classList.add('hidden');
-            resultsScreen.classList.remove('hidden');
+            resultsScreen.classList.add('hidden');
 
-            const resultsTitle = document.getElementById('results-title');
-            const resultsMessage = document.getElementById('results-message');
+            subjectScreen.classList.remove('fade-out');
+            subjectScreen.classList.remove('hidden');
+            subjectScreen.classList.add('fade-in');
 
-            resultsTitle.innerText = "Sessione di studio completata!";
-            resultsMessage.innerText = "Hai completato tutte le flashcard. Ottimo lavoro! Puoi riprovare o cambiare materia.";
-        }
+            currentSubjectInfo = { subjectId, subjectName, flipbookUrl };
 
-        function restartQuiz() {
-            let subject = 'meccanica';
-            if (quizTitle.innerText.includes("Sicurezza")) {
-                subject = 'sicurezza';
-            } else if (quizTitle.innerText.includes("Elettrotecnica")) {
-                subject = 'elettrotecnica';
-            } else if (quizTitle.innerText.includes("Comunicazione")) {
-                subject = 'comunicazione';
-            } else if (quizTitle.innerText.includes("Matematica")) {
-                subject = 'matematica';
-            }
-            startQuiz(null, subject);
-        }
+            // AGGIORNA IL TITOLO IN MAIUSCOLO
+            subjectTitle.innerText = subjectName.toUpperCase();
 
-        function showSelectionScreen() {
-             quizScreen.classList.add('hidden');
-             resultsScreen.classList.add('hidden');
-             selectionScreen.classList.remove('hidden');
-             // Reset quiz state
-             currentQuizData = [];
-             currentQuestionIndex = 0;
-             isFlipped = false;
-             flashcard.classList.remove('flipped');
-        }
-    </script>
+            flipbookBtn.href = flipbookUrl;
+            flashcardBtn.setAttribute('onclick', `startQuiz('${subjectId}')`);
+
+            markActiveSidebar(subjectId);
+
+            // Chiude la sidebar dopo la selezione della materia (click interno)
+            closeSidebar();
+
+            animateSubjectButtons();
+
+        }, subjectScreen.classList.contains('fade-out') ? 300 : 0);
+    }
+
+    let currentQuizData = [];
+    let currentQuestionIndex = 0;
+    let isFlipped = false;
+    let currentSubjectInfo = {};
+
+    function startQuiz(subjectId) {
+      stopHomeBackgroundCycle();
+      bgOverlay.classList.add(BLURRED_CLASS);
+
+      const subjectName = currentSubjectInfo.subjectName;
+      if (!questions[subjectId] || questions[subjectId].length === 0) {
+        currentQuizData = [];
+      } else {
+        // Copia e mescola le domande
+        currentQuizData = [...questions[subjectId]].sort(() => Math.random() - 0.5);
+      }
+      currentQuestionIndex = 0;
+      isFlipped = false;
+      // Resetta la flashcard alla faccia frontale all'inizio di un nuovo quiz
+      flashcard.classList.remove('flipped');
+      subjectScreen.classList.add('hidden');
+      resultsScreen.classList.add('hidden');
+      quizScreen.classList.remove('hidden');
+      displayQuestion();
+    }
+
+    function displayQuestion() {
+      if (isFlipped) {
+        flashcard.classList.remove('flipped');
+        isFlipped = false;
+      }
+      if (!currentQuizData || currentQuizData.length === 0) {
+        questionText.innerText = 'Nessuna domanda disponibile per questa materia.';
+        answerText.innerText = 'Seleziona un\'altra materia o aggiungi domande.';
+        progressText.innerText = '';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+      const questionData = currentQuizData[currentQuestionIndex];
+      questionText.innerText = questionData.question || '';
+      answerText.innerText = questionData.answer || '';
+      progressText.innerText = `Domanda ${currentQuestionIndex + 1} di ${currentQuizData.length}`;
+      prevBtn.disabled = (currentQuestionIndex === 0);
+      nextBtn.disabled = (currentQuestionIndex === currentQuizData.length - 1);
+    }
+
+    function flipCard() {
+      // Controlla se ci sono domande prima di girare
+      if (currentQuizData && currentQuizData.length > 0) {
+        flashcard.classList.toggle('flipped');
+        isFlipped = !isFlipped;
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < currentQuizData.length - 1) {
+        currentQuestionIndex++;
+        displayQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function previousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+      }
+    }
+
+    function showResults() {
+      quizScreen.classList.add('hidden');
+      resultsScreen.classList.remove('hidden');
+
+      resultsMessage.innerText = `Sessione di studio completata! Hai completato tutte le flashcard per ${currentSubjectInfo.subjectName}. Ottimo lavoro!`;
+    }
+
+    function restartQuiz() {
+      startQuiz(currentSubjectInfo.subjectId);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (quizScreen.classList.contains('hidden')) return;
+      if (e.key === 'ArrowRight' && !nextBtn.disabled) nextQuestion();
+      else if (e.key === 'ArrowLeft' && !prevBtn.disabled) previousQuestion();
+      else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        flipCard();
+      }
+    });
+    // --- Fine Funzioni di Navigazione e Quiz ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Inizializza il carosello
+      initializeHomeCarousel();
+
+      // 2. Mostra la Home e avvia il carosello
+      showHomeScreen();
+
+      // 3. Registra il Service Worker per la PWA
+      if ('serviceWorker' in navigator) {
+        const swContent = `
+          self.addEventListener('install', event => {
+            event.waitUntil(
+              caches.open('studio-tai-cache-v1').then(cache => {
+                return cache.addAll(['index.html']);
+              })
+            );
+          });
+
+          self.addEventListener('fetch', event => {
+            event.respondWith(
+              caches.match(event.request).then(response => {
+                return response || fetch(event.request);
+              })
+            );
+          });
+        `;
+        const swBlob = new Blob([swContent], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(swBlob);
+
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register(swUrl)
+            .then(registration => {
+              console.log('Service Worker registrato con successo:', registration);
+            })
+            .catch(error => {
+              console.log('Registrazione del Service Worker fallita:', error);
+            });
+        });
+      }
+    });
+  </script>
+
 </body>
 </html>
