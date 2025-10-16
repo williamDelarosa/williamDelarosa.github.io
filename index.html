@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>App di Studio TAI</title>
+  <title>TAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- PWA & iOS support -->
   <meta name="theme-color" content="#111827"/>
-  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkFwcCBkaSBTdHVkaW8gVEFJIiwKICAic2hvcnRfbmFtZSI6ICJTdHVkaW8gVEFJIiwKICAiZGVzY3JpcHRpb24iOiAiQXBwIGRpIFN0dWRpbyBwZXIgaWwgY29yc28gVEFJICcyNS8nMjYiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzExMTgyNyIsCiAgInRoZW1lX2NvbG9yIjogIiMxMTE4MjciLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vd2lsbGlhbURlbGFyb3NhL3dpbGxpYW1EZWxhcm9zYS5naXRodWIuaW8vbWFpbi9sb2dvLWZvZXIucG5nIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9LAogICAgewogICAgICAic3JjIjogImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS93aWxsaWFtRGVsYXJvc2Evd2lsbGlhbURlbGFyb3NhLmdpdGh1Yi5pby9tYWluL2xvZ28tZm9lci5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0K">
+  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlRBSSIsCiAgInNob3J0X25hbWUiOiAiVEFJIiwKICAiZGVzY3JpcHRpb24iOiAiQXBwIGRpIFN0dWRpbyBwZXIgaWwgY29yc28gVEFJICcyNS8nMjYiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzExMTgyNyIsCiAgInRoZW1lX2NvbG9yIjogIiMxMTE4MjciLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vd2lsbGlhbURlbGFyb3NhL3dpbGxpYW1EZWxhcm9zYS5naXRodWIuaW8vMmM2OGZiNWJlMzEzNmQzNDU4ZTA3M2VhOGM1MWRmYWY4Y2RmMzA0MS9yZWFkeS5wbmciLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3dpbGxpYW1EZWxhcm9zYS93aWxsaWFtRGVsYXJvc2EuZ2l0aHViLmlvLzJjNjhmYjViZTMxMzZkMzQ1OGUwNzNlYThjNTFkZmFmOGNkZjMwNDEvcmVhZHkucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Studio TAI">
-  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/main/logo-foer.png">
+  <meta name="apple-mobile-web-app-title" content="TAI">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/2c68fb5be3136d3458e073ea8c51dfaf8cdf3041/ready.png">
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -183,8 +183,22 @@
       to { opacity: 0; transform: translateY(-10px); }
     }
     .fade-out { animation: fadeOut 0.3s ease-out forwards; }
-    .fade-in { animation: fadeIn 0.5s ease-in-out; }
-    @keyframes popIn {
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+          from { opacity: 0; transform: translateX(-20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes zoomIn {
+          from { opacity: 0; transform: scale(0.8); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes popIn {
       0% { opacity: 0; transform: scale(0.8); }
       100% { opacity: 1; transform: scale(1); }
     }
@@ -206,12 +220,28 @@
       color: #fff;
     }
 
-    @keyframes blink {
-      50% { opacity: 0.3; }
-    }
 
-    #menu-toggle.blink {
-      animation: blink 1.5s ease-in-out infinite;
+
+
+    @keyframes fadeInOpacity {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeOutOpacity {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    .fade-in-4s {
+        animation: fadeInOpacity 4s ease-in forwards;
+    }
+    .fade-in-5s {
+        animation: fadeInOpacity 5s ease-in forwards;
+    }
+    .fade-out-1s {
+        animation: fadeOutOpacity 1s ease-out forwards;
+    }
+    .fade-in-2s {
+        animation: fadeInOpacity 2s ease-in forwards;
     }
   </style>
 </head>
@@ -236,31 +266,57 @@
     <!-- Sidebar -->
     <nav id="sidebar" class="w-72 min-h-screen p-4 fixed top-0 left-0 transform -translate-x-full">
       <div onclick="showHomeScreen()" class="cursor-pointer mb-8">
-        <img src="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/main/logo-foer.png"
-             alt="Logo FOER" class="mx-auto w-32" />
+        <img src="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/2c68fb5be3136d3458e073ea8c51dfaf8cdf3041/ready.png"
+             alt="Logo TAI" class="mx-auto w-32" />
       </div>
       <!-- Titolo sidebar MANTENUTO come da richiesta -->
-      <h1 class="text-xl font-semibold text-white mb-6 text-center">Corso TAI '25/'26</h1>
+
       <div id="sidebar-list" class="space-y-2">
-        <div id="item-meccanica" class="sidebar-item" onclick="showSubjectPage('meccanica', 'Progettazione Meccanica', 'https://www.calameo.com/read/0080586702a2803aacd1a')">
-          <h3 class="font-semibold">Progettazione Meccanica</h3>
+        <div>
+          <button id="info-toggle" class="sidebar-item w-full text-left flex justify-between items-center">
+            <h3 class="font-semibold">Info</h3>
+            <svg id="info-arrow" class="w-5 h-5 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+          <div id="info-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+            <div class="pt-2 pl-4 space-y-2">
+              <div id="item-qualifica" class="sidebar-item" onclick="showSubjectPage('qualifica', 'Qualifica', 'https://www.calameo.com/read/008058670b6fc9cf3227f', true)">
+                <h3 class="font-semibold text-sm">Qualifica</h3>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="item-sicurezza" class="sidebar-item" onclick="showSubjectPage('sicurezza', 'Sicurezza sul Lavoro', 'https://www.calameo.com/read/0080586704ac279277422')">
-          <h3 class="font-semibold">Sicurezza sul Lavoro</h3>
+
+        <div>
+          <button id="materie-toggle" class="sidebar-item w-full text-left flex justify-between items-center">
+            <h3 class="font-semibold">Materie</h3>
+            <svg id="materie-arrow" class="w-5 h-5 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+          <div id="materie-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+            <div class="pt-2 pl-4 space-y-2">
+              <div id="item-meccanica" class="sidebar-item" onclick="showSubjectPage('meccanica', 'Progettazione Meccanica', 'https://www.calameo.com/read/0080586702a2803aacd1a')">
+                <h3 class="font-semibold text-sm">Progettazione Meccanica</h3>
+              </div>
+              <div id="item-sicurezza" class="sidebar-item" onclick="showSubjectPage('sicurezza', 'Sicurezza sul Lavoro', 'https://www.calameo.com/read/0080586704ac279277422')">
+                <h3 class="font-semibold text-sm">Sicurezza sul Lavoro</h3>
+              </div>
+              <div id="item-elettrotecnica" class="sidebar-item" onclick="showSubjectPage('elettrotecnica', 'Elettrotecnica', 'https://www.calameo.com/read/0080586706f297b0b127f')">
+                <h3 class="font-semibold text-sm">Elettrotecnica</h3>
+              </div>
+              <div id="item-comunicazione" class="sidebar-item" onclick="showSubjectPage('comunicazione', 'Soft Skills & Comunicazione', 'https://www.calameo.com/read/0080586704d243157c399')">
+                <h3 class="font-semibold text-sm">Soft Skills & Comunicazione</h3>
+              </div>
+              <div id="item-matematica" class="sidebar-item" onclick="showSubjectPage('matematica', 'Matematica', 'https://www.calameo.com/account/private/read/#code-0080586707940de0f2426')">
+                <h3 class="font-semibold text-sm">Matematica</h3>
+              </div>
+              <div id="item-solidworks" class="sidebar-item" onclick="showSubjectPage('solidworks', 'Solidworks', 'https://www.calameo.com/read/0080586708c1eaef6408f')">
+                <h3 class="font-semibold text-sm">Solidworks</h3>
+              </div>
+              <div id="item-robotica" class="sidebar-item" onclick="showSubjectPage('robotica', 'Robotica', 'https://www.calameo.com/read/008058670fd37822e6df4')">
+                <h3 class="font-semibold text-sm">Robotica</h3>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="item-elettrotecnica" class="sidebar-item" onclick="showSubjectPage('elettrotecnica', 'Elettrotecnica', 'https://www.calameo.com/read/0080586706f297b0b127f')">
-          <h3 class="font-semibold">Elettrotecnica</h3>
-        </div>
-        <div id="item-comunicazione" class="sidebar-item" onclick="showSubjectPage('comunicazione', 'Soft Skills & Comunicazione', 'https://www.calameo.com/read/0080586704d243157c399')">
-          <h3 class="font-semibold">Soft Skills & Comunicazione</h3>
-        </div>
-        <div id="item-matematica" class="sidebar-item" onclick="showSubjectPage('matematica', 'Matematica', 'https://www.calameo.com/account/private/read/#code-0080586707940de0f2426')">
-          <h3 class="font-semibold">Matematica</h3>
-        </div>
-        <div id="item-solidworks" class="sidebar-item" onclick="showSubjectPage('solidworks', 'Solidworks', 'https://www.calameo.com/read/0080586708c1eaef6408f')">
-          <h3 class="font-semibold">Solidworks</h3>
-        </div>
-      </div>
     </nav>
 
     <!-- Main Content -->
@@ -268,7 +324,7 @@
     <main id="main-content" class="flex-1 transition-all duration-300 ease-in-out h-screen overflow-y-auto">
       <div class="p-4 md:p-8">
         <button id="menu-toggle"
-                class="p-2 rounded-md bg-gray-800 hover:bg-gray-700 fixed top-4 left-4 z-50 blink">
+                class="p-2 rounded-md bg-gray-800 hover:bg-gray-700 fixed top-4 left-4 z-50">
           <svg class="w-6 h-6" fill="none" stroke="currentColor"
                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -278,9 +334,26 @@
 
         <div id="app-container" class="w-full max-w-5xl mx-auto">
           <!-- Home Screen -->
-          <div id="home-screen" class="hidden text-center fade-in h-screen flex flex-col justify-center items-center">
-            <h2 class="text-5xl font-extrabold text-white mb-6">CORSO TAI '25/'26</h2>
-            <p class="text-xl font-semibold italic text-gray-300 mb-12">"fatti non foste a viver come bruti, ma per seguir virtute e canoscenza"</p>
+          <div id="home-screen" class="hidden text-center h-screen flex flex-col justify-center items-center">
+            <div id="home-animation-container" class="relative w-full h-full flex justify-center items-center">
+                <p id="home-subtitle" class="text-xl font-semibold italic text-gray-300 absolute opacity-0">"fatti non foste a viver come bruti, ma per seguir virtute e canoscenza"</p>
+                <div id="home-vertical-title" class="absolute inset-0 flex items-center justify-center opacity-0">
+                    <div class="flex flex-col items-start justify-center text-red-600 font-black" style="line-height: 1.2;">
+                        <div id="word-tecnico" class="flex items-baseline">
+                            <span style="font-size: 20vh;">T</span>
+                            <span class="text-white" style="font-size: 5vh; margin-left: -1.4ch;">ecnico</span>
+                        </div>
+                        <div id="word-automazione" class="flex items-baseline">
+                            <span style="font-size: 20vh;">A</span>
+                            <span class="text-white" style="font-size: 5vh; margin-left: -0.1ch;">utomazione</span>
+                        </div>
+                        <div id="word-industriale" class="flex items-baseline">
+                            <span style="font-size: 20vh;">I</span>
+                            <span class="text-white" style="font-size: 5vh; margin-left: -0.1ch;">ndustriale</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
 
           <!-- Subject Screen: Verrà animato completamente ad ogni cambio materia -->
@@ -336,6 +409,70 @@
             </div>
           </div>
 
+
+
+          <!-- Snake Game Screen -->
+          <div id="snake-game-screen" class="hidden text-center">
+            <div class="content-panel p-4 md:p-6 rounded-2xl mt-8 fade-in">
+              <h2 class="text-3xl font-bold text-white mb-4">Snake</h2>
+              <div class="flex justify-between items-center mb-4">
+                <p class="text-xl text-white">Punteggio: <span id="snake-score-display">0</span></p>
+                <button id="start-snake-game-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Inizia Gioco</button>
+              </div>
+              <canvas id="snake-game-canvas" class="bg-gray-800 border-2 border-gray-600 rounded-lg"></canvas>
+              <div class="mt-6 grid grid-cols-3 gap-2 w-48 mx-auto">
+                <div></div>
+                <button id="snake-game-up" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                </button>
+                <div></div>
+                <button id="snake-game-left" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <div></div>
+                <button id="snake-game-right" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                <div></div>
+                <button id="snake-game-down" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Snake Game Screen -->
+          <div id="snake-game-screen" class="hidden text-center">
+            <div class="content-panel p-4 md:p-6 rounded-2xl mt-8 fade-in">
+              <h2 class="text-3xl font-bold text-white mb-4">Snake</h2>
+              <div class="flex justify-between items-center mb-4">
+                <p class="text-xl text-white">Punteggio: <span id="snake-score-display">0</span></p>
+                <button id="start-snake-game-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Inizia Gioco</button>
+              </div>
+              <canvas id="snake-game-canvas" class="bg-gray-800 border-2 border-gray-600 rounded-lg"></canvas>
+              <div class="mt-6 grid grid-cols-3 gap-2 w-48 mx-auto">
+                <div></div>
+                <button id="snake-game-up" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                </button>
+                <div></div>
+                <button id="snake-game-left" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <div></div>
+                <button id="snake-game-right" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                <div></div>
+                <button id="snake-game-down" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div></div>
+              </div>
+            </div>
+          </div>
+
           <!-- Results Screen -->
           <div id="results-screen" class="hidden text-center content-panel p-10 rounded-2xl fade-in">
             <p id="results-message" class="text-3xl font-bold text-white mb-8"></p>
@@ -355,6 +492,30 @@
   </div>
 
   <script>
+    // Aggiungi qui le tue citazioni
+    const quotes = [
+      {
+        text: "Fatti non foste a viver come bruti, ma per seguir virtute e canoscenza.",
+        author: "Dante Alighieri"
+      },
+      {
+        text: "L'intelligenza non consiste soltanto nella conoscenza, ma anche nella capacità di applicare la conoscenza alla pratica.",
+        author: "Aristotele"
+      },
+      {
+        text: "Ci sono uomini che sanno tutto, peccato che questo è tutto quello che sanno.",
+        author: "Niccolo' Macchiavelli"
+      },
+      {
+        text: "L'immaginazione è più importante della conoscenza.",
+        author: "Albert Einstein"
+      },
+      {
+        text: "La saggezza è sapere di non sapere.",
+        author: "Socrate"
+      }
+    ];
+
     const questions = {
       meccanica: [
         { question: "Cos'è la 'Deformazione Plastica'?", answer: "È la deformazione permanente di un materiale, che non recupera la sua forma originale dopo la rimozione del carico." },
@@ -667,6 +828,58 @@
         { question: "Cos'è 'SolidWorks Composer'?", answer: "Un software per creare documentazione tecnica, istruzioni di montaggio e animazioni a partire da modelli 3D." },
         { question: "A cosa serve la funzione 'sposta/copia corpo'?", answer: "A spostare, ruotare o copiare corpi solidi all'interno di un file di parte." },
         { question: "Qual è l'importanza di utilizzare 'template' personalizzati?", answer: "Permettono di standardizzare le impostazioni del documento (unità, norme di disegno, proprietà) e di risparmiare tempo." }
+      ],
+      robotica: [
+        { question: "Quali sono i moduli principali del corso di automazione e robotica?", answer: "I moduli includono: Fondamenti di automazione, Programmazione di sistemi robotizzati, Progettazione 3D per robot e Configurazione di cablaggi e protocolli." },
+        { question: "Quali sono i livelli organizzativi in una fabbrica intelligente?", answer: "Sono ERP (livello manageriale), MES (livello esecutivo), SCADA (supervisione), PLC (controllo) e Field Level (sensori/attuatori)." },
+        { question: "Cos'è l'Intelligenza Artificiale (AI) in robotica?", answer: "È l'insieme di tecniche che permettono a una macchina di prendere decisioni in scenari nuovi, andando oltre i movimenti programmati." },
+        { question: "Cosa sono le reti neurali?", answer: "Sono complesse reti di numeri (parametri) che apprendono funzioni complesse da grandi volumi di dati, usate per calcolare un output." },
+        { question: "Cos'è la Computer Vision?", answer: "È la disciplina che consente ai robot di 'vedere' e interpretare immagini o video per dedurne un comportamento." },
+        { question: "Su cosa si basa il Reinforcement Learning (RL)?", answer: "Si basa sul concetto di apprendere facendo esperienze e ricevendo ricompense o penalità per le azioni compiute." },
+        { question: "Qual è la differenza tra un'architettura di controllo centralizzata e una decentralizzata?", answer: "Centralizzata: un server comanda tutto. Decentralizzata: ogni robot prende decisioni locali, risultando più robusta." },
+        { question: "Cos'è l'HMI (Human Machine Interface)?", answer: "È l'interfaccia software/hardware che permette l'interazione tra l'operatore umano e il sistema automatico (robot, macchina, ecc.)." },
+        { question: "Quali sono le normative chiave per la sicurezza nell'interazione uomo-macchina?", answer: "ISO 10218 per robot industriali e ISO/TS 15066 per robot collaborativi (cobot)." },
+        { question: "Cos'è un 'PLC' (Programmable Logic Controller)?", answer: "Un computer digitale industriale robusto, progettato per eseguire cicli di controllo in tempo reale in ambienti difficili." },
+        { question: "Cosa si intende per sistema 'real-time'?", answer: "Un sistema in cui la correttezza del calcolo dipende non solo dal risultato logico, ma anche dal tempo in cui viene prodotto." },
+        { question: "Qual è il ruolo chiave di un'interfaccia HMI?", answer: "Visualizzare lo stato del processo, permettere input all'operatore e segnalare anomalie e allarmi." },
+        { question: "Cosa si intende per 'Digital Twin'?", answer: "Un modello virtuale che replica fedelmente un robot o una linea di produzione, usato per simulazioni, monitoraggio e manutenzione predittiva." },
+        { question: "Qual è la differenza tra 'Hard Real-Time' e 'Soft Real-Time'?", answer: "In Hard RT, mancare una deadline è un errore critico. In Soft RT, sforamenti occasionali portano a un degrado di qualità ma non al collasso del sistema." },
+        { question: "Cosa sono i 'Robotic Foundation Models'?", answer: "Sono sistemi data-driven che usano l'immagine dello spazio come input per controllare i giunti di un robot (approccio end-to-end)." },
+        { question: "Cos'è un 'end-effector'?", answer: "È il dispositivo alla fine di un braccio robotico, progettato per interagire con l'ambiente. Esempi sono pinze, saldatori o ventose." },
+        { question: "Definisci i 'gradi di libertà' (DOF) di un robot.", answer: "Indicano il numero di direzioni indipendenti in cui un robot può muoversi. Un braccio a 6 assi ha 6 gradi di libertà." },
+        { question: "Cos'è la cinematica diretta?", answer: "È il calcolo della posizione e orientamento dell'end-effector a partire dagli angoli dei giunti del robot." },
+        { question: "Cos'è la cinematica inversa?", answer: "È il calcolo degli angoli dei giunti necessari per raggiungere una data posizione e orientamento dell'end-effector. È un problema più complesso." },
+        { question: "Qual è la differenza tra un robot e un cobot?", answer: "Un cobot (robot collaborativo) è progettato per lavorare in sicurezza a fianco degli esseri umani, spesso senza barriere fisiche." },
+        { question: "Cosa si intende per 'spazio di lavoro' (workspace) di un robot?", answer: "È l'insieme di tutti i punti che l'end-effector del robot può raggiungere." },
+        { question: "Quali sono i principali tipi di giunti in un robot?", answer: "I giunti principali sono rotoidali (rotazione, come un gomito) e prismatici (movimento lineare, come uno stantuffo)." },
+        { question: "Cos'è un robot SCARA?", answer: "Selective Compliance Assembly Robot Arm. È un robot veloce e preciso, ideale per assemblaggi su un piano orizzontale." },
+        { question: "Cos'è un robot cartesiano?", answer: "Un robot che si muove lungo tre assi lineari (X, Y, Z). È rigido e preciso, usato per macchine CNC e stampa 3D." },
+        { question: "Cos'è un robot delta?", answer: "Un robot con una struttura a tre bracci paralleli, noto per la sua altissima velocità. Usato per compiti di 'pick and place' rapidi." },
+        { question: "Cosa significa 'payload' (carico utile) di un robot?", answer: "È il peso massimo che il robot può trasportare con il suo end-effector mantenendo le prestazioni specificate." },
+        { question: "Cos'è il 'ROS' (Robot Operating System)?", answer: "Non è un vero sistema operativo, ma un framework flessibile per scrivere software per robot, fornendo librerie e strumenti." },
+        { question: "A cosa serve un sensore di forza/coppia?", answer: "Misura le forze e le coppie applicate all'end-effector, permettendo al robot di eseguire compiti delicati come l'assemblaggio di precisione." },
+        { question: "Cos'è la 'localizzazione' in robotica mobile?", answer: "È il processo con cui un robot determina la propria posizione all'interno di una mappa o di un ambiente." },
+        { question: "Cos'è lo 'SLAM' (Simultaneous Localization and Mapping)?", answer: "È la capacità di un robot mobile di costruire una mappa di un ambiente sconosciuto e contemporaneamente localizzarsi al suo interno." },
+        { question: "Qual è il ruolo degli attuatori in un robot?", answer: "Sono i 'muscoli' del robot, i motori che convertono l'energia (elettrica, pneumatica) in movimento fisico." },
+        { question: "Cosa si intende per 'teleoperazione'?", answer: "Il controllo di un robot a distanza da parte di un operatore umano, spesso usato in ambienti pericolosi." },
+        { question: "Qual è la funzione di un 'encoder' in un motore robotico?", answer: "È un sensore che misura la posizione angolare o la velocità del motore, fornendo un feedback preciso al controller." },
+        { question: "Cos'è un 'robot autonomo'?", answer: "Un robot in grado di percepire il suo ambiente, prendere decisioni e agire senza intervento umano continuo." },
+        { question: "Cosa sono i 'sistemi di visione 2D' in robotica?", answer: "Utilizzano una singola telecamera per analizzare l'ambiente in due dimensioni, utili per il riconoscimento di oggetti su un piano." },
+        { question: "Cosa sono i 'sistemi di visione 3D' in robotica?", answer: "Utilizzano tecniche come la stereoscopia o la luce strutturata per percepire la profondità e creare un modello tridimensionale dell'ambiente." },
+        { question: "Qual è il linguaggio di programmazione più comune per i PLC?", answer: "Il Ladder Logic (diagramma a contatti), che assomiglia a uno schema elettrico, ma sono usati anche altri linguaggi come Structured Text." },
+        { question: "Cos'è la 'singolarità' di un braccio robotico?", answer: "Una configurazione in cui il robot perde uno o più gradi di libertà, causando movimenti imprevedibili o bloccandosi. Va evitata nella pianificazione del moto." },
+        { question: "Cosa si intende per 'traiettoria' in robotica?", answer: "È il percorso che il robot deve seguire, specificato non solo in termini di posizioni ma anche di velocità e accelerazioni." },
+        { question: "Qual è la differenza tra 'automazione rigida' e 'automazione flessibile'?", answer: "Rigida: attrezzature specializzate per un singolo compito (alta efficienza). Flessibile: sistemi (come i robot) che possono essere riprogrammati per compiti diversi." },
+        { question: "Cos'è un 'AGV' (Automated Guided Vehicle)?", answer: "Un veicolo a guida automatica, tipicamente usato in magazzini e fabbriche per trasportare materiali seguendo percorsi predefiniti." },
+        { question: "Qual è il vantaggio principale dei motori 'brushless' (senza spazzole)?", answer: "Maggiore efficienza, minor manutenzione, maggior durata e miglior rapporto potenza/peso rispetto ai motori a spazzole." },
+        { question: "Cosa si intende per 'calibrazione' di un robot?", answer: "Il processo di affinamento del modello cinematico del robot per migliorare la sua precisione assoluta, compensando piccoli errori di fabbricazione." },
+        { question: "Qual è il ruolo della 'manutenzione predittiva' in robotica?", answer: "Utilizzare i dati dei sensori e l'AI per prevedere quando un componente del robot potrebbe guastarsi, pianificando la manutenzione prima che avvenga il guasto." },
+        { question: "Cos'è un 'riduttore armonico' (strain wave gear)?", answer: "Un tipo di riduttore compatto e leggero con gioco quasi nullo, molto comune nei giunti dei robot per la sua alta precisione." },
+        { question: "Cosa si intende per 'logica fuzzy' in un sistema di controllo?", answer: "Una logica che gestisce concetti 'sfumati' (es. 'caldo', 'veloce') invece di valori booleani (vero/falso), utile per controlli più 'umani'." },
+        { question: "Qual è la funzione del 'teach pendant'?", answer: "È un dispositivo portatile con cui un operatore può muovere manualmente un robot e programmare le sue posizioni punto per punto." },
+        { question: "Cos'è l' 'Industria 4.0'?", answer: "La quarta rivoluzione industriale, caratterizzata dall'integrazione di sistemi ciber-fisici, IoT, cloud computing e intelligenza artificiale nei processi produttivi." },
+        { question: "Cosa si intende per 'programmazione offline' di un robot?", answer: "La programmazione del robot in un ambiente virtuale (software di simulazione) senza fermare la produzione. Il programma viene poi trasferito al robot reale." },
+        { question: "Qual è il principio di un sensore a ultrasuoni?", answer: "Emette un'onda sonora ad alta frequenza e misura il tempo che impiega a tornare indietro dopo aver colpito un oggetto, calcolando così la distanza." }
       ]
     };
 
@@ -676,7 +889,9 @@
       elettrotecnica: 'https://images.pexels.com/photos/6477203/pexels-photo-6477203.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       comunicazione: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       matematica: 'https://images.pexels.com/photos/3729557/pexels-photo-3729557.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
-      solidworks: 'https://images.pexels.com/photos/7504612/pexels-photo-7504612.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
+      solidworks: 'https://images.pexels.com/photos/7504612/pexels-photo-7504612.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      robotica: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      qualifica: 'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
     };
 
     // --- Configurazione Immagini Cicliche per la Home ---
@@ -708,6 +923,7 @@
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const resultsMessage = document.getElementById('results-message');
+
 
     // Variabile per gestire il ciclo dello sfondo automatico
     let homeBackgroundInterval = null;
@@ -873,8 +1089,7 @@
             overlay.classList.remove(DESKTOP_TRANSPARENT_CLASS);
         }
 
-        // Aggiunge o rimuove l'animazione di blink
-        menuToggle.classList.toggle('blink', !shouldOpen);
+
     }
 
     /**
@@ -896,11 +1111,68 @@
     function showHomeScreen() {
       changeBackground('home');
       subjectScreen.classList.add('hidden');
-      homeScreen.classList.remove('hidden');
       quizScreen.classList.add('hidden');
       resultsScreen.classList.add('hidden');
+
+      const homeScreenDiv = document.getElementById('home-screen');
+      const subtitle = document.getElementById('home-subtitle');
+      const verticalTitle = document.getElementById('home-vertical-title');
+      const words = [
+          document.getElementById('word-tecnico'),
+          document.getElementById('word-automazione'),
+          document.getElementById('word-industriale')
+      ];
+
+      // Select a random quote
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      subtitle.innerHTML = `"${randomQuote.text}"<br><span class="text-sm font-normal">- ${randomQuote.author}</span>`;
+
+      // Reset animations
+      homeScreenDiv.classList.remove('hidden');
+      subtitle.classList.remove('fade-in-4s', 'fade-out-1s', 'fade-in-5s');
+      subtitle.style.opacity = '0';
+      
+      // Reset title container and words
+      verticalTitle.style.opacity = '0';
+      words.forEach(word => {
+        if(word) {
+            word.style.opacity = 0; // Start hidden
+            word.style.animation = ''; // Clear any previous animation
+        }
+      });
+
+      // --- Start Animation Sequence ---
+
+      // 1. Subtitle fades in
+      setTimeout(() => {
+        subtitle.classList.add('fade-in-5s');
+      }, 100);
+
+      // 2. After 5s, subtitle starts to fade out
+      setTimeout(() => {
+        subtitle.classList.remove('fade-in-5s');
+        subtitle.classList.add('fade-out-1s');
+      }, 5100); // 5s fade-in + 0.1s buffer
+
+      // 3. After 6.1s, show vertical title by animating words
+      setTimeout(() => {
+        verticalTitle.style.opacity = '1'; // Show the container
+
+        const animations = ['fadeInUp', 'fadeInLeft', 'zoomIn'];
+        
+        words.forEach((word, index) => {
+            if (word) {
+                // Assign a random animation
+                const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+                // Stagger the animation start
+                word.style.animation = `${randomAnimation} 0.8s ease-out forwards`;
+                word.style.animationDelay = `${index * 0.4}s`;
+            }
+        });
+      }, 6200); // 5.1s + 1s fade-out + 0.1s buffer
+
+
       clearActiveSidebar();
-      // Chiude la sidebar se aperta (anche se si clicca sul logo che è un click interno)
       closeSidebar();
     }
 
@@ -916,7 +1188,7 @@
         flashcardBtn.style.animationDelay = '0.2s';
     }
 
-    function showSubjectPage(subjectId, subjectName, flipbookUrl) {
+    function showSubjectPage(subjectId, subjectName, flipbookUrl, hideFlashcard = false) {
         stopHomeBackgroundCycle();
         changeBackground(subjectId);
 
@@ -939,7 +1211,13 @@
             subjectTitle.innerText = subjectName.toUpperCase();
 
             flipbookBtn.href = flipbookUrl;
-            flashcardBtn.setAttribute('onclick', `startQuiz('${subjectId}')`);
+            
+            if (hideFlashcard) {
+              flashcardBtn.style.display = 'none';
+            } else {
+              flashcardBtn.style.display = 'block';
+              flashcardBtn.setAttribute('onclick', `startQuiz('${subjectId}')`);
+            }
 
             markActiveSidebar(subjectId);
 
@@ -1033,6 +1311,12 @@
       startQuiz(currentSubjectInfo.subjectId);
     }
 
+    function restartQuiz() {
+      startQuiz(currentSubjectInfo.subjectId);
+    }
+
+
+
     document.addEventListener('keydown', (e) => {
       if (quizScreen.classList.contains('hidden')) return;
       if (e.key === 'ArrowRight' && !nextBtn.disabled) nextQuestion();
@@ -1045,6 +1329,42 @@
     // --- Fine Funzioni di Navigazione e Quiz ---
 
     document.addEventListener('DOMContentLoaded', () => {
+      const infoToggle = document.getElementById('info-toggle');
+      const infoDropdown = document.getElementById('info-dropdown');
+      const infoArrow = document.getElementById('info-arrow');
+
+      infoToggle.addEventListener('click', () => {
+        const isOpen = infoDropdown.classList.contains('max-h-96');
+        if (isOpen) {
+          infoDropdown.classList.remove('max-h-96');
+          infoDropdown.classList.add('max-h-0');
+          infoArrow.classList.remove('rotate-90');
+        } else {
+          infoDropdown.classList.remove('max-h-0');
+          infoDropdown.classList.add('max-h-96');
+          infoArrow.classList.add('rotate-90');
+        }
+      });
+
+      const materieToggle = document.getElementById('materie-toggle');
+      const materieDropdown = document.getElementById('materie-dropdown');
+      const materieArrow = document.getElementById('materie-arrow');
+
+      materieToggle.addEventListener('click', () => {
+        const isOpen = materieDropdown.classList.contains('max-h-96');
+        if (isOpen) {
+          materieDropdown.classList.remove('max-h-96');
+          materieDropdown.classList.add('max-h-0');
+          materieArrow.classList.remove('rotate-90');
+        } else {
+          materieDropdown.classList.remove('max-h-0');
+          materieDropdown.classList.add('max-h-96');
+          materieArrow.classList.add('rotate-90');
+        }
+      });
+
+
+
       // 1. Inizializza il carosello
       initializeHomeCarousel();
 
