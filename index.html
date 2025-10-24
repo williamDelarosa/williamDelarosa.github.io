@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,0,0" />
 
   <!-- PWA & iOS support -->
   <meta name="theme-color" content="#111827"/>
@@ -275,13 +276,12 @@
 
       <div id="sidebar-list" class="space-y-2">
         <div>
-          <button id="info-toggle" class="sidebar-item w-full text-left flex justify-between items-center text-white">
-            <h3 class="font-semibold">Info</h3>
-            <svg id="info-arrow" class="w-5 h-5 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          <button id="info-toggle" class="sidebar-item w-full flex justify-center items-center">
+            <span class="material-symbols-sharp text-2xl" style="color: #81A1C1;">info</span>
           </button>
           <div id="info-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
             <div class="pt-2 pl-4 space-y-2">
-              <a id="item-qualifica" href="https://www.calameo.com/read/008058670b6fc9cf3227f" target="_blank" class="sidebar-item">
+              <a id="item-qualifica" href="https://www.calameo.com/read/008058670b6fc9cf3227f" target="_blank" class="block p-2 rounded-md hover:bg-gray-700">
                 <h3 class="font-semibold text-sm">Qualifica</h3>
               </a>
             </div>
@@ -289,9 +289,8 @@
         </div>
 
         <div>
-          <button id="materie-toggle" class="sidebar-item w-full text-left flex justify-between items-center text-white">
-            <h3 class="font-semibold">Materie</h3>
-            <svg id="materie-arrow" class="w-5 h-5 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          <button id="materie-toggle" class="sidebar-item w-full flex justify-center items-center">
+            <span class="material-symbols-sharp text-2xl" style="color: #A3BE8C;">school</span>
           </button>
           <div id="materie-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
              <div class="pt-2 pl-4 space-y-1" id="materie-list-container">
@@ -1480,20 +1479,6 @@
 
         if (dropdown) {
             const isOpen = dropdown.classList.contains('max-h-[40rem]');
-            
-            // Close all other open dropdowns in the same list
-            const parentList = toggleBtn.closest('.space-y-1, .space-y-2');
-            if (parentList) {
-                parentList.querySelectorAll('[id$="-dropdown"]').forEach(dd => {
-                    if (dd.id !== dropdownId) {
-                        dd.classList.remove('max-h-[40rem]');
-                        dd.classList.add('max-h-0');
-                        const otherArrow = dd.previousElementSibling.querySelector('svg');
-                        if (otherArrow) otherArrow.classList.remove('rotate-90');
-                    }
-                });
-            }
-
             if (isOpen) {
                 dropdown.classList.remove('max-h-[40rem]');
                 dropdown.classList.add('max-h-0');
