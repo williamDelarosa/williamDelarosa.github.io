@@ -220,6 +220,13 @@
       color: #fff;
     }
 
+    @keyframes red-blink {
+      50% { color: #ef4444; } /* red-500 */
+    }
+    .blink-red-twice {
+      animation: red-blink 0.5s ease-in-out 2;
+    }
+
 
 
 
@@ -231,21 +238,16 @@
       from { opacity: 1; }
       to { opacity: 0; }
     }
-    .fade-in-4s {
-        animation: fadeInOpacity 4s ease-in forwards;
-    }
     .fade-in-5s {
         animation: fadeInOpacity 5s ease-in forwards;
     }
     .fade-out-1s {
         animation: fadeOutOpacity 1s ease-out forwards;
     }
-    .fade-in-2s {
-        animation: fadeInOpacity 2s ease-in forwards;
-    }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-200 flex min-h-screen overflow-hidden">
+  <div id="sidebar-hotzone" class="hidden md:block fixed top-0 left-0 h-full w-4 z-40"></div>
 
   <div id="background-container" class="fixed inset-0 z-0" data-current-key="">
     <!-- Immagine di sfondo statica per le pagine interne -->
@@ -273,48 +275,28 @@
 
       <div id="sidebar-list" class="space-y-2">
         <div>
-          <button id="info-toggle" class="sidebar-item w-full text-left flex justify-between items-center">
+          <button id="info-toggle" class="sidebar-item w-full text-left flex justify-between items-center text-white">
             <h3 class="font-semibold">Info</h3>
             <svg id="info-arrow" class="w-5 h-5 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </button>
           <div id="info-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
             <div class="pt-2 pl-4 space-y-2">
-              <div id="item-qualifica" class="sidebar-item" onclick="showSubjectPage('qualifica', 'Qualifica', 'https://www.calameo.com/read/008058670b6fc9cf3227f', true)">
+              <a id="item-qualifica" href="https://www.calameo.com/read/008058670b6fc9cf3227f" target="_blank" class="sidebar-item">
                 <h3 class="font-semibold text-sm">Qualifica</h3>
-              </div>
+              </a>
             </div>
           </div>
         </div>
 
         <div>
-          <button id="materie-toggle" class="sidebar-item w-full text-left flex justify-between items-center">
+          <button id="materie-toggle" class="sidebar-item w-full text-left flex justify-between items-center text-white">
             <h3 class="font-semibold">Materie</h3>
             <svg id="materie-arrow" class="w-5 h-5 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </button>
           <div id="materie-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
-            <div class="pt-2 pl-4 space-y-2">
-              <div id="item-meccanica" class="sidebar-item" onclick="showSubjectPage('meccanica', 'Progettazione Meccanica', 'https://www.calameo.com/read/0080586702a2803aacd1a')">
-                <h3 class="font-semibold text-sm">Progettazione Meccanica</h3>
-              </div>
-              <div id="item-sicurezza" class="sidebar-item" onclick="showSubjectPage('sicurezza', 'Sicurezza sul Lavoro', 'https://www.calameo.com/read/0080586704ac279277422')">
-                <h3 class="font-semibold text-sm">Sicurezza sul Lavoro</h3>
-              </div>
-              <div id="item-elettrotecnica" class="sidebar-item" onclick="showSubjectPage('elettrotecnica', 'Elettrotecnica', 'https://www.calameo.com/read/0080586706f297b0b127f')">
-                <h3 class="font-semibold text-sm">Elettrotecnica</h3>
-              </div>
-              <div id="item-comunicazione" class="sidebar-item" onclick="showSubjectPage('comunicazione', 'Soft Skills & Comunicazione', 'https://www.calameo.com/read/0080586704d243157c399')">
-                <h3 class="font-semibold text-sm">Soft Skills & Comunicazione</h3>
-              </div>
-              <div id="item-matematica" class="sidebar-item" onclick="showSubjectPage('matematica', 'Matematica', 'https://www.calameo.com/account/private/read/#code-0080586707940de0f2426')">
-                <h3 class="font-semibold text-sm">Matematica</h3>
-              </div>
-              <div id="item-solidworks" class="sidebar-item" onclick="showSubjectPage('solidworks', 'Solidworks', 'https://www.calameo.com/read/0080586708c1eaef6408f')">
-                <h3 class="font-semibold text-sm">Solidworks</h3>
-              </div>
-              <div id="item-robotica" class="sidebar-item" onclick="showSubjectPage('robotica', 'Robotica', 'https://www.calameo.com/read/008058670fd37822e6df4')">
-                <h3 class="font-semibold text-sm">Robotica</h3>
-              </div>
-            </div>
+             <div class="pt-2 pl-4 space-y-1" id="materie-list-container">
+                <!-- Subject dropdowns will be injected here by JS -->
+             </div>
           </div>
         </div>
     </nav>
@@ -324,12 +306,8 @@
     <main id="main-content" class="flex-1 transition-all duration-300 ease-in-out h-screen overflow-y-auto">
       <div class="p-4 md:p-8">
         <button id="menu-toggle"
-                class="p-2 rounded-md bg-gray-800 hover:bg-gray-700 fixed top-4 left-4 z-50">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor"
-               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6h16M4 12h16m-7 6h7"></path>
-          </svg>
+                class="p-2 text-gray-400 hover:text-white fixed top-5 left-2 z-30 transform transition-all duration-300 ease-in-out focus:outline-none opacity-0 pointer-events-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </button>
 
         <div id="app-container" class="w-full max-w-5xl mx-auto">
@@ -356,21 +334,30 @@
             </div>
           </div>
 
-          <!-- Subject Screen: Verrà animato completamente ad ogni cambio materia -->
+          <!-- Subject Screen (content moved to sidebar) -->
           <div id="subject-screen" class="hidden">
-            <div class="mb-12 pt-20 text-center">
-              <!-- TITOLO DELLA MATERIA -->
+             <div class="mb-12 pt-20 text-center">
               <h2 id="subject-title" class="text-4xl font-extrabold text-white uppercase mb-6"></h2>
             </div>
-            <div class="flex flex-col sm:flex-row gap-10 justify-center items-center">
-              <a id="flipbook-btn" href="#" target="_blank"
-                 class="animated-button subject-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">
-                Flipbook
-              </a>
-              <button id="flashcard-btn" onclick=""
-                      class="animated-button subject-button bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-xl">
-                Flashcard
-              </button>
+          </div>
+
+          <!-- Real Quiz Screen -->
+          <div id="real-quiz-screen" class="hidden">
+            <div class="content-panel p-6 md:p-8 rounded-2xl mt-8">
+              <div class="flex justify-between items-center mb-6">
+                <h2 id="real-quiz-subject-title" class="text-2xl font-bold text-white">Quiz</h2>
+                <p id="real-quiz-progress" class="text-sm font-medium text-gray-400"></p>
+                <p id="real-quiz-score" class="text-sm font-medium text-gray-400">Punteggio: 0</p>
+              </div>
+              <div id="real-quiz-question" class="text-2xl font-semibold mb-8 text-center"></div>
+              <div id="real-quiz-answers" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Answer buttons will be injected here -->
+              </div>
+            </div>
+            <div class="flex justify-center mt-8">
+                <button id="next-quiz-btn" onclick="nextQuizQuestion()" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
+                    Prossima
+                </button>
             </div>
           </div>
 
@@ -411,65 +398,20 @@
 
 
 
-          <!-- Snake Game Screen -->
-          <div id="snake-game-screen" class="hidden text-center">
-            <div class="content-panel p-4 md:p-6 rounded-2xl mt-8 fade-in">
-              <h2 class="text-3xl font-bold text-white mb-4">Snake</h2>
-              <div class="flex justify-between items-center mb-4">
-                <p class="text-xl text-white">Punteggio: <span id="snake-score-display">0</span></p>
-                <button id="start-snake-game-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Inizia Gioco</button>
-              </div>
-              <canvas id="snake-game-canvas" class="bg-gray-800 border-2 border-gray-600 rounded-lg"></canvas>
-              <div class="mt-6 grid grid-cols-3 gap-2 w-48 mx-auto">
-                <div></div>
-                <button id="snake-game-up" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                </button>
-                <div></div>
-                <button id="snake-game-left" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
-                <div></div>
-                <button id="snake-game-right" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
-                <div></div>
-                <button id="snake-game-down" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div></div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Snake Game Screen -->
-          <div id="snake-game-screen" class="hidden text-center">
-            <div class="content-panel p-4 md:p-6 rounded-2xl mt-8 fade-in">
-              <h2 class="text-3xl font-bold text-white mb-4">Snake</h2>
-              <div class="flex justify-between items-center mb-4">
-                <p class="text-xl text-white">Punteggio: <span id="snake-score-display">0</span></p>
-                <button id="start-snake-game-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Inizia Gioco</button>
-              </div>
-              <canvas id="snake-game-canvas" class="bg-gray-800 border-2 border-gray-600 rounded-lg"></canvas>
-              <div class="mt-6 grid grid-cols-3 gap-2 w-48 mx-auto">
-                <div></div>
-                <button id="snake-game-up" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                </button>
-                <div></div>
-                <button id="snake-game-left" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
-                <div></div>
-                <button id="snake-game-right" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
-                <div></div>
-                <button id="snake-game-down" class="bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg flex items-center justify-center h-16">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div></div>
-              </div>
+
+          <!-- Real Quiz Results Screen -->
+          <div id="real-quiz-results-screen" class="hidden text-center content-panel p-10 rounded-2xl fade-in">
+            <p id="real-quiz-results-message" class="text-3xl font-bold text-white mb-8"></p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <button onclick="startRealQuiz(currentSubjectInfo.subjectId)"
+                      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
+                Riprova Quiz
+              </button>
+              <button onclick="backToSubject()"
+                      class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg">
+                Torna alla materia
+              </button>
             </div>
           </div>
 
@@ -830,56 +772,108 @@
         { question: "Qual è l'importanza di utilizzare 'template' personalizzati?", answer: "Permettono di standardizzare le impostazioni del documento (unità, norme di disegno, proprietà) e di risparmiare tempo." }
       ],
       robotica: [
-        { question: "Quali sono i moduli principali del corso di automazione e robotica?", answer: "I moduli includono: Fondamenti di automazione, Programmazione di sistemi robotizzati, Progettazione 3D per robot e Configurazione di cablaggi e protocolli." },
-        { question: "Quali sono i livelli organizzativi in una fabbrica intelligente?", answer: "Sono ERP (livello manageriale), MES (livello esecutivo), SCADA (supervisione), PLC (controllo) e Field Level (sensori/attuatori)." },
-        { question: "Cos'è l'Intelligenza Artificiale (AI) in robotica?", answer: "È l'insieme di tecniche che permettono a una macchina di prendere decisioni in scenari nuovi, andando oltre i movimenti programmati." },
-        { question: "Cosa sono le reti neurali?", answer: "Sono complesse reti di numeri (parametri) che apprendono funzioni complesse da grandi volumi di dati, usate per calcolare un output." },
-        { question: "Cos'è la Computer Vision?", answer: "È la disciplina che consente ai robot di 'vedere' e interpretare immagini o video per dedurne un comportamento." },
+        { question: "Quali sono i 5 livelli della piramide dell'automazione, dal basso verso l'alto?", answer: "Field Level (sensori/attuatori), Control Level (PLC), Supervisory Level (SCADA), Planning Level (MES), Management Level (ERP)." },
+        { question: "Cos'è l'Intelligenza Artificiale (AI) in robotica?", answer: "È l'insieme di tecniche che permettono a una macchina di prendere decisioni in molteplici scenari, adattandosi a situazioni nuove senza una regola a priori." },
         { question: "Su cosa si basa il Reinforcement Learning (RL)?", answer: "Si basa sul concetto di apprendere facendo esperienze e ricevendo ricompense o penalità per le azioni compiute." },
-        { question: "Qual è la differenza tra un'architettura di controllo centralizzata e una decentralizzata?", answer: "Centralizzata: un server comanda tutto. Decentralizzata: ogni robot prende decisioni locali, risultando più robusta." },
-        { question: "Cos'è l'HMI (Human Machine Interface)?", answer: "È l'interfaccia software/hardware che permette l'interazione tra l'operatore umano e il sistema automatico (robot, macchina, ecc.)." },
-        { question: "Quali sono le normative chiave per la sicurezza nell'interazione uomo-macchina?", answer: "ISO 10218 per robot industriali e ISO/TS 15066 per robot collaborativi (cobot)." },
-        { question: "Cos'è un 'PLC' (Programmable Logic Controller)?", answer: "Un computer digitale industriale robusto, progettato per eseguire cicli di controllo in tempo reale in ambienti difficili." },
-        { question: "Cosa si intende per sistema 'real-time'?", answer: "Un sistema in cui la correttezza del calcolo dipende non solo dal risultato logico, ma anche dal tempo in cui viene prodotto." },
-        { question: "Qual è il ruolo chiave di un'interfaccia HMI?", answer: "Visualizzare lo stato del processo, permettere input all'operatore e segnalare anomalie e allarmi." },
-        { question: "Cosa si intende per 'Digital Twin'?", answer: "Un modello virtuale che replica fedelmente un robot o una linea di produzione, usato per simulazioni, monitoraggio e manutenzione predittiva." },
-        { question: "Qual è la differenza tra 'Hard Real-Time' e 'Soft Real-Time'?", answer: "In Hard RT, mancare una deadline è un errore critico. In Soft RT, sforamenti occasionali portano a un degrado di qualità ma non al collasso del sistema." },
-        { question: "Cosa sono i 'Robotic Foundation Models'?", answer: "Sono sistemi data-driven che usano l'immagine dello spazio come input per controllare i giunti di un robot (approccio end-to-end)." },
-        { question: "Cos'è un 'end-effector'?", answer: "È il dispositivo alla fine di un braccio robotico, progettato per interagire con l'ambiente. Esempi sono pinze, saldatori o ventose." },
-        { question: "Definisci i 'gradi di libertà' (DOF) di un robot.", answer: "Indicano il numero di direzioni indipendenti in cui un robot può muoversi. Un braccio a 6 assi ha 6 gradi di libertà." },
-        { question: "Cos'è la cinematica diretta?", answer: "È il calcolo della posizione e orientamento dell'end-effector a partire dagli angoli dei giunti del robot." },
-        { question: "Cos'è la cinematica inversa?", answer: "È il calcolo degli angoli dei giunti necessari per raggiungere una data posizione e orientamento dell'end-effector. È un problema più complesso." },
-        { question: "Qual è la differenza tra un robot e un cobot?", answer: "Un cobot (robot collaborativo) è progettato per lavorare in sicurezza a fianco degli esseri umani, spesso senza barriere fisiche." },
-        { question: "Cosa si intende per 'spazio di lavoro' (workspace) di un robot?", answer: "È l'insieme di tutti i punti che l'end-effector del robot può raggiungere." },
-        { question: "Quali sono i principali tipi di giunti in un robot?", answer: "I giunti principali sono rotoidali (rotazione, come un gomito) e prismatici (movimento lineare, come uno stantuffo)." },
-        { question: "Cos'è un robot SCARA?", answer: "Selective Compliance Assembly Robot Arm. È un robot veloce e preciso, ideale per assemblaggi su un piano orizzontale." },
-        { question: "Cos'è un robot cartesiano?", answer: "Un robot che si muove lungo tre assi lineari (X, Y, Z). È rigido e preciso, usato per macchine CNC e stampa 3D." },
-        { question: "Cos'è un robot delta?", answer: "Un robot con una struttura a tre bracci paralleli, noto per la sua altissima velocità. Usato per compiti di 'pick and place' rapidi." },
-        { question: "Cosa significa 'payload' (carico utile) di un robot?", answer: "È il peso massimo che il robot può trasportare con il suo end-effector mantenendo le prestazioni specificate." },
-        { question: "Cos'è il 'ROS' (Robot Operating System)?", answer: "Non è un vero sistema operativo, ma un framework flessibile per scrivere software per robot, fornendo librerie e strumenti." },
-        { question: "A cosa serve un sensore di forza/coppia?", answer: "Misura le forze e le coppie applicate all'end-effector, permettendo al robot di eseguire compiti delicati come l'assemblaggio di precisione." },
-        { question: "Cos'è la 'localizzazione' in robotica mobile?", answer: "È il processo con cui un robot determina la propria posizione all'interno di una mappa o di un ambiente." },
-        { question: "Cos'è lo 'SLAM' (Simultaneous Localization and Mapping)?", answer: "È la capacità di un robot mobile di costruire una mappa di un ambiente sconosciuto e contemporaneamente localizzarsi al suo interno." },
-        { question: "Qual è il ruolo degli attuatori in un robot?", answer: "Sono i 'muscoli' del robot, i motori che convertono l'energia (elettrica, pneumatica) in movimento fisico." },
-        { question: "Cosa si intende per 'teleoperazione'?", answer: "Il controllo di un robot a distanza da parte di un operatore umano, spesso usato in ambienti pericolosi." },
-        { question: "Qual è la funzione di un 'encoder' in un motore robotico?", answer: "È un sensore che misura la posizione angolare o la velocità del motore, fornendo un feedback preciso al controller." },
-        { question: "Cos'è un 'robot autonomo'?", answer: "Un robot in grado di percepire il suo ambiente, prendere decisioni e agire senza intervento umano continuo." },
-        { question: "Cosa sono i 'sistemi di visione 2D' in robotica?", answer: "Utilizzano una singola telecamera per analizzare l'ambiente in due dimensioni, utili per il riconoscimento di oggetti su un piano." },
-        { question: "Cosa sono i 'sistemi di visione 3D' in robotica?", answer: "Utilizzano tecniche come la stereoscopia o la luce strutturata per percepire la profondità e creare un modello tridimensionale dell'ambiente." },
-        { question: "Qual è il linguaggio di programmazione più comune per i PLC?", answer: "Il Ladder Logic (diagramma a contatti), che assomiglia a uno schema elettrico, ma sono usati anche altri linguaggi come Structured Text." },
-        { question: "Cos'è la 'singolarità' di un braccio robotico?", answer: "Una configurazione in cui il robot perde uno o più gradi di libertà, causando movimenti imprevedibili o bloccandosi. Va evitata nella pianificazione del moto." },
-        { question: "Cosa si intende per 'traiettoria' in robotica?", answer: "È il percorso che il robot deve seguire, specificato non solo in termini di posizioni ma anche di velocità e accelerazioni." },
-        { question: "Qual è la differenza tra 'automazione rigida' e 'automazione flessibile'?", answer: "Rigida: attrezzature specializzate per un singolo compito (alta efficienza). Flessibile: sistemi (come i robot) che possono essere riprogrammati per compiti diversi." },
-        { question: "Cos'è un 'AGV' (Automated Guided Vehicle)?", answer: "Un veicolo a guida automatica, tipicamente usato in magazzini e fabbriche per trasportare materiali seguendo percorsi predefiniti." },
-        { question: "Qual è il vantaggio principale dei motori 'brushless' (senza spazzole)?", answer: "Maggiore efficienza, minor manutenzione, maggior durata e miglior rapporto potenza/peso rispetto ai motori a spazzole." },
-        { question: "Cosa si intende per 'calibrazione' di un robot?", answer: "Il processo di affinamento del modello cinematico del robot per migliorare la sua precisione assoluta, compensando piccoli errori di fabbricazione." },
-        { question: "Qual è il ruolo della 'manutenzione predittiva' in robotica?", answer: "Utilizzare i dati dei sensori e l'AI per prevedere quando un componente del robot potrebbe guastarsi, pianificando la manutenzione prima che avvenga il guasto." },
-        { question: "Cos'è un 'riduttore armonico' (strain wave gear)?", answer: "Un tipo di riduttore compatto e leggero con gioco quasi nullo, molto comune nei giunti dei robot per la sua alta precisione." },
-        { question: "Cosa si intende per 'logica fuzzy' in un sistema di controllo?", answer: "Una logica che gestisce concetti 'sfumati' (es. 'caldo', 'veloce') invece di valori booleani (vero/falso), utile per controlli più 'umani'." },
-        { question: "Qual è la funzione del 'teach pendant'?", answer: "È un dispositivo portatile con cui un operatore può muovere manualmente un robot e programmare le sue posizioni punto per punto." },
-        { question: "Cos'è l' 'Industria 4.0'?", answer: "La quarta rivoluzione industriale, caratterizzata dall'integrazione di sistemi ciber-fisici, IoT, cloud computing e intelligenza artificiale nei processi produttivi." },
-        { question: "Cosa si intende per 'programmazione offline' di un robot?", answer: "La programmazione del robot in un ambiente virtuale (software di simulazione) senza fermare la produzione. Il programma viene poi trasferito al robot reale." },
-        { question: "Qual è il principio di un sensore a ultrasuoni?", answer: "Emette un'onda sonora ad alta frequenza e misura il tempo che impiega a tornare indietro dopo aver colpito un oggetto, calcolando così la distanza." }
+        { question: "Qual è la differenza tra architettura di controllo centralizzata e decentralizzata?", answer: "Centralizzata: un server comanda tutto (semplice ma vulnerabile). Decentralizzata: ogni robot prende decisioni locali (più robusta ma richiede coordinazione)." },
+        { question: "Cosa studia l'HRI (Human Robot Interaction)?", answer: "Studia come le persone interagiscono con i robot, includendo aspetti tecnici, psicologici e sociali." },
+        { question: "Cos'è un PLC (Programmable Logic Controller)?", answer: "Un computer digitale industriale robusto, progettato per eseguire cicli di controllo in tempo reale in ambienti difficili." },
+        { question: "Qual è la differenza tra sistemi Hard Real-Time e Soft Real-Time?", answer: "In Hard RT, mancare una deadline è un errore critico (safety-critical). In Soft RT, porta a un degrado di qualità ma non al collasso del sistema." },
+        { question: "Qual è il problema della cinematica diretta?", answer: "Data una configurazione dei giunti, determinare la posa (posizione e orientamento) dell'end-effector. È un problema sempre risolvibile." },
+        { question: "Qual è il problema della cinematica inversa?", answer: "Data una posa desiderata dell'end-effector, determinare i valori dei giunti. È un problema complesso che può avere nessuna, una o più soluzioni." },
+        { question: "Cos'è una 'singolarità' di un manipolatore?", answer: "Una configurazione in cui il robot perde gradi di libertà, causando movimenti imprevedibili o bloccandosi. Va evitata nella pianificazione del moto." },
+        { question: "Quale tecnologia è emersa come chiave per l'industria nel periodo 1970-1990?", answer: "PLC e robot rigidi, con una priorità su qualità e stabilità della produzione." },
+        { question: "Quali sono le tecnologie abilitanti dell'era 2010-2025?", answer: "AI, IoT (Internet of Things) e Digital Twin, con focus su digitalizzazione e autonomia dei processi." },
+        { question: "A cosa serve il livello MES (Manufacturing Execution System)?", answer: "Serve al livello esecutivo per gestire ordini di produzione e raccolta dati in tempo reale." },
+        { question: "Cos'è la Computer Vision?", answer: "È la disciplina che consente ai robot di 'vedere' e interpretare immagini o video per dedurne un comportamento." },
+        { question: "Cos'è un sistema distribuito in robotica?", answer: "Un insieme di robot o nodi che lavorano insieme, senza un unico punto di controllo, per completare una task complessa." },
+        { question: "Qual è l'obiettivo della normativa ISO/TS 15066?", answer: "Garantire che l'interazione fisica uomo-robot (nei cobot) avvenga senza rischio di lesioni, definendo le modalità di collaborazione sicura." },
+        { question: "Quali sono le 4 modalità di collaborazione sicura per i cobot?", answer: "Safety-rated monitored stop (SRMS), Hand guiding, Speed and separation monitoring (SSM), e Power and force limiting (PFL)." },
+        { question: "Qual è la differenza tra un Embedded System e un Bus System in ambito hardware?", answer: "Embedded: funzione dedicata, non espandibile, per grandi volumi. Bus System: architettura modulare ed espandibile, più flessibile, per piccole serie." },
+        { question: "Quali sono le tre fasi del ciclo di scanning di un PLC?", answer: "1. Input Scan (lettura sensori), 2. Program Scan (esecuzione logica), 3. Output Scan (scrittura attuatori)." },
+        { question: "Cos'è il Jitter in un sistema Real-Time?", answer: "È la variabilità del tempo di completamento di un task periodico. Deve essere minimizzata per garantire il determinismo." },
+        { question: "Qual è la differenza tra Percorso (Path) e Traiettoria (Trajectory)?", answer: "Il Percorso è la forma geometrica del movimento. La Traiettoria è il percorso associato a una legge oraria (un profilo di velocità nel tempo)." },
+        { question: "Cosa significa che un manipolatore è 'ridondante'?", answer: "Significa che ha più gradi di libertà (n) rispetto a quelli richiesti dallo spazio di lavoro (m), n > m. Questo aumenta la flessibilità." },
+        { question: "Quali sono i vantaggi di un robot Cartesiano (TTT)?", answer: "Elevata precisione e rigidità, e controllo semplice delle traiettorie." },
+        { question: "Per cosa è tipicamente usato un robot SCARA (RRT)?", answer: "Per assemblaggio elettronico e movimentazione rapida su un piano orizzontale, grazie alla sua elevata velocità nei movimenti planari." },
+        { question: "Perché il controllo di interazione è fondamentale in molte applicazioni?", answer: "Perché il robot non deve solo seguire un percorso, ma anche interagire con l'ambiente, ad esempio mantenendo una forza costante." },
+        { question: "Qual è la differenza tra controllo di ammettenza e controllo di forza diretto?", answer: "Ammettenza (indiretto): regola la posizione in risposta a forze esterne. Forza diretto: regola direttamente le coppie/forze applicate ai giunti." },
+        { question: "Cos'è un Digital Twin?", answer: "È un modello virtuale che replica fedelmente un robot o una linea di produzione, usato per simulazioni, monitoraggio e manutenzione predittiva." },
+        { question: "Quali sono i componenti fondamentali di un sistema di controllo industriale?", answer: "Acquisizione dati (sensori), Microprocessore, Interfaccia di uscita (attuatori), Timer e Interfacce di comunicazione." },
+        { question: "Cosa si intende per HMI (Human-Machine Interface)?", answer: "L'interfaccia software/hardware che permette l'interazione tra operatore umano e sistema automatico (robot, macchine, ecc.)." },
+        { question: "Quali sono le proprietà chiave di un sistema usabile secondo la ISO 9241?", answer: "Efficacia (Effectiveness), Efficienza (Efficiency) e Soddisfazione (Satisfaction)." },
+        { question: "Qual è la differenza tra un manipolatore 'difettivo' e uno 'ridondante'?", answer: "Difettivo: ha meno gradi di libertà (DOF) dello spazio di lavoro (n < m). Ridondante: ha più DOF (n > m), aumentando la flessibilità." },
+        { question: "Qual è lo spazio di lavoro di un robot cartesiano (TTT)?", answer: "Un parallelepipedo." },
+        { question: "Qual è lo spazio di lavoro di un robot SCARA (RRT)?", answer: "Un cilindro appiattito." },
+        { question: "Qual è lo spazio di lavoro di un robot antropomorfo a 6 DOF?", answer: "Una sfera deformata e molto ampia." },
+        { question: "Come funziona il controllo di un robot 'uniciclo' (differential drive)?", answer: "Usa due ruote attuate indipendentemente. Il moto rettilineo si ottiene con velocità uguali (wR = wL), la rotazione sul posto con velocità opposte (wR = -wL)." },
+        { question: "Qual è il principale svantaggio di un robot 'triciclo' (car-like)?", answer: "Agilità limitata e necessità di manovre complesse, simili a un'automobile." },
+        { question: "Perché si usano i 'via-points' nella pianificazione del movimento?", answer: "Per interpolare un percorso complesso, evitando ostacoli e rispettando i vincoli cinematici del robot (velocità, accelerazione)." },
+        { question: "Come funziona l'algoritmo di pianificazione PRM (Probabilistic Roadmap)?", answer: "Campiona configurazioni casuali, scarta quelle in collisione, costruisce un grafo (roadmap) dei punti validi e cerca un percorso." },
+        { question: "Qual è il ruolo dell'azionamento elettrico (drive) nella catena di controllo del moto?", answer: "Regola la coppia del motore (anello di corrente) per seguire i riferimenti forniti dal controllore di posizione/velocità." },
+        { question: "Perché un profilo di moto con discontinuità del jerk è problematico?", answer: "Perché la discontinuità del jerk (derivata dell'accelerazione) può causare urti e vibrazioni meccaniche indesiderate." },
+        { question: "Quali sono le 4 proprietà chiave di un sistema usabile (oltre efficacia, efficienza, soddisfazione)?", answer: "Learnability (facile da imparare), Memorability (facile da ricordare), Errori ridotti e Sicurezza." },
+        { question: "Quali sono le tecnologie principali per l'uso del Natural Language Processing (NLP) in robotica?", answer: "NLP per interpretare comandi, Speech-to-Text/Text-to-Speech per la traduzione vocale, e Gesture recognition per i gesti." },
+        { question: "Cos'è l'Industrial IoT (IIoT)?", answer: "È l'applicazione dell'IoT in ambito industriale, dove robot, macchine e sensori comunicano tra loro per creare una fabbrica connessa." },
+        { question: "Quali sono i principali protocolli di comunicazione per l'IIoT?", answer: "OPC-UA (standard per macchinari), MQTT (leggero per dispositivi IoT) e 5G (bassa latenza per robot mobili)." },
+        { question: "Qual è la differenza tra Edge Computing e Cloud Computing?", answer: "Edge: elaborazione dati vicino alla macchina per risposte rapide. Cloud: analisi pesanti, archiviazione e AI." },
+        { question: "Cosa sono le 'sezioni critiche' in programmazione concorrente?", answer: "Sono blocchi di codice che accedono a risorse condivise e che devono essere eseguiti in modo atomico per evitare race condition." },
+        { question: "Cos'è un 'semaforo' in programmazione?", answer: "È una primitiva di sincronizzazione per gestire l'accesso a risorse condivise, prevenendo l'uso simultaneo da parte di più task." },
+        { question: "Qual è il ruolo dello scheduler in un RTOS (Real-Time Operating System)?", answer: "Decide quale task eseguire in base a politiche specifiche (es. priorità, round-robin) per rispettare le deadline temporali." },
+        { question: "Cosa si intende per 'catena cinematica'?", answer: "L'insieme di link (corpi rigidi) e giunti (motori) che convertono il moto dei giunti nel movimento dell'end-effector." },
+        { question: "Qual è la tecnologia abilitante dell'era industriale 1950-1970?", answer: "La Meccanizzazione, con priorità su quantità ed efficienza e un modello produttivo Push." }
+      ],
+      programmazione: [
+        { question: "Cos'è un 'algoritmo'?", answer: "Una sequenza finita di istruzioni chiare e non ambigue per risolvere un problema o eseguire un calcolo." },
+        { question: "Qual è la differenza tra 'programmazione compilata' e 'interpretata'?", answer: "Compilata: il codice sorgente viene tradotto in codice macchina prima dell'esecuzione. Interpretata: il codice viene tradotto ed eseguito riga per riga da un interprete." },
+        { question: "Cosa si intende per 'variabile'?", answer: "Un contenitore di dati nominato che può contenere un valore che può cambiare durante l'esecuzione del programma." },
+        { question: "Quali sono i principali 'tipi di dati' primitivi?", answer: "Interi (int), numeri in virgola mobile (float), booleani (bool) e caratteri (char)." },
+        { question: "Cos'è un 'ciclo' (loop)?", answer: "Una struttura di controllo che ripete un blocco di codice finché una condizione specificata rimane vera." },
+        { question: "Qual è la differenza tra un ciclo 'for' e un ciclo 'while'?", answer: "Il ciclo 'for' è usato quando il numero di iterazioni è noto, il 'while' quando la condizione di terminazione dipende da altri fattori." },
+        { question: "Cosa si intende per 'struttura condizionale' (if-else)?", answer: "Una struttura che esegue blocchi di codice diversi a seconda che una condizione sia vera o falsa." },
+        { question: "Cos'è una 'funzione' o 'metodo'?", answer: "Un blocco di codice riutilizzabile che esegue un'attività specifica. Può accettare parametri e restituire un valore." },
+        { question: "Cosa si intende per 'programmazione orientata agli oggetti' (OOP)?", answer: "Un paradigma di programmazione basato sul concetto di 'oggetti', che possono contenere dati (attributi) e codice (metodi)." },
+        { question: "Cos'è una 'classe' in OOP?", answer: "Un modello o 'stampo' per creare oggetti. Definisce gli attributi e i metodi che gli oggetti di quella classe avranno." },
+        { question: "Qual è la differenza tra 'classe' e 'oggetto'?", answer: "La classe è il progetto (es. il progetto di un'auto), l'oggetto è un'istanza concreta di quella classe (es. la mia auto)." },
+        { question: "Cosa si intende per 'ereditarietà'?", answer: "Un meccanismo OOP in cui una classe (sottoclasse) può ereditare attributi e metodi da un'altra classe (superclasse)." },
+        { question: "Cos'è il 'polimorfismo'?", answer: "La capacità di oggetti di classi diverse di rispondere allo stesso messaggio (chiamata di metodo) in modi specifici per la loro classe." },
+        { question: "Cosa si intende per 'incapsulamento'?", answer: "Il raggruppamento di dati e metodi che operano su quei dati in un'unica unità (un oggetto), nascondendo i dettagli interni." },
+        { question: "Cos'è un 'array' o 'vettore'?", answer: "Una struttura dati che memorizza una collezione di elementi dello stesso tipo in posizioni di memoria contigue." },
+        { question: "Qual è la differenza tra 'stack' e 'queue'?", answer: "Stack (pila) è LIFO (Last-In, First-Out). Queue (coda) è FIFO (First-In, First-Out)." },
+        { question: "Cosa si intende per 'ricorsione'?", answer: "Una tecnica in cui una funzione chiama se stessa per risolvere un problema, suddividendolo in sotto-problemi più piccoli." },
+        { question: "Cos'è un 'database'?", answer: "Una raccolta organizzata di dati, gestita da un sistema chiamato DBMS (Database Management System)." },
+        { question: "Qual è la differenza tra 'SQL' e 'NoSQL'?", answer: "SQL è per database relazionali con schemi fissi (tabelle). NoSQL è per database non relazionali con schemi flessibili (documenti, grafi, ecc.)." },
+        { question: "Cosa si intende per 'API' (Application Programming Interface)?", answer: "Un insieme di regole e strumenti che permette a diverse applicazioni software di comunicare tra loro." },
+        { question: "Cos'è 'Git'?", answer: "Un sistema di controllo di versione distribuito, usato per tracciare le modifiche al codice sorgente durante lo sviluppo del software." },
+        { question: "Qual è la differenza tra 'HTTP' e 'HTTPS'?", answer: "HTTPS è la versione sicura di HTTP. Utilizza la crittografia (SSL/TLS) per proteggere i dati scambiati tra client e server." },
+        { question: "Cosa si intende per 'debugging'?", answer: "Il processo di individuazione e correzione di errori (bug) in un programma." },
+        { question: "Cos'è un 'framework'?", answer: "Una struttura software che fornisce una base su cui gli sviluppatori possono costruire applicazioni, offrendo funzionalità generiche." },
+        { question: "Qual è la differenza tra 'libreria' e 'framework'?", answer: "Una libreria è una collezione di funzioni che il tuo codice chiama. Un framework è una struttura che chiama il tuo codice (Inversion of Control)." },
+        { question: "Cos'è la 'complessità computazionale' di un algoritmo?", answer: "Una misura delle risorse (tempo e spazio) richieste dall'algoritmo in funzione della dimensione dell'input." },
+        { question: "Qual è la differenza tra 'passaggio per valore' e 'passaggio per riferimento'?", answer: "Per valore: viene passata una copia del valore della variabile. Per riferimento: viene passato l'indirizzo di memoria della variabile, permettendo di modificarla." },
+        { question: "Cos'è un 'puntatore'?", answer: "Una variabile che memorizza l'indirizzo di memoria di un'altra variabile." },
+        { question: "Cosa si intende per 'allocazione dinamica della memoria'?", answer: "L'allocazione di memoria per le variabili durante l'esecuzione del programma, invece che a tempo di compilazione." },
+        { question: "Cos'è il 'garbage collector'?", answer: "Un processo automatico che libera la memoria occupata da oggetti che non sono più utilizzati dal programma." },
+        { question: "Qual è la differenza tra 'JSON' e 'XML'?", answer: "JSON (JavaScript Object Notation) è più leggero e facile da leggere per gli umani. XML (eXtensible Markup Language) è più verboso e usa tag di chiusura." },
+        { question: "Cos'è un 'IDE' (Integrated Development Environment)?", answer: "Un software che fornisce strumenti completi per lo sviluppo, come editor di codice, debugger e compilatore." },
+        { question: "Cosa si intende per 'testing unità' (unit testing)?", answer: "Il processo di testare singole unità o componenti di un software per verificare che funzionino correttamente in isolamento." },
+        { question: "Qual è lo scopo di un 'ciclo di vita dello sviluppo del software' (SDLC)?", answer: "Fornire un processo strutturato per la produzione di software di alta qualità, dal concepimento al rilascio e manutenzione." },
+        { question: "Cos'è il 'modello a cascata' (waterfall model)?", answer: "Un modello SDLC sequenziale in cui ogni fase (requisiti, progettazione, implementazione, test) deve essere completata prima di passare alla successiva." },
+        { question: "Cos'è la 'metodologia Agile'?", answer: "Un approccio iterativo e incrementale allo sviluppo software che si concentra sulla collaborazione, il feedback del cliente e rilasci frequenti." },
+        { question: "Cos'è 'Scrum'?", answer: "Un framework Agile per la gestione di progetti complessi, basato su cicli di sviluppo brevi chiamati 'sprint'." },
+        { question: "Cosa si intende per 'refactoring'?", answer: "Il processo di ristrutturazione del codice sorgente esistente senza cambiarne il comportamento esterno, per migliorarne la leggibilità e la manutenibilità." },
+        { question: "Cos'è un 'design pattern'?", answer: "Una soluzione generale e riutilizzabile a un problema comune nel contesto della progettazione del software." },
+        { question: "Qual è il pattern 'Singleton'?", answer: "Un design pattern che garantisce che una classe abbia una sola istanza e fornisce un punto di accesso globale a tale istanza." },
+        { question: "Qual è il pattern 'Factory'?", answer: "Un design pattern che fornisce un'interfaccia per creare oggetti in una superclasse, ma permette alle sottoclassi di alterare il tipo di oggetti che verranno creati." },
+        { question: "Cosa si intende per 'concorrenza' in programmazione?", answer: "La capacità di un sistema di eseguire più calcoli o processi contemporaneamente, che possono o meno interagire tra loro." },
+        { question: "Qual è la differenza tra 'concorrenza' e 'parallelismo'?", answer: "La concorrenza è la gestione di più task alla volta (task switching). Il parallelismo è l'esecuzione effettiva di più task simultaneamente (su più core)." },
+        { question: "Cos'è un 'thread'?", answer: "La più piccola unità di esecuzione che può essere gestita in modo indipendente da uno scheduler." },
+        { question: "Cos'è un 'mutex' (mutua esclusione)?", answer: "Un meccanismo di sincronizzazione per prevenire che più thread accedano contemporaneamente a una risorsa condivisa." },
+        { question: "Cosa si intende per 'deadlock'?", answer: "Una situazione in cui due o più processi sono bloccati in attesa l'uno dell'altro, impedendo a entrambi di proseguire." },
+        { question: "Cos'è la 'programmazione funzionale'?", answer: "Un paradigma di programmazione che tratta il calcolo come la valutazione di funzioni matematiche ed evita di cambiare lo stato e i dati mutabili." },
+        { question: "Cos'è una 'lambda function' o 'funzione anonima'?", answer: "Una funzione definita senza un nome, spesso usata per brevi operazioni o come argomento di funzioni di ordine superiore." },
+        { question: "Cosa si intende per 'sicurezza dei tipi' (type safety)?", answer: "La misura in cui un linguaggio di programmazione previene o scoraggia errori di tipo, ovvero operazioni su dati di tipo errato." },
+        { question: "Cos'è 'Unicode'?", answer: "Uno standard di codifica dei caratteri che mira a rappresentare tutti i caratteri utilizzati in quasi tutte le lingue scritte del mondo." }
       ]
     };
 
@@ -891,6 +885,7 @@
       matematica: 'https://images.pexels.com/photos/3729557/pexels-photo-3729557.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       solidworks: 'https://images.pexels.com/photos/7504612/pexels-photo-7504612.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       robotica: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      programmazione: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       qualifica: 'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
     };
 
@@ -973,13 +968,16 @@
             img.classList.remove('active');
         });
 
-        currentHomeImageIndex = 0;
+        currentHomeImageIndex = Math.floor(Math.random() * images.length);
         images[currentHomeImageIndex].classList.add('active');
 
 
         homeBackgroundInterval = setInterval(() => {
             const prevIndex = currentHomeImageIndex;
-            const nextIndex = (currentHomeImageIndex + 1) % homeCycleImages.length;
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * homeCycleImages.length);
+            } while (nextIndex === currentHomeImageIndex);
 
             const currentImage = images[prevIndex];
             const nextImage = images[nextIndex];
@@ -1071,6 +1069,8 @@
         const isOpen = isSidebarOpen();
         const shouldOpen = !isOpen; // Stiamo tentando di aprire?
 
+
+
         // 1. Toggle delle classi della Sidebar
         sidebar.classList.toggle('sidebar-open', shouldOpen);
         sidebar.classList.toggle('-translate-x-full', isOpen);
@@ -1104,15 +1104,23 @@
 
     menuToggle.addEventListener('click', toggleSidebar);
 
-    // RIMOSSO: overlay.addEventListener('click', closeMobileSidebar);
-    // La chiusura tramite click esterno è stata disabilitata.
+    overlay.addEventListener('click', closeSidebar);
 
 
     function showHomeScreen() {
+        // Provide immediate feedback by closing the sidebar
+        closeSidebar();
+        // Defer the heavy work to the next event loop cycle
+        setTimeout(setupAndShowHomeScreen, 50);
+    }
+
+    function setupAndShowHomeScreen() {
       changeBackground('home');
       subjectScreen.classList.add('hidden');
       quizScreen.classList.add('hidden');
       resultsScreen.classList.add('hidden');
+      document.getElementById('real-quiz-screen').classList.add('hidden');
+      document.getElementById('real-quiz-results-screen').classList.add('hidden');
 
       const homeScreenDiv = document.getElementById('home-screen');
       const subtitle = document.getElementById('home-subtitle');
@@ -1131,7 +1139,7 @@
       homeScreenDiv.classList.remove('hidden');
       subtitle.classList.remove('fade-in-4s', 'fade-out-1s', 'fade-in-5s');
       subtitle.style.opacity = '0';
-      
+
       // Reset title container and words
       verticalTitle.style.opacity = '0';
       words.forEach(word => {
@@ -1159,74 +1167,30 @@
         verticalTitle.style.opacity = '1'; // Show the container
 
         const animations = ['fadeInUp', 'fadeInLeft', 'zoomIn'];
-        
+
         words.forEach((word, index) => {
             if (word) {
-                // Assign a random animation
                 const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
-                // Stagger the animation start
                 word.style.animation = `${randomAnimation} 0.8s ease-out forwards`;
                 word.style.animationDelay = `${index * 0.4}s`;
             }
         });
       }, 6200); // 5.1s + 1s fade-out + 0.1s buffer
 
+      // 4. After title animation, blink arrow
+      setTimeout(() => {
+          menuToggle.style.opacity = 1;
+          menuToggle.style.pointerEvents = 'auto';
+          menuToggle.classList.add('blink-red-twice');
+
+          setTimeout(() => {
+            menuToggle.style.opacity = 0;
+            menuToggle.style.pointerEvents = 'none';
+            menuToggle.classList.remove('blink-red-twice');
+          }, 1000);
+      }, 7800);
 
       clearActiveSidebar();
-      closeSidebar();
-    }
-
-    function animateSubjectButtons() {
-        const buttons = document.querySelectorAll('.subject-button');
-        buttons.forEach(btn => {
-            btn.style.animationDelay = '';
-            btn.classList.remove('animated-button');
-            void btn.offsetWidth;
-            btn.classList.add('animated-button');
-        });
-        flipbookBtn.style.animationDelay = '0.1s';
-        flashcardBtn.style.animationDelay = '0.2s';
-    }
-
-    function showSubjectPage(subjectId, subjectName, flipbookUrl, hideFlashcard = false) {
-        stopHomeBackgroundCycle();
-        changeBackground(subjectId);
-
-        if (!subjectScreen.classList.contains('hidden')) {
-            subjectScreen.classList.add('fade-out');
-        }
-
-        setTimeout(() => {
-            homeScreen.classList.add('hidden');
-            quizScreen.classList.add('hidden');
-            resultsScreen.classList.add('hidden');
-
-            subjectScreen.classList.remove('fade-out');
-            subjectScreen.classList.remove('hidden');
-            subjectScreen.classList.add('fade-in');
-
-            currentSubjectInfo = { subjectId, subjectName, flipbookUrl };
-
-            // AGGIORNA IL TITOLO IN MAIUSCOLO
-            subjectTitle.innerText = subjectName.toUpperCase();
-
-            flipbookBtn.href = flipbookUrl;
-            
-            if (hideFlashcard) {
-              flashcardBtn.style.display = 'none';
-            } else {
-              flashcardBtn.style.display = 'block';
-              flashcardBtn.setAttribute('onclick', `startQuiz('${subjectId}')`);
-            }
-
-            markActiveSidebar(subjectId);
-
-            // Chiude la sidebar dopo la selezione della materia (click interno)
-            closeSidebar();
-
-            animateSubjectButtons();
-
-        }, subjectScreen.classList.contains('fade-out') ? 300 : 0);
     }
 
     let currentQuizData = [];
@@ -1234,20 +1198,65 @@
     let isFlipped = false;
     let currentSubjectInfo = {};
 
+    const realQuizScreen = document.getElementById('real-quiz-screen');
+    let currentRealQuizData = [];
+    let currentRealQuizIndex = 0;
+    let score = 0;
+
+    const subjectData = {
+      meccanica: { name: 'Progettazione Meccanica', flipbook: 'https://www.calameo.com/read/0080586702a2803aacd1a' },
+      sicurezza: { name: 'Sicurezza sul Lavoro', flipbook: 'https://www.calameo.com/read/0080586704ac279277422' },
+      elettrotecnica: { name: 'Elettrotecnica', flipbook: 'https://www.calameo.com/read/0080586706f297b0b127f' },
+      comunicazione: { name: 'Soft Skills & Comunicazione', flipbook: 'https://www.calameo.com/read/0080586704d243157c399' },
+      matematica: { name: 'Matematica', flipbook: 'https://www.calameo.com/account/private/read/#code-0080586707940de0f2426' },
+      solidworks: { name: 'Solidworks', flipbook: 'https://www.calameo.com/read/0080586708c1eaef6408f' },
+      robotica: { name: 'Robotica', flipbook: 'https://www.calameo.com/read/008058670c3c6f838af83' },
+      programmazione: { name: 'Programmazione Informatica', flipbook: 'https://www.calameo.com/read/00805867000fffa431632' },
+    };
+
+
+
+    function prepareAndStart(subjectId, type) {
+        const subject = subjectData[subjectId];
+        if (!subject) return;
+
+        currentSubjectInfo = {
+            subjectId: subjectId,
+            subjectName: subject.name,
+            flipbookUrl: subject.flipbook
+        };
+        
+        // Defer all UI updates to free the main thread immediately after click
+        setTimeout(() => {
+            closeSidebar();
+            changeBackground(subjectId);
+            
+            // Hide all main screens
+            homeScreen.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+            realQuizScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            document.getElementById('real-quiz-results-screen').classList.add('hidden');
+
+            if (type === 'flashcard') {
+                startQuiz(subjectId);
+            } else if (type === 'realQuiz') {
+                startRealQuiz(subjectId);
+            }
+        }, 0); // Yield to main thread immediately
+    }
+
     function startQuiz(subjectId) {
       stopHomeBackgroundCycle();
       bgOverlay.classList.add(BLURRED_CLASS);
 
-      const subjectName = currentSubjectInfo.subjectName;
       if (!questions[subjectId] || questions[subjectId].length === 0) {
         currentQuizData = [];
       } else {
-        // Copia e mescola le domande
         currentQuizData = [...questions[subjectId]].sort(() => Math.random() - 0.5);
       }
       currentQuestionIndex = 0;
       isFlipped = false;
-      // Resetta la flashcard alla faccia frontale all'inizio di un nuovo quiz
       flashcard.classList.remove('flipped');
       subjectScreen.classList.add('hidden');
       resultsScreen.classList.add('hidden');
@@ -1277,7 +1286,6 @@
     }
 
     function flipCard() {
-      // Controlla se ci sono domande prima di girare
       if (currentQuizData && currentQuizData.length > 0) {
         flashcard.classList.toggle('flipped');
         isFlipped = !isFlipped;
@@ -1303,19 +1311,117 @@
     function showResults() {
       quizScreen.classList.add('hidden');
       resultsScreen.classList.remove('hidden');
-
       resultsMessage.innerText = `Sessione di studio completata! Hai completato tutte le flashcard per ${currentSubjectInfo.subjectName}. Ottimo lavoro!`;
     }
 
     function restartQuiz() {
-      startQuiz(currentSubjectInfo.subjectId);
+      if (!resultsScreen.classList.contains('hidden')) {
+          startQuiz(currentSubjectInfo.subjectId);
+      }
     }
 
-    function restartQuiz() {
-      startQuiz(currentSubjectInfo.subjectId);
+    function startRealQuiz(subjectId) {
+        stopHomeBackgroundCycle();
+        bgOverlay.classList.add(BLURRED_CLASS);
+
+        const subjectQs = questions[subjectId];
+        if (!subjectQs || subjectQs.length < 50) {
+            alert("Questa materia non ha abbastanza domande per un quiz da 50.");
+            return;
+        }
+
+        homeScreen.classList.add('hidden');
+        subjectScreen.classList.add('hidden');
+        quizScreen.classList.add('hidden');
+        resultsScreen.classList.add('hidden');
+        const realQuizResultsScreen = document.getElementById('real-quiz-results-screen');
+        if(realQuizResultsScreen) {
+            realQuizResultsScreen.classList.add('hidden');
+        }
+
+        currentRealQuizData = [...subjectQs].sort(() => Math.random() - 0.5).slice(0, 50);
+        currentRealQuizIndex = 0;
+        score = 0;
+        realQuizScreen.classList.remove('hidden');
+        document.getElementById('real-quiz-subject-title').innerText = `Quiz: ${currentSubjectInfo.subjectName}`;
+        document.getElementById('real-quiz-score').innerText = `Punteggio: 0`;
+        displayQuizQuestion();
     }
 
+    function displayQuizQuestion() {
+        const quizProgress = document.getElementById('real-quiz-progress');
+        const quizQuestion = document.getElementById('real-quiz-question');
+        const quizAnswers = document.getElementById('real-quiz-answers');
+        const nextQuizBtn = document.getElementById('next-quiz-btn');
 
+        nextQuizBtn.classList.add('hidden');
+        quizAnswers.innerHTML = '';
+
+        if (currentRealQuizIndex >= currentRealQuizData.length) {
+            showQuizResults();
+            return;
+        }
+
+        quizProgress.innerText = `Domanda ${currentRealQuizIndex + 1} di ${currentRealQuizData.length}`;
+        const questionData = currentRealQuizData[currentRealQuizIndex];
+        quizQuestion.innerText = questionData.question;
+
+        const correctAnswer = questionData.answer;
+        const allAnswers = [...new Set(questions[currentSubjectInfo.subjectId].map(q => q.answer))];
+        let incorrectAnswers = allAnswers.filter(a => a !== correctAnswer).sort(() => Math.random() - 0.5).slice(0, 3);
+        while (incorrectAnswers.length < 3) {
+            incorrectAnswers.push(`Risposta errata ${incorrectAnswers.length + 1}`);
+        }
+        const answerOptions = [correctAnswer, ...incorrectAnswers].sort(() => Math.random() - 0.5);
+
+        answerOptions.forEach(answer => {
+            const button = document.createElement('button');
+            button.className = 'p-4 rounded-lg text-left transition-colors duration-200 text-white bg-gray-800 hover:bg-gray-700';
+            button.innerText = answer;
+            button.onclick = () => selectQuizAnswer(button, answer === correctAnswer);
+            quizAnswers.appendChild(button);
+        });
+    }
+
+    function selectQuizAnswer(button, isCorrect) {
+        const quizAnswers = document.getElementById('real-quiz-answers');
+        const nextQuizBtn = document.getElementById('next-quiz-btn');
+        
+        Array.from(quizAnswers.children).forEach(btn => {
+            btn.disabled = true;
+            const answerText = btn.innerText;
+            const originalQuestion = currentRealQuizData[currentRealQuizIndex];
+            if (answerText === originalQuestion.answer) {
+                btn.className = 'p-4 rounded-lg text-left transition-colors duration-200 text-white bg-green-700';
+            } else {
+                 btn.className = 'p-4 rounded-lg text-left transition-colors duration-200 text-white bg-red-700';
+            }
+        });
+
+        if (isCorrect) {
+            score++;
+            document.getElementById('real-quiz-score').innerText = `Punteggio: ${score}`;
+        }
+        nextQuizBtn.classList.remove('hidden');
+    }
+
+    function nextQuizQuestion() {
+        currentRealQuizIndex++;
+        displayQuizQuestion();
+    }
+
+    function showQuizResults() {
+        realQuizScreen.classList.add('hidden');
+        const realQuizResultsScreen = document.getElementById('real-quiz-results-screen');
+        realQuizResultsScreen.classList.remove('hidden');
+        const realQuizResultsMessage = document.getElementById('real-quiz-results-message');
+        realQuizResultsMessage.innerHTML = `Quiz completato per ${currentSubjectInfo.subjectName}!<br>Punteggio finale: ${score} / ${currentRealQuizData.length}`;
+    }
+
+    function backToSubject() {
+        document.getElementById('real-quiz-results-screen').classList.add('hidden');
+        showHomeScreen();
+    }
 
     document.addEventListener('keydown', (e) => {
       if (quizScreen.classList.contains('hidden')) return;
@@ -1328,42 +1434,77 @@
     });
     // --- Fine Funzioni di Navigazione e Quiz ---
 
+    function buildSubjectDropdowns() {
+        const container = document.getElementById('materie-list-container');
+        if (!container) return;
+        
+        let allSubjectsHtml = '';
+
+        for (const subjectId in subjectData) {
+            const subject = subjectData[subjectId];
+            const hasRealQuiz = questions[subjectId] && questions[subjectId].length >= 50;
+            const hasFlashcard = questions[subjectId] && questions[subjectId].length > 0;
+
+            allSubjectsHtml += `
+              <div>
+                <button id="subject-${subjectId}-toggle" class="sidebar-item w-full text-left flex justify-between items-center">
+                    <h3 class="font-semibold text-sm">${subject.name}</h3>
+                    <svg class="w-4 h-4 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                <div id="subject-${subjectId}-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+                    <div class="pt-1 pb-1 pl-6 pr-2 space-y-2">
+                        <a href="${subject.flipbook}" target="_blank" class="block w-full text-left p-2 rounded-md text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">Flipbook</a>`;
+            
+            if (hasFlashcard) {
+                allSubjectsHtml += `<button onclick="prepareAndStart('${subjectId}', 'flashcard')" class="block w-full text-left p-2 rounded-md text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">Flashcard</button>`;
+            }
+            if (hasRealQuiz) {
+                 allSubjectsHtml += `<button onclick="prepareAndStart('${subjectId}', 'realQuiz')" class="block w-full text-left p-2 rounded-md text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">Quiz</button>`;
+            }
+            
+            allSubjectsHtml += `</div></div></div>`;
+        }
+        container.innerHTML = allSubjectsHtml;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      const infoToggle = document.getElementById('info-toggle');
-      const infoDropdown = document.getElementById('info-dropdown');
-      const infoArrow = document.getElementById('info-arrow');
+      buildSubjectDropdowns();
 
-      infoToggle.addEventListener('click', () => {
-        const isOpen = infoDropdown.classList.contains('max-h-96');
-        if (isOpen) {
-          infoDropdown.classList.remove('max-h-96');
-          infoDropdown.classList.add('max-h-0');
-          infoArrow.classList.remove('rotate-90');
-        } else {
-          infoDropdown.classList.remove('max-h-0');
-          infoDropdown.classList.add('max-h-96');
-          infoArrow.classList.add('rotate-90');
+      document.getElementById('sidebar-list').addEventListener('click', e => {
+        const toggleBtn = e.target.closest('[id$="-toggle"]');
+        if (!toggleBtn) return;
+
+        const dropdownId = toggleBtn.id.replace('-toggle', '-dropdown');
+        const dropdown = document.getElementById(dropdownId);
+        const arrow = toggleBtn.querySelector('svg');
+
+        if (dropdown) {
+            const isOpen = dropdown.classList.contains('max-h-[40rem]');
+            
+            // Close all other open dropdowns in the same list
+            const parentList = toggleBtn.closest('.space-y-1, .space-y-2');
+            if (parentList) {
+                parentList.querySelectorAll('[id$="-dropdown"]').forEach(dd => {
+                    if (dd.id !== dropdownId) {
+                        dd.classList.remove('max-h-[40rem]');
+                        dd.classList.add('max-h-0');
+                        const otherArrow = dd.previousElementSibling.querySelector('svg');
+                        if (otherArrow) otherArrow.classList.remove('rotate-90');
+                    }
+                });
+            }
+
+            if (isOpen) {
+                dropdown.classList.remove('max-h-[40rem]');
+                dropdown.classList.add('max-h-0');
+                if (arrow) arrow.classList.remove('rotate-90');
+            } else {
+                dropdown.classList.remove('max-h-0');
+                dropdown.classList.add('max-h-[40rem]');
+                if (arrow) arrow.classList.add('rotate-90');
+            }
         }
       });
-
-      const materieToggle = document.getElementById('materie-toggle');
-      const materieDropdown = document.getElementById('materie-dropdown');
-      const materieArrow = document.getElementById('materie-arrow');
-
-      materieToggle.addEventListener('click', () => {
-        const isOpen = materieDropdown.classList.contains('max-h-96');
-        if (isOpen) {
-          materieDropdown.classList.remove('max-h-96');
-          materieDropdown.classList.add('max-h-0');
-          materieArrow.classList.remove('rotate-90');
-        } else {
-          materieDropdown.classList.remove('max-h-0');
-          materieDropdown.classList.add('max-h-96');
-          materieArrow.classList.add('rotate-90');
-        }
-      });
-
-
 
       // 1. Inizializza il carosello
       initializeHomeCarousel();
@@ -1401,6 +1542,69 @@
             .catch(error => {
               console.log('Registrazione del Service Worker fallita:', error);
             });
+        });
+      }
+
+      // --- Sidebar Interaction Enhancements ---
+
+      // 1. Hover to open/close on Desktop
+      if (isDesktop()) {
+        const sidebarHotzone = document.getElementById('sidebar-hotzone');
+        let sidebarCloseTimeout;
+
+        if (sidebarHotzone) {
+            sidebarHotzone.addEventListener('mouseenter', () => {
+              if (!isSidebarOpen()) {
+                clearTimeout(sidebarCloseTimeout);
+                toggleSidebar();
+              }
+            });
+        }
+
+        sidebar.addEventListener('mouseenter', () => {
+          clearTimeout(sidebarCloseTimeout);
+        });
+
+        sidebar.addEventListener('mouseleave', () => {
+          if (isSidebarOpen()) {
+            sidebarCloseTimeout = setTimeout(() => {
+              toggleSidebar();
+            }, 300);
+          }
+        });
+      }
+
+      // 2. Swipe to open/close on Mobile
+      if (!isDesktop()) {
+        let touchstartX = 0;
+        let touchstartY = 0;
+        const swipeThreshold = 50; // Min distance in pixels for a swipe
+        const swipeArea = 40; // Width of edge area to trigger open
+
+        document.body.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+            touchstartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        document.body.addEventListener('touchend', e => {
+            const touchendX = e.changedTouches[0].screenX;
+            const touchendY = e.changedTouches[0].screenY;
+
+            const swipedX = touchendX - touchstartX;
+            const swipedY = touchendY - touchstartY;
+
+            // Ignore if it's more of a vertical swipe or not a clear swipe
+            if (Math.abs(swipedX) < swipeThreshold || Math.abs(swipedX) < Math.abs(swipedY)) {
+                return;
+            }
+
+            if (swipedX > 0 && touchstartX < swipeArea && !isSidebarOpen()) {
+                // Swipe Right from left edge to Open
+                toggleSidebar();
+            } else if (swipedX < 0 && isSidebarOpen()) {
+                // Swipe Left anywhere to Close
+                toggleSidebar();
+            }
         });
       }
     });
