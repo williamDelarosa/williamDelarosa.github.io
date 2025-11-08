@@ -245,9 +245,47 @@
     .fade-out-1s {
         animation: fadeOutOpacity 1s ease-out forwards;
     }
-  </style>
-</head>
+  
+
+    /* PRESENZE - CHART WITH NAMES */
+    #presenze-chart-container {
+      position: relative;
+      height: 400px;
+      width: 100%;
+    }
+  </style></style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
 <body class="bg-gray-900 text-gray-200 flex min-h-screen overflow-hidden">
+  <!-- LOGIN OVERLAY -->
+  <div id="firebase-login-overlay" class="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4">
+    <div class="bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700">
+      <div class="text-center mb-8">
+        <img src="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/2c68fb5be3136d3458e073ea8c51dfaf8cdf3041/ready.png" alt="Logo TAI" class="w-20 h-20 mx-auto mb-4 rounded-full">
+        <h1 class="text-3xl font-bold text-white mb-2">TAI</h1>
+        <p class="text-gray-400">Accedi per continuare</p>
+      </div>
+      <form id="firebase-login-form" class="space-y-4">
+        <div>
+          <label for="firebase-email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+          <input type="email" id="firebase-email" required class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="tua@email.com">
+        </div>
+        <div>
+          <label for="firebase-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+          <input type="password" id="firebase-password" required class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
+        </div>
+        <div id="firebase-error" class="hidden text-red-400 text-sm p-3 bg-red-900/20 rounded-lg border border-red-800"></div>
+        <button type="submit" id="firebase-login-btn" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">Accedi</button>
+      </form>
+    </div>
+  </div>
+
+
   <div id="sidebar-hotzone" class="hidden md:block fixed top-0 left-0 h-full w-4 z-40"></div>
 
   <div id="background-container" class="fixed inset-0 z-0" data-current-key="">
@@ -297,6 +335,19 @@
                 <!-- Subject dropdowns will be injected here by JS -->
              </div>
           </div>
+
+        <div>
+          <button id="strumenti-toggle" class="sidebar-item w-full flex justify-center items-center">
+            <span class="material-symbols-sharp text-2xl" style="color: #D08770;">build</span>
+          </button>
+          <div id="strumenti-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+            <div class="pt-2 pl-4 space-y-2">
+              <button id="presenze-btn" class="block w-full text-left p-2 rounded-md hover:bg-gray-700 transition-colors">
+                <h3 class="font-semibold text-sm">Presenze</h3>
+              </button>
+            </div>
+          </div>
+        </div>
         </div>
     </nav>
 
@@ -422,6 +473,20 @@
                       class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
                 Riprova Quiz
               </button>
+            </div>
+          </div>
+
+          <!-- PRESENZE SCREEN - GRAFICO CON NOMI -->
+          <div id="presenze-screen" class="hidden">
+            <h1 class="text-4xl font-bold mb-2">Dashboard Presenze</h1>
+            <p class="text-gray-400 mb-8">Riepilogo presenze al 04/11/2025</p>
+
+            <!-- GRAFICO ANDAMENTO ORE -->
+            <div class="content-panel p-6 rounded-lg">
+              <h2 class="text-xl font-bold mb-4">Andamento Generale Ore Presenze</h2>
+              <div id="presenze-chart-container">
+                <canvas id="presenze-chart"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -1246,6 +1311,7 @@
     }
 
     function startQuiz(subjectId) {
+      document.getElementById('presenze-screen').classList.add('hidden');
       stopHomeBackgroundCycle();
       bgOverlay.classList.add(BLURRED_CLASS);
 
@@ -1320,6 +1386,7 @@
     }
 
     function startRealQuiz(subjectId) {
+      document.getElementById('presenze-screen').classList.add('hidden');
         stopHomeBackgroundCycle();
         bgOverlay.classList.add(BLURRED_CLASS);
 
@@ -1595,5 +1662,270 @@
     });
   </script>
 
+
+  <!-- FIREBASE AUTH SCRIPT -->
+  <script>
+    (function() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyDoDSzZurbHx0A9Ra-11U2VzrHJAJ00X8M",
+        authDomain: "cnatai.firebaseapp.com",
+        projectId: "cnatai",
+        storageBucket: "cnatai.firebasestorage.app",
+        messagingSenderId: "780153268227",
+        appId: "1:780153268227:web:5c80b025581169efcb8636"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+
+      const overlay = document.getElementById('firebase-login-overlay');
+      const form = document.getElementById('firebase-login-form');
+      const emailInput = document.getElementById('firebase-email');
+      const passwordInput = document.getElementById('firebase-password');
+      const errorDiv = document.getElementById('firebase-error');
+      const loginBtn = document.getElementById('firebase-login-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Accesso...';
+        errorDiv.classList.add('hidden');
+
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+        } catch (error) {
+          let msg = 'Errore accesso';
+          if (error.code === 'auth/user-not-found') msg = 'Utente non trovato';
+          if (error.code === 'auth/wrong-password') msg = 'Password errata';
+          if (error.code === 'auth/invalid-email') msg = 'Email non valida';
+
+          errorDiv.textContent = msg;
+          errorDiv.classList.remove('hidden');
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Accedi';
+        }
+      });
+
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          overlay.style.display = 'none';
+          const sidebar = document.getElementById('sidebar');
+          let logoutDiv = document.getElementById('firebase-logout-section');
+          if (!logoutDiv) {
+            logoutDiv = document.createElement('div');
+            logoutDiv.id = 'firebase-logout-section';
+            logoutDiv.className = 'mt-auto pt-4 border-t border-gray-700';
+            sidebar.appendChild(logoutDiv);
+          }
+          logoutDiv.innerHTML = '<div class="text-gray-400 text-xs mb-2 px-2 truncate">' + user.email + '</div><button onclick="firebase.auth().signOut()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm">Logout</button>';
+        } else {
+          overlay.style.display = 'flex';
+          const logoutDiv = document.getElementById('firebase-logout-section');
+          if (logoutDiv) logoutDiv.remove();
+        }
+      });
+    })();
+  
+
+    // ====== PRESENZE - GRAFICO CON NOMI + FIX VISIBILITA ======
+
+    function initializePresenzeHandlers() {
+      const strumentiToggle = document.getElementById('strumenti-toggle');
+      const strumentiDropdown = document.getElementById('strumenti-dropdown');
+      const prezenzeBtn = document.getElementById('presenze-btn');
+
+      if (strumentiToggle && strumentiDropdown) {
+        strumentiToggle.addEventListener('click', function() {
+          const isOpen = strumentiDropdown.style.maxHeight && strumentiDropdown.style.maxHeight !== '0px';
+          if (isOpen) {
+            strumentiDropdown.style.maxHeight = '0px';
+          } else {
+            strumentiDropdown.style.maxHeight = strumentiDropdown.scrollHeight + 'px';
+          }
+        });
+      }
+
+      if (prezenzeBtn) {
+        prezenzeBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          showPresenzeScreen();
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializePresenzeHandlers);
+    } else {
+      initializePresenzeHandlers();
+    }
+
+    let presenzeData = [];
+    let prezenzeChart = null;
+
+    function showPresenzeScreen() {
+      document.getElementById('home-screen').classList.add('hidden');
+      document.getElementById('subject-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('real-quiz-screen').classList.add('hidden');
+      document.getElementById('real-quiz-results-screen').classList.add('hidden');
+      document.getElementById('presenze-screen').classList.remove('hidden');
+      loadPresenzeData();
+    }
+
+    function loadPresenzeData() {
+      const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1ytDd1n5vqhGooCpZ-25Vt93x8jUJGRkp/export?format=csv&gid=222758920';
+
+      fetch(spreadsheetUrl)
+        .then(response => response.text())
+        .then(csv => {
+          presenzeData = [];
+          parsePresenzeCSV(csv);
+          renderChart();
+        })
+        .catch(error => {
+          console.error('Errore:', error);
+        });
+    }
+
+    function parsePresenzeCSV(csv) {
+      const lines = csv.trim().split('\n');
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const values = parseCSVLine(lines[i]);
+
+        if (values.length < 6) continue;
+        if (values[0].includes('COGNOME') || values[1].includes('COGNOME')) continue;
+
+        const cognome = (values[1] || '').trim();
+        const nome = (values[2] || '').trim();
+        const oreCorse = parseInt(values[4]) || 111;
+        const oreSvolte = parseFloat(values[5].replace(',', '.')) || 0;
+
+        if (!cognome) continue;
+
+        presenzeData.push({
+          cognome: cognome,
+          nome: nome,
+          ore_corso: oreCorse,
+          ore_svolte: oreSvolte
+        });
+      }
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          if (inQuotes && line[i + 1] === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    }
+
+    function renderChart() {
+      if (presenzeData.length === 0) return;
+
+      const ctx = document.getElementById('presenze-chart');
+      if (!ctx) return;
+
+      // LABELS CON COGNOME E NOME
+      const labels = presenzeData.map(d => d.cognome + ' ' + d.nome);
+      const dataValues = presenzeData.map(d => Math.round((d.ore_svolte / d.ore_corso) * 100));
+
+      const colors = dataValues.map(val => {
+        if (val >= 94) return 'rgba(34, 197, 94, 0.8)';
+        if (val >= 88) return 'rgba(132, 204, 22, 0.8)';
+        if (val >= 82) return 'rgba(234, 179, 8, 0.8)';
+        if (val >= 76) return 'rgba(249, 115, 22, 0.8)';
+        return 'rgba(239, 68, 68, 0.8)';
+      });
+
+      const borderColors = dataValues.map(val => {
+        if (val >= 94) return 'rgba(34, 197, 94, 1)';
+        if (val >= 88) return 'rgba(132, 204, 22, 1)';
+        if (val >= 82) return 'rgba(234, 179, 8, 1)';
+        if (val >= 76) return 'rgba(249, 115, 22, 1)';
+        return 'rgba(239, 68, 68, 1)';
+      });
+
+      if (prezenzeChart) {
+        prezenzeChart.destroy();
+      }
+
+      prezenzeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Percentuale Ore Svolte (%)',
+            data: dataValues,
+            backgroundColor: colors,
+            borderColor: borderColors,
+            borderWidth: 2,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          scales: {
+            x: {
+              max: 100,
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                },
+                color: 'rgba(156, 163, 175, 0.8)'
+              },
+              grid: {
+                color: 'rgba(107, 114, 128, 0.2)'
+              }
+            },
+            y: {
+              ticks: {
+                color: 'rgba(156, 163, 175, 0.8)',
+                font: { size: 11 }
+              },
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: 'rgba(156, 163, 175, 0.8)',
+                font: { size: 12 }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return context.parsed.x + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  </script></script>
 </body>
 </html>
