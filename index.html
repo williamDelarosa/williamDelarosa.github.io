@@ -1893,13 +1893,13 @@
         if (!lines[i].trim()) continue;
         const values = parseCSVLine(lines[i]);
 
-        if (values.length < 6) continue;
+        if (values.length < 13) continue;
         if (values[0].includes('COGNOME') || values[1].includes('COGNOME')) continue;
 
         const cognome = (values[1] || '').trim();
         const nome = (values[2] || '').trim();
         const oreCorse = parseInt(values[4]) || 111;
-        const oreSvolte = parseFloat(values[5].replace(',', '.')) || 0;
+        const oreSvolte = parseFloat((values[12] || '0').replace(',', '.')) || 0;
 
         if (!cognome) continue;
 
