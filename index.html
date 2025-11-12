@@ -245,7 +245,7 @@
     .fade-out-1s {
         animation: fadeOutOpacity 1s ease-out forwards;
     }
-  
+
 
     /* PRESENZE - CHART WITH NAMES */
     #presenze-chart-container {
@@ -481,9 +481,29 @@
             <h1 class="text-4xl font-bold mb-2">Dashboard Presenze</h1>
             <p class="text-gray-400 mb-8">Riepilogo presenze al 04/11/2025</p>
 
+            <!-- Pannello Riepilogo Generale -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div class="content-panel p-6 rounded-lg flex flex-col items-center justify-center text-center">
+                <h3 class="text-lg font-semibold text-gray-400 mb-2">Presenza Media</h3>
+                <p id="avg-attendance-value" class="text-4xl font-bold text-white">--%</p>
+              </div>
+              <div class="content-panel p-6 rounded-lg flex flex-col items-center justify-center text-center">
+                <h3 class="text-lg font-semibold text-gray-400 mb-2">Studenti Totali</h3>
+                <p id="students-total" class="text-4xl font-bold text-white">--</p>
+              </div>
+              <div class="content-panel p-6 rounded-lg flex flex-col items-center justify-center text-center">
+                <h3 class="text-lg font-semibold text-gray-400 mb-2">Studenti in Zona Sicura (>=90%)</h3>
+                <p id="students-safe" class="text-4xl font-bold text-green-500">--</p>
+              </div>
+              <div class="content-panel p-6 rounded-lg flex flex-col items-center justify-center text-center">
+                <h3 class="text-lg font-semibold text-gray-400 mb-2">Studenti a Rischio (<=70%)</h3>
+                <p id="students-danger" class="text-4xl font-bold text-red-500">--</p>
+              </div>
+            </div>
+
             <!-- GRAFICO ANDAMENTO ORE -->
             <div class="content-panel p-6 rounded-lg">
-              <h2 class="text-xl font-bold mb-4">Andamento Generale Ore Presenze</h2>
+              <h2 class="text-xl font-bold mb-4">Dettaglio Presenze Individuali</h2>
               <div id="presenze-chart-container">
                 <canvas id="presenze-chart"></canvas>
               </div>
@@ -1308,12 +1328,12 @@
             subjectName: subject.name,
             flipbookUrl: subject.flipbook
         };
-        
+
         // Defer all UI updates to free the main thread immediately after click
         setTimeout(() => {
             closeSidebar();
             changeBackground(subjectId);
-            
+
             // Hide all main screens
             homeScreen.classList.add('hidden');
             quizScreen.classList.add('hidden');
@@ -1471,7 +1491,7 @@
     function selectQuizAnswer(button, isCorrect) {
         const quizAnswers = document.getElementById('real-quiz-answers');
         const nextQuizBtn = document.getElementById('next-quiz-btn');
-        
+
         Array.from(quizAnswers.children).forEach(btn => {
             btn.disabled = true;
             const answerText = btn.innerText;
@@ -1522,7 +1542,7 @@
     function buildSubjectDropdowns() {
         const container = document.getElementById('materie-list-container');
         if (!container) return;
-        
+
         let allSubjectsHtml = '';
 
         for (const subjectId in subjectData) {
@@ -1539,14 +1559,14 @@
                 <div id="subject-${subjectId}-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
                     <div class="pt-1 pb-1 pl-6 pr-2 space-y-2">
                         <a href="${subject.flipbook}" target="_blank" class="block w-full text-left p-2 rounded-md text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">Flipbook</a>`;
-            
+
             if (hasFlashcard) {
                 allSubjectsHtml += `<button onclick="prepareAndStart('${subjectId}', 'flashcard')" class="block w-full text-left p-2 rounded-md text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">Flashcard</button>`;
             }
             if (hasRealQuiz) {
                  allSubjectsHtml += `<button onclick="prepareAndStart('${subjectId}', 'realQuiz')" class="block w-full text-left p-2 rounded-md text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">Quiz</button>`;
             }
-            
+
             allSubjectsHtml += `</div></div></div>`;
         }
         container.innerHTML = allSubjectsHtml;
@@ -1747,7 +1767,7 @@
         }
       });
     })();
-  
+
 
     // ====== PRESENZE - GRAFICO CON NOMI + FIX VISIBILITA ======
 
@@ -1861,6 +1881,30 @@
 
     function renderChart() {
       if (presenzeData.length === 0) return;
+
+      // --- START: Calcoli per il dashboard di riepilogo ---
+      const totalStudents = presenzeData.length;
+      const totalPercentageSum = presenzeData.reduce((sum, student) => {
+          const percentage = (student.ore_svolte / student.ore_corso) * 100;
+          return sum + (isNaN(percentage) ? 0 : percentage);
+      }, 0);
+      const averageAttendance = totalStudents > 0 ? totalPercentageSum / totalStudents : 0;
+
+      const studentsAbove90 = presenzeData.filter(s => (s.ore_svolte / s.ore_corso) * 100 >= 90).length;
+      const studentsBelow70 = presenzeData.filter(s => (s.ore_svolte / s.ore_corso) * 100 <= 70).length;
+
+      // Popola le card del dashboard
+      const avgEl = document.getElementById('avg-attendance-value');
+      const totalEl = document.getElementById('students-total');
+      const safeEl = document.getElementById('students-safe');
+      const dangerEl = document.getElementById('students-danger');
+
+      if(avgEl) avgEl.innerText = `${averageAttendance.toFixed(1)}%`;
+      if(totalEl) totalEl.innerText = totalStudents;
+      if(safeEl) safeEl.innerText = studentsAbove90;
+      if(dangerEl) dangerEl.innerText = studentsBelow70;
+      // --- END: Calcoli per il dashboard di riepilogo ---
+
 
       const ctx = document.getElementById('presenze-chart');
       if (!ctx) return;
