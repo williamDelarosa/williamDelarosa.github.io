@@ -977,6 +977,60 @@
         { question: "Cos'è una 'lambda function' o 'funzione anonima'?", answer: "Una funzione definita senza un nome, spesso usata per brevi operazioni o come argomento di funzioni di ordine superiore." },
         { question: "Cosa si intende per 'sicurezza dei tipi' (type safety)?", answer: "La misura in cui un linguaggio di programmazione previene o scoraggia errori di tipo, ovvero operazioni su dati di tipo errato." },
         { question: "Cos'è 'Unicode'?", answer: "Uno standard di codifica dei caratteri che mira a rappresentare tutti i caratteri utilizzati in quasi tutte le lingue scritte del mondo." }
+      ],
+      machine_learning: [
+        { question: "Cos'è il Machine Learning?", answer: "Un sottocampo dell'intelligenza artificiale che fornisce ai computer la capacità di apprendere senza essere programmati esplicitamente." },
+        { question: "Qual è la differenza tra Apprendimento Supervisionato e Non Supervisionato?", answer: "Supervisionato: l'algoritmo apprende da dati etichettati. Non Supervisionato: l'algoritmo apprende da dati non etichettati, cercando pattern." },
+        { question: "Cos'è un modello di classificazione?", answer: "Un modello che predice un'etichetta di classe discreta (es. 'spam' o 'non spam')." },
+        { question: "Cos'è un modello di regressione?", answer: "Un modello che predice un valore numerico continuo (es. il prezzo di una casa)." },
+        { question: "Cos'è il 'overfitting'?", answer: "Un fenomeno in cui un modello apprende troppo bene i dati di addestramento, catturando anche il rumore, e generalizza male su nuovi dati." },
+        { question: "Cos'è il 'underfitting'?", answer: "Un fenomeno in cui un modello è troppo semplice per catturare la struttura dei dati, portando a scarse prestazioni sia sui dati di training che di test." },
+        { question: "A cosa serve un 'set di validazione'?", answer: "A regolare gli iperparametri di un modello e a valutarne le prestazioni durante l'addestramento per evitare l'overfitting." },
+        { question: "Qual è lo scopo di una 'funzione di costo' (loss function)?", answer: "Misurare l'errore del modello. L'obiettivo dell'addestramento è minimizzare questa funzione." },
+        { question: "Cos'è la 'discesa del gradiente'?", answer: "Un algoritmo di ottimizzazione per minimizzare la funzione di costo, aggiornando iterativamente i parametri del modello nella direzione opposta al gradiente." },
+        { question: "Cos'è una 'rete neurale'?", answer: "Un modello computazionale ispirato alla struttura del cervello umano, composto da nodi (neuroni) interconnessi organizzati in strati." },
+        { question: "Qual è la differenza tra 'Deep Learning' e 'Machine Learning'?", answer: "Il Deep Learning è un sottocampo del Machine Learning che utilizza reti neurali con molti strati (profonde) per apprendere rappresentazioni complesse dei dati." },
+        { question: "Cos'è il 'Natural Language Processing' (NLP)?", answer: "Un'area dell'AI che si occupa dell'interazione tra computer e linguaggio umano." },
+        { question: "Cos'è il 'clustering'?", answer: "Un task di apprendimento non supervisionato che raggruppa dati simili in cluster." },
+        { question: "Qual è l'algoritmo 'K-Means'?", answer: "Un popolare algoritmo di clustering che partiziona i dati in K cluster, minimizzando la varianza intra-cluster." },
+        { question: "Cos'è un 'albero decisionale'?", answer: "Un modello di apprendimento supervisionato che utilizza una struttura ad albero per prendere decisioni basate su una serie di regole." },
+        { question: "Cos'è una 'Random Forest'?", answer: "Un metodo d'insieme (ensemble) che costruisce più alberi decisionali e ne combina i risultati per migliorare l'accuratezza e ridurre l'overfitting." },
+        { question: "Cos'è il 'Support Vector Machine' (SVM)?", answer: "Un classificatore che trova l'iperpiano ottimale che separa al meglio i dati di due classi." },
+        { question: "Cos'è il 'transfer learning'?", answer: "Una tecnica in cui un modello pre-addestrato su un grande dataset viene riutilizzato e affinato per un nuovo task simile." },
+        { question: "Cos'è l''ingegneria delle feature' (feature engineering)?", answer: "Il processo di selezione, trasformazione e creazione di variabili (feature) dai dati grezzi per migliorare le prestazioni del modello." },
+        { question: "Qual è la metrica 'accuratezza' (accuracy)?", answer: "La frazione di predizioni corrette sul totale delle predizioni. Può essere fuorviante con dati sbilanciati." },
+        { question: "Cosa sono 'precision' e 'recall'?", answer: "Precision: la frazione di veri positivi tra tutti i positivi predetti. Recall: la frazione di veri positivi tra tutti i positivi reali." },
+        { question: "Cos'è una 'matrice di confusione'?", answer: "Una tabella che visualizza le prestazioni di un classificatore, mostrando veri positivi, veri negativi, falsi positivi e falsi negativi." },
+        { question: "Cos'è il 'Reinforcement Learning'?", answer: "Un tipo di apprendimento in cui un agente impara a prendere decisioni compiendo azioni in un ambiente per massimizzare una ricompensa." },
+        { question: "Qual è la differenza tra 'parametro' e 'iperparametro'?", answer: "I parametri sono appresi dal modello durante l'addestramento (es. pesi di una rete neurale). Gli iperparametri sono configurati prima dell'addestramento (es. learning rate)." },
+        { question: "Cos'è il 'learning rate'?", answer: "Un iperparametro che controlla la dimensione dei passi durante la discesa del gradiente." },
+        { question: "Cos'è la 'normalizzazione' dei dati?", answer: "Il processo di riscalare i valori delle feature in un intervallo comune (es. [0, 1]) per migliorare le prestazioni di alcuni algoritmi." },
+        { question: "Cos'è il 'one-hot encoding'?", answer: "Una tecnica per convertire variabili categoriche in un formato numerico binario che può essere fornito ai modelli di ML." },
+        { question: "Cos'è un 'tensore'?", answer: "Una generalizzazione di vettori e matrici a dimensioni superiori, usata comunemente nelle librerie di Deep Learning come TensorFlow e PyTorch." },
+        { question: "Qual è il ruolo di una 'GPU' nel Deep Learning?", answer: "Accelera notevolmente l'addestramento dei modelli di Deep Learning grazie alla sua capacità di eseguire calcoli paralleli su larga scala." },
+        { question: "Cos'è un 'modello generativo'?", answer: "Un modello che impara la distribuzione dei dati di training e può generare nuovi dati simili (es. GAN, VAE)." },
+        { question: "Cos'è una 'GAN' (Generative Adversarial Network)?", answer: "Un'architettura composta da due reti neurali (un generatore e un discriminatore) che competono tra loro per generare dati realistici." },
+        { question: "Cos'è la 'riduzione della dimensionalità'?", answer: "Il processo di ridurre il numero di feature in un dataset, preservando al contempo le informazioni importanti (es. PCA)." },
+        { question: "Cos'è la 'Principal Component Analysis' (PCA)?", answer: "Una tecnica di riduzione della dimensionalità che trasforma i dati in un nuovo sistema di coordinate, dove le componenti principali catturano la massima varianza." },
+        { question: "Cos'è la 'cross-validation'?", answer: "Una tecnica di valutazione del modello in cui i dati vengono suddivisi in più 'fold', addestrando e testando il modello più volte per ottenere una stima più robusta delle prestazioni." },
+        { question: "Qual è la differenza tra 'correlazione' e 'causalità'?", answer: "La correlazione indica una relazione statistica tra due variabili, ma non implica che una causi l'altra." },
+        { question: "Cos'è un 'bias' in un modello di ML?", answer: "Un errore sistematico che porta il modello a fare predizioni errate in una certa direzione. Può derivare da dati di training non rappresentativi." },
+        { question: "Cos'è un 'ensemble learning'?", answer: "Una tecnica che combina le predizioni di più modelli per ottenere prestazioni migliori rispetto a un singolo modello." },
+        { question: "Cos'è il 'bagging'?", answer: "Una tecnica di ensemble (usata nelle Random Forest) in cui più modelli vengono addestrati su sottoinsiemi casuali dei dati di training." },
+        { question: "Cos'è il 'boosting'?", answer: "Una tecnica di ensemble in cui i modelli vengono addestrati in sequenza, e ogni nuovo modello si concentra sugli errori commessi dal precedente." },
+        { question: "Cos'è 'XGBoost'?", answer: "Una libreria di boosting del gradiente ottimizzata, nota per le sue alte prestazioni e velocità." },
+        { question: "Cos'è una 'funzione di attivazione' in una rete neurale?", answer: "Una funzione che introduce non-linearità nel modello, permettendo di apprendere relazioni complesse (es. ReLU, Sigmoid)." },
+        { question: "Cos'è la 'ReLU' (Rectified Linear Unit)?", answer: "Una popolare funzione di attivazione che restituisce 0 se l'input è negativo e l'input stesso se è positivo." },
+        { question: "Cos'è il 'dropout'?", answer: "Una tecnica di regolarizzazione per le reti neurali che 'spegne' casualmente alcuni neuroni durante l'addestramento per prevenire l'overfitting." },
+        { question: "Cos'è la 'backpropagation'?", answer: "L'algoritmo utilizzato per addestrare le reti neurali, calcolando il gradiente della funzione di costo rispetto ai pesi della rete." },
+        { question: "Cos'è un 'embedding' nel contesto del NLP?", answer: "Una rappresentazione vettoriale densa di parole o frasi, che cattura le loro relazioni semantiche." },
+        { question: "Cos'è 'BERT'?", answer: "Un potente modello di linguaggio pre-addestrato da Google, che ha rivoluzionato molti task di NLP." },
+        { question: "Cos'è la 'computer vision'?", answer: "Un campo dell'AI che insegna ai computer a interpretare e comprendere il mondo visivo da immagini e video." },
+        { question: "Cos'è una 'rete neurale convoluzionale' (CNN)?", answer: "Un tipo di rete neurale particolarmente efficace per i task di computer vision, che utilizza filtri convoluzionali per rilevare feature nelle immagini." },
+        { question: "Cos'è il 'pooling' in una CNN?", answer: "Un'operazione che riduce la dimensionalità delle feature map, rendendo il modello più efficiente e robusto alle piccole traslazioni." },
+        { question: "Cos'è una 'rete neurale ricorrente' (RNN)?", answer: "Un tipo di rete neurale progettata per gestire dati sequenziali (es. testo, serie temporali), dotata di una 'memoria' interna." },
+        { question: "Qual è il problema del 'vanishing gradient' nelle RNN?", answer: "Un problema in cui i gradienti diventano estremamente piccoli durante la backpropagation, rendendo difficile l'apprendimento di dipendenze a lungo termine." },
+        { question: "Cos'è una 'LSTM' (Long Short-Term Memory)?", answer: "Un tipo speciale di RNN che risolve il problema del vanishing gradient, utilizzando 'gate' per regolare il flusso di informazioni." }
       ]
     };
 
@@ -989,7 +1043,9 @@
       solidworks: 'https://images.pexels.com/photos/7504612/pexels-photo-7504612.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       robotica: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       programmazione: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
-      qualifica: 'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
+      qualifica: 'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      presenze: 'https://images.pexels.com/photos/1591060/pexels-photo-1591060.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      machine_learning: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
     };
 
     // --- Configurazione Immagini Cicliche per la Home ---
@@ -1315,6 +1371,7 @@
       solidworks: { name: 'Solidworks', flipbook: 'https://www.calameo.com/read/0080586708c1eaef6408f' },
       robotica: { name: 'Robotica', flipbook: 'https://www.calameo.com/read/008058670c3c6f838af83' },
       programmazione: { name: 'Programmazione Informatica', flipbook: 'https://www.calameo.com/read/00805867000fffa431632' },
+      machine_learning: { name: 'Machine Learning', flipbook: 'https://www.calameo.com/read/008058670887f48b78b0f' },
     };
 
 
@@ -1805,6 +1862,7 @@
     let prezenzeChart = null;
 
     function showPresenzeScreen() {
+      changeBackground('presenze');
       document.getElementById('home-screen').classList.add('hidden');
       document.getElementById('subject-screen').classList.add('hidden');
       document.getElementById('quiz-screen').classList.add('hidden');
