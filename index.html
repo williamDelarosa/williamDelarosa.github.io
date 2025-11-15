@@ -253,6 +253,27 @@
       height: 400px;
       width: 100%;
     }
+    .colab-card {
+      background: rgba(31, 41, 55, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease-in-out;
+      display: block;
+      text-decoration: none;
+    }
+    .colab-card:hover {
+      transform: translateY(-5px);
+      background: rgba(55, 65, 81, 0.8);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+    .colab-card h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #E5E7EB;
+    }
   </style></style>
 
   <!-- Firebase SDK -->
@@ -261,10 +282,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-<body class="bg-gray-900 text-gray-200 flex min-h-screen overflow-hidden">
+<body class="bg-gray-900 text-gray-200 flex min-h-screen">
   <!-- LOGIN OVERLAY -->
-  <div id="firebase-login-overlay" class="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4">
-    <div class="bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700">
+  <div id="firebase-login-overlay" class="fixed inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4" style="z-index: 9999;">
+    <div class="bg-gray-800/80 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700">
       <div class="text-center mb-8">
         <img src="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/2c68fb5be3136d3458e073ea8c51dfaf8cdf3041/ready.png" alt="Logo TAI" class="w-20 h-20 mx-auto mb-4 rounded-full">
         <h1 class="text-3xl font-bold text-white mb-2">TAI</h1>
@@ -345,6 +366,20 @@
               <button id="presenze-btn" class="block w-full text-left p-2 rounded-md hover:bg-gray-700 transition-colors">
                 <h3 class="font-semibold text-sm">Presenze</h3>
               </button>
+              <button id="colab-btn" class="block w-full text-left p-2 rounded-md hover:bg-gray-700 transition-colors">
+                <h3 class="font-semibold text-sm">Colab</h3>
+              </button>
+              <div>
+                <button id="esami-toggle" class="w-full text-left p-2 rounded-md hover:bg-gray-700 flex justify-between items-center">
+                    <h3 class="font-semibold text-sm">Esami</h3>
+                    <svg class="w-4 h-4 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                <div id="esami-dropdown" class="overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+                    <div class="pt-1 pb-1 pl-4 pr-2 space-y-2">
+                        <button id="esame-informatica-btn" class="block w-full text-left p-2 rounded-md text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">Informatica</button>
+                    </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -528,6 +563,25 @@
               </div>
             </div>
           </div>
+
+          <!-- ESAME INFORMATICA SCREEN -->
+          <div id="esame-informatica-screen" class="hidden">
+            <div class="content-panel p-6 md:p-8 rounded-2xl mt-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Esame di Informatica – Versione DEMO</h2>
+                <div id="esame-informatica-content" class="text-gray-300 space-y-6 prose prose-invert max-w-none">
+                    <!-- Content will be injected here by JS -->
+                </div>
+            </div>
+          </div>
+
+          <!-- COLAB SCREEN -->
+          <div id="colab-screen" class="hidden">
+            <h2 class="text-3xl font-bold text-white text-center my-8">Notebooks Colab</h2>
+            <div id="colab-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Cards will be injected here by JS -->
+            </div>
+          </div>
+
         </div>
       </div>
     </main>
@@ -634,7 +688,7 @@
         { question: "Cosa si intende per 'rischio rumore'?", answer: "Il rischio di danni all'udito a causa dell'esposizione a livelli eccessivi di rumore." },
         { question: "Qual è il 'rischio vibrazioni'?", answer: "Il rischio associato all'esposizione a vibrazioni meccaniche trasmesse al corpo." },
         { question: "Cosa si intende per 'movimentazione manuale dei carichi'?", answer: "Le operazioni di trasporto o di sostegno di un carico ad opera di uno o più lavoratori." },
-        { question: "Qual è il 'rischio elettrico'?", answer: "Il rischio di folgorazione, ustioni o incendi a causa del contatto con parti in tensione." },
+        { question: "Qual è il 'rischio elettrico'?", answer: "Il rischio di folgorazione, ustioni o incendi a causa dell'elettricità." },
         { question: "Cosa si intende per 'lavori in quota'?", answer: "L'attività lavorativa che espone il lavoratore al rischio di caduta da una quota posta ad altezza superiore a 2 m." },
         { question: "Quali sono le principali misure di 'protezione collettiva'?", answer: "Misure che proteggono più lavoratori contemporaneamente, come i parapetti o le reti di sicurezza." },
         { question: "Cosa si intende per 'ergonomia'?", answer: "La scienza che si occupa dell'interazione tra gli esseri umani e gli altri elementi di un sistema." },
@@ -658,7 +712,7 @@
         { question: "Cosa si intende per 'lavori in ambienti confinati'?", answer: "Lavori in spazi con limitate aperture di accesso e ventilazione naturale sfavorevole." },
         { question: "Qual è il 'rischio stradale'?", answer: "Il rischio di incidenti durante gli spostamenti lavorativi." },
         { question: "Cosa si intende per 'manutenzione' ai fini della sicurezza?", answer: "L'insieme delle operazioni per mantenere in efficienza macchine e impianti." },
-        { question: "Qual è il ruolo dell' 'Organismo Paritetico'?", answer: "Supportare le imprese nell'individuazione di soluzioni tecniche e organizzative per la sicurezza." },
+        { question: "Qual è il ruolo dell 'Organismo Paritetico'?", answer: "Supportare le imprese nell'individuazione di soluzioni tecniche e organizzative per la sicurezza." },
         { question: "Cosa si intende per 'rischio biologico deliberato'?", answer: "L'uso intenzionale di agenti biologici per nuocere." },
         { question: "Quali sono le sanzioni per il mancato rispetto delle norme di sicurezza?", answer: "Sanzioni penali (arresto o ammenda) e amministrative." },
         { question: "Cosa si intende per 'buone prassi' in materia di sicurezza?", answer: "Soluzioni organizzative o procedurali coerenti con la normativa e le norme di buona tecnica." },
@@ -739,7 +793,7 @@
         { question: "Cos'è la 'persuasione'?", answer: "L'arte di convincere gli altri ad adottare un'idea o un comportamento." },
         { question: "Qual è il ruolo della 'fiducia' in un team?", answer: "È fondamentale per una comunicazione aperta, onesta e una collaborazione efficace." },
         { question: "Cosa si intende per 'public speaking'?", answer: "La capacità di parlare in pubblico in modo efficace e coinvolgente." },
-        { question: "Come si può gestire l' 'ansia da prestazione' nel parlare in pubblico?", answer: "Con una buona preparazione, tecniche di respirazione e focalizzandosi sul messaggio." },
+        { question: "Come si può gestire l 'ansia da prestazione' nel parlare in pubblico?", answer: "Con una buona preparazione, tecniche di respirazione e focalizzandosi sul messaggio." },
         { question: "Qual è l'importanza del 'contatto visivo'?", answer: "Crea connessione con l'interlocutore e dimostra sicurezza e onestà." },
         { question: "Cosa si intende per 'netiquette'?", answer: "L'insieme delle regole di buona educazione da seguire nella comunicazione online." },
         { question: "Qual è la differenza tra 'collaborazione' e 'cooperazione'?", answer: "La cooperazione è lavorare insieme per un obiettivo comune, la collaborazione implica anche la creazione di qualcosa di nuovo insieme." },
@@ -765,7 +819,7 @@
         { question: "Qual è il ruolo della 'creatività' nella comunicazione?", answer: "Permette di creare messaggi originali e memorabili che catturano l'attenzione." },
         { question: "Cosa si intende per 'comunicazione interna'?", answer: "La comunicazione che avviene all'interno di un'organizzazione tra i suoi membri." },
         { question: "Qual è l'importanza di una 'cultura aziendale' forte?", answer: "Guida i comportamenti dei dipendenti e crea un senso di appartenenza." },
-        { question: "Come si può promuovere l' 'innovazione' in un team?", answer: "Incoraggiando la sperimentazione, accettando il fallimento e premiando le nuove idee." },
+        { question: "Come si può promuovere l 'innovazione' in un team?", answer: "Incoraggiando la sperimentazione, accettando il fallimento e premiando le nuove idee." },
         { question: "Cosa si intende per 'leadership situazionale'?", answer: "Adattare il proprio stile di leadership alla situazione e al livello di maturità dei collaboratori." },
         { question: "Qual è il ruolo del 'mentoring'?", answer: "Un professionista esperto (mentor) guida e supporta lo sviluppo di un'altra persona (mentee)." },
         { question: "Come si può costruire una 'rete di contatti' (networking) efficace?", answer: "Partecipando a eventi, coltivando relazioni autentiche e offrendo valore agli altri." }
@@ -850,7 +904,7 @@
         { question: "Qual è la differenza tra una 'parte' e un 'corpo'?", answer: "Una parte è un singolo file (.sldprt), che può contenere uno o più corpi solidi distinti." },
         { question: "Cosa si intende per 'relazioni di schizzo'?", answer: "Vincoli geometrici (es. orizzontale, verticale, tangente) che definiscono il comportamento dello schizzo." },
         { question: "Perché è importante avere uno 'schizzo completamente definito'?", answer: "Perché garantisce che la geometria sia stabile e non possa muoversi o cambiare dimensione inaspettatamente." },
-        { question: "A cosa serve l' 'albero di disegno FeatureManager'?", answer: "A visualizzare la cronologia di tutte le operazioni e le feature utilizzate per creare il modello." },
+        { question: "A cosa serve l 'albero di disegno FeatureManager'?", answer: "A visualizzare la cronologia di tutte le operazioni e le feature utilizzate per creare il modello." },
         { question: "Cosa si intende per 'progettazione top-down' (dall'alto verso il basso)?", answer: "Un metodo di progettazione di assiemi in cui le parti vengono create nel contesto dell'assieme stesso." },
         { question: "Qual è il vantaggio della 'progettazione top-down'?", answer: "Permette di garantire che le parti si adattino correttamente tra loro, poiché vengono progettate in relazione l'una con l'altra." },
         { question: "Cosa si intende per 'progettazione bottom-up' (dal basso verso l'alto)?", answer: "Un metodo di progettazione in cui le parti vengono create individualmente e poi inserite in un assieme." },
@@ -1275,11 +1329,7 @@
 
     function setupAndShowHomeScreen() {
       changeBackground('home');
-      subjectScreen.classList.add('hidden');
-      quizScreen.classList.add('hidden');
-      resultsScreen.classList.add('hidden');
-      document.getElementById('real-quiz-screen').classList.add('hidden');
-      document.getElementById('real-quiz-results-screen').classList.add('hidden');
+      hideAllScreens();
 
       const homeScreenDiv = document.getElementById('home-screen');
       const subtitle = document.getElementById('home-subtitle');
@@ -1370,7 +1420,7 @@
       matematica: { name: 'Matematica', flipbook: 'https://www.calameo.com/account/private/read/#code-0080586707940de0f2426' },
       solidworks: { name: 'Solidworks', flipbook: 'https://www.calameo.com/read/0080586708c1eaef6408f' },
       robotica: { name: 'Robotica', flipbook: 'https://www.calameo.com/read/008058670c3c6f838af83' },
-      programmazione: { name: 'Programmazione Informatica', flipbook: 'https://www.calameo.com/read/00805867000fffa431632' },
+      programmazione: { name: 'Programmazione Informatica', flipbook: 'https://www.calameo.com/read/0080586704c5f9a83fa5b' },
       machine_learning: { name: 'Machine Learning', flipbook: 'https://www.calameo.com/read/008058670887f48b78b0f' },
     };
 
@@ -1406,15 +1456,46 @@
         }, 0); // Yield to main thread immediately
     }
 
+    function shuffleArray(array) {
+      let currentIndex = array.length, randomIndex;
+      // While there remain elements to shuffle.
+      while (currentIndex > 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    }
+
+    function getNRandomElements(arr, n) {
+      const result = new Array(n);
+      let len = arr.length;
+      const taken = new Array(len);
+      if (n > len) {
+        console.warn("Richiesti più elementi di quanti disponibili. Restituisco l'intero array.");
+        return shuffleArray([...arr]);
+      }
+      while (n > 0) {
+        n--;
+        const x = Math.floor(Math.random() * len);
+        result[n] = arr[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
+      }
+      return result;
+    }
+
     function startQuiz(subjectId) {
-      document.getElementById('presenze-screen').classList.add('hidden');
+      hideAllScreens();
       stopHomeBackgroundCycle();
       bgOverlay.classList.add(BLURRED_CLASS);
 
       if (!questions[subjectId] || questions[subjectId].length === 0) {
         currentQuizData = [];
       } else {
-        currentQuizData = [...questions[subjectId]].sort(() => Math.random() - 0.5);
+        // Use efficient Fisher-Yates shuffle
+        currentQuizData = shuffleArray([...questions[subjectId]]);
       }
       currentQuestionIndex = 0;
       isFlipped = false;
@@ -1482,13 +1563,14 @@
     }
 
     function startRealQuiz(subjectId) {
-      document.getElementById('presenze-screen').classList.add('hidden');
+        hideAllScreens();
         stopHomeBackgroundCycle();
         bgOverlay.classList.add(BLURRED_CLASS);
 
         const subjectQs = questions[subjectId];
         if (!subjectQs || subjectQs.length < 50) {
             alert("Questa materia non ha abbastanza domande per un quiz da 50.");
+            showHomeScreen(); // Go back home if quiz can't start
             return;
         }
 
@@ -1501,7 +1583,8 @@
             realQuizResultsScreen.classList.add('hidden');
         }
 
-        currentRealQuizData = [...subjectQs].sort(() => Math.random() - 0.5).slice(0, 50);
+        // Use efficient random sampling
+        currentRealQuizData = getNRandomElements(subjectQs, 50);
         currentRealQuizIndex = 0;
         score = 0;
         realQuizScreen.classList.remove('hidden');
@@ -1596,6 +1679,52 @@
     });
     // --- Fine Funzioni di Navigazione e Quiz ---
 
+    // --- COLAB ---
+    const colabLinks = [
+      { title: "Python basics - Classi, eccezioni, import", url: "https://colab.research.google.com/drive/1x7wl0nMjFDf_yQGZVMXIxtmyIcjnu3qx" },
+      { title: "Python Basics - condizionali e cicli", url: "https://colab.research.google.com/drive/1lRKUVaqb9_nU9qu5l_6_mKhNh_t9nznU" },
+      { title: "Python Basics - Funzioni", url: "https://colab.research.google.com/drive/1aRyGhwKIfvDSuzpRcyrolA6L_zinWWdZ" },
+      { title: "Python basics - strutture dati", url: "https://colab.research.google.com/drive/1oUxnR2SGixiDczAwl_gPa2P4SXZRWBNE" },
+      { title: "Python Basics - Esercizi", url: "https://colab.research.google.com/drive/1FlYOhMCk89B0mVG5lBQW9SiQcs5DAYVu" },
+      { title: "Python Basics", url: "https://colab.research.google.com/drive/1cB7xlbJHzEYJz9dMAx1EGNtcwPeFkFOA#scrollTo=LE_VvMNoXlCD" }
+    ];
+
+    function buildColabCards() {
+        const container = document.getElementById('colab-cards-container');
+        if (!container) return;
+        let cardsHtml = '';
+        colabLinks.forEach(link => {
+            cardsHtml += `
+                <a href="${link.url}" target="_blank" class="colab-card">
+                    <h3>${link.title}</h3>
+                </a>
+            `;
+        });
+        container.innerHTML = cardsHtml;
+    }
+
+    function hideAllScreens() {
+        const screenIds = [
+            'home-screen', 'subject-screen', 'quiz-screen', 'results-screen',
+            'real-quiz-screen', 'real-quiz-results-screen', 'presenze-screen',
+            'esame-informatica-screen', 'colab-screen'
+        ];
+        screenIds.forEach(id => {
+            const screen = document.getElementById(id);
+            if (screen) {
+                screen.classList.add('hidden');
+            }
+        });
+    }
+
+    function showColabScreen() {
+        closeSidebar();
+        changeBackground('programmazione');
+        hideAllScreens();
+        document.getElementById('colab-screen').classList.remove('hidden');
+    }
+    // --- FINE COLAB ---
+
     function buildSubjectDropdowns() {
         const container = document.getElementById('materie-list-container');
         if (!container) return;
@@ -1631,6 +1760,9 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       buildSubjectDropdowns();
+      buildColabCards();
+
+      document.getElementById('colab-btn').addEventListener('click', showColabScreen);
 
       document.getElementById('sidebar-list').addEventListener('click', e => {
         const toggleBtn = e.target.closest('[id$="-toggle"]');
@@ -1771,7 +1903,9 @@
         appId: "1:780153268227:web:5c80b025581169efcb8636"
       };
 
-      firebase.initializeApp(firebaseConfig);
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
       const auth = firebase.auth();
 
       const overlay = document.getElementById('firebase-login-overlay');
@@ -1792,12 +1926,28 @@
 
         try {
           await auth.signInWithEmailAndPassword(email, password);
+          // onAuthStateChanged will handle hiding the overlay
         } catch (error) {
-          let msg = 'Errore accesso';
-          if (error.code === 'auth/user-not-found') msg = 'Utente non trovato';
-          if (error.code === 'auth/wrong-password') msg = 'Password errata';
-          if (error.code === 'auth/invalid-email') msg = 'Email non valida';
-
+          let msg = 'Si è verificato un errore durante l\'accesso.';
+          switch (error.code) {
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+            case 'auth/invalid-credential':
+              msg = 'Credenziali non valide. Controlla email e password.';
+              break;
+            case 'auth/invalid-email':
+              msg = "L\'indirizzo email non è valido.";
+              break;
+            case 'auth/too-many-requests':
+              msg = 'Accesso temporaneamente disabilitato. Riprova più tardi.';
+              break;
+            case 'auth/network-request-failed':
+              msg = 'Errore di rete. Controlla la tua connessione e riprova.';
+              break;
+            default:
+              msg = 'Errore sconosciuto. Riprova.';
+              console.error('Login Error:', error);
+          }
           errorDiv.textContent = msg;
           errorDiv.classList.remove('hidden');
           loginBtn.disabled = false;
@@ -1807,42 +1957,83 @@
 
       auth.onAuthStateChanged((user) => {
         if (user) {
-          overlay.style.display = 'none';
+          if(overlay) overlay.style.display = 'none';
           const sidebar = document.getElementById('sidebar');
-          let logoutDiv = document.getElementById('firebase-logout-section');
-          if (!logoutDiv) {
-            logoutDiv = document.createElement('div');
-            logoutDiv.id = 'firebase-logout-section';
-            logoutDiv.className = 'mt-auto pt-4 border-t border-gray-700';
-            sidebar.appendChild(logoutDiv);
+          if (sidebar) {
+              let logoutDiv = document.getElementById('firebase-logout-section');
+              if (!logoutDiv) {
+                logoutDiv = document.createElement('div');
+                logoutDiv.id = 'firebase-logout-section';
+                logoutDiv.className = 'mt-auto pt-4 border-t border-gray-700';
+                sidebar.appendChild(logoutDiv);
+              }
+              logoutDiv.innerHTML = '<div class="text-gray-400 text-xs mb-2 px-2 truncate">' + user.email + '</div><button id="logout-btn" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm">Logout</button>';
+              document.getElementById('logout-btn').addEventListener('click', () => {
+                  auth.signOut();
+              });
           }
-          logoutDiv.innerHTML = '<div class="text-gray-400 text-xs mb-2 px-2 truncate">' + user.email + '</div><button onclick="firebase.auth().signOut()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm">Logout</button>';
         } else {
-          overlay.style.display = 'flex';
+          if(overlay) overlay.style.display = 'flex';
           const logoutDiv = document.getElementById('firebase-logout-section');
           if (logoutDiv) logoutDiv.remove();
         }
       });
     })();
+  </script>
+
+  <script>
+    // ====== ESAME INFORMATICA ======
+    function initializeEsameInformaticaHandlers() {
+      const esameBtn = document.getElementById('esame-informatica-btn');
+
+      if (esameBtn) {
+        esameBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          showEsameInformaticaScreen();
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeEsameInformaticaHandlers);
+    } else {
+      initializeEsameInformaticaHandlers();
+    }
+
+    function showEsameInformaticaScreen() {
+      closeSidebar();
+      changeBackground('programmazione'); // Using programming background
+      hideAllScreens();
+
+      // Show the informatics exam screen
+      const screen = document.getElementById('esame-informatica-screen');
+      screen.classList.remove('hidden');
+
+      // Inject content if it's not already there
+      const contentDiv = document.getElementById('esame-informatica-content');
+      if (contentDiv.innerHTML.trim() === '') {
+          contentDiv.innerHTML = `
+            <p><strong>Benvenuto alla versione demo dell'esame di Informatica.</strong></p>
+            <p>Questo test è progettato per valutare la tua comprensione dei concetti fondamentali della programmazione, delle basi di dati e delle reti.</p>
+            <div class="mt-4 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
+                <h3 class="font-bold text-lg text-white mb-2">Struttura del Test</h3>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li><strong>Sezione 1:</strong> Domande a risposta multipla su algoritmi e strutture dati.</li>
+                    <li><strong>Sezione 2:</strong> Esercizi di scrittura codice (es. Python, JavaScript).</li>
+                    <li><strong>Sezione 3:</strong> Domande su concetti di database, in particolare SQL.</li>
+                    <li><strong>Sezione 4:</strong> Principi di base del networking e protocolli.</li>
+                </ul>
+            </div>
+            <p class="mt-4 text-yellow-400"><strong>Nota:</strong> Questa è solo una demo. La funzionalità di svolgimento del test non è implementata.</p>
+          `;
+      }
+    }
 
 
     // ====== PRESENZE - GRAFICO CON NOMI + FIX VISIBILITA ======
 
     function initializePresenzeHandlers() {
-      const strumentiToggle = document.getElementById('strumenti-toggle');
-      const strumentiDropdown = document.getElementById('strumenti-dropdown');
       const prezenzeBtn = document.getElementById('presenze-btn');
-
-      if (strumentiToggle && strumentiDropdown) {
-        strumentiToggle.addEventListener('click', function() {
-          const isOpen = strumentiDropdown.style.maxHeight && strumentiDropdown.style.maxHeight !== '0px';
-          if (isOpen) {
-            strumentiDropdown.style.maxHeight = '0px';
-          } else {
-            strumentiDropdown.style.maxHeight = strumentiDropdown.scrollHeight + 'px';
-          }
-        });
-      }
 
       if (prezenzeBtn) {
         prezenzeBtn.addEventListener('click', function(e) {
@@ -1862,27 +2053,50 @@
     let prezenzeChart = null;
 
     function showPresenzeScreen() {
+      closeSidebar();
       changeBackground('presenze');
-      document.getElementById('home-screen').classList.add('hidden');
-      document.getElementById('subject-screen').classList.add('hidden');
-      document.getElementById('quiz-screen').classList.add('hidden');
-      document.getElementById('real-quiz-screen').classList.add('hidden');
-      document.getElementById('real-quiz-results-screen').classList.add('hidden');
-      document.getElementById('presenze-screen').classList.remove('hidden');
-      loadPresenzeData();
+      hideAllScreens();
+
+      const presenzeScreen = document.getElementById('presenze-screen');
+      presenzeScreen.classList.remove('hidden');
+
+      // Show a loading state immediately to improve INP
+      const chartContainer = document.getElementById('presenze-chart-container');
+      chartContainer.innerHTML = '<p class="text-center py-16 text-gray-400">Caricamento dati presenze...</p>';
+
+      // Reset summary cards to loading state
+      document.getElementById('avg-attendance-value').innerText = '--%';
+      document.getElementById('students-total').innerText = '--';
+      document.getElementById('students-safe').innerText = '--';
+      document.getElementById('students-danger').innerText = '--';
+
+      // Defer the actual data loading to unblock the UI thread
+      setTimeout(loadPresenzeData, 100);
     }
 
     function loadPresenzeData() {
       const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1ytDd1n5vqhGooCpZ-25Vt93x8jUJGRkp/export?format=csv&gid=222758920';
+      const chartContainer = document.getElementById('presenze-chart-container');
 
       fetch(spreadsheetUrl)
-        .then(response => response.text())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Errore di rete: ${response.statusText}`);
+          }
+          return response.text();
+        })
         .then(csv => {
-          presenzeData = parsePresenzeCSV(csv);
-          renderChart();
+          try {
+            presenzeData = parsePresenzeCSV(csv);
+            renderChart();
+          } catch (e) {
+            console.error("Errore durante l'elaborazione dei dati:", e);
+            chartContainer.innerHTML = '<p class="text-center py-16 text-red-400">Errore durante l\'elaborazione dei dati.</p>';
+          }
         })
         .catch(error => {
-          console.error('Errore:', error);
+          console.error('Errore caricamento presenze:', error);
+          chartContainer.innerHTML = '<p class="text-center py-16 text-red-400">Impossibile caricare i dati. Controlla la connessione.</p>';
         });
     }
 
@@ -1938,7 +2152,16 @@
     }
 
     function renderChart() {
-      if (presenzeData.length === 0) return;
+      const chartContainer = document.getElementById('presenze-chart-container');
+      if (presenzeData.length === 0) {
+        chartContainer.innerHTML = '<p class="text-center py-16 text-gray-400">Nessun dato sulle presenze da visualizzare.</p>';
+        return;
+      }
+
+      // Re-create the canvas element that was replaced by the loading message
+      chartContainer.innerHTML = '<canvas id="presenze-chart"></canvas>';
+      const ctx = document.getElementById('presenze-chart');
+      if (!ctx) return;
 
       // --- START: Calcoli per il dashboard di riepilogo ---
       const totalStudents = presenzeData.length;
@@ -1962,10 +2185,6 @@
       if(safeEl) safeEl.innerText = studentsAbove90;
       if(dangerEl) dangerEl.innerText = studentsBelow70;
       // --- END: Calcoli per il dashboard di riepilogo ---
-
-
-      const ctx = document.getElementById('presenze-chart');
-      if (!ctx) return;
 
       // Sort data in descending order by percentage
       presenzeData.sort((a, b) => {
@@ -2006,51 +2225,39 @@
         data: {
           labels: labels,
           datasets: [{
-            label: 'Percentuale Ore Svolte (%)',
+            label: 'Percentuale Presenze',
             data: dataValues,
             backgroundColor: colors,
             borderColor: borderColors,
             borderWidth: 2,
-            borderRadius: 8
+            borderRadius: 5,
           }]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
           indexAxis: 'y',
+          maintainAspectRatio: false,
           scales: {
             x: {
+              beginAtZero: true,
               max: 100,
-              ticks: {
-                callback: function(value) {
-                  return value + '%';
-                },
-                color: 'rgba(156, 163, 175, 0.8)'
-              },
-              grid: {
-                color: 'rgba(107, 114, 128, 0.2)'
-              }
+              grid: { color: 'rgba(255, 255, 255, 0.1)' },
+              ticks: { color: '#d1d5db', font: { weight: 'bold' } }
             },
             y: {
-              ticks: {
-                color: 'rgba(156, 163, 175, 0.8)',
-                font: { size: 11 }
-              },
-              grid: { display: false }
+              grid: { display: false },
+              ticks: { color: '#d1d5db', font: { size: 10 } }
             }
           },
           plugins: {
-            legend: {
-              display: false,
-              labels: {
-                color: 'rgba(156, 163, 175, 0.8)',
-                font: { size: 12 }
-              }
-            },
+            legend: { display: false },
             tooltip: {
+              enabled: true,
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 12 },
               callbacks: {
                 label: function(context) {
-                  return context.parsed.x + '%';
+                  return `Presenze: ${context.raw}%`;
                 }
               }
             }
@@ -2058,6 +2265,327 @@
         }
       });
     }
-  </script></script>
+
+    // ====== ESAME INFORMATICA ======
+    const esameInformaticaHTML = `
+      <p><strong>Modulo:</strong> ####</p>
+      <p><strong>Data:</strong> 14 novembre 2025</p>
+      <br>
+      <h3 class="text-xl font-semibold text-white">Istruzioni:</h3>
+      <ul class="list-disc list-inside">
+          <li>Barrare una sola risposta per ciascuna domanda, salvo diversa indicazione.</li>
+          <li>Non sono ammessi libri, appunti o dispositivi elettronici.</li>
+          <li>Durata consigliata per l'esercitazione: 90 minuti.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold text-white pt-4 border-t border-gray-700 mt-6">Parte A – Teoria a risposta multipla (60/100)</h2>
+
+      <h3 class="text-xl font-semibold text-white mt-4">Modulo IoT</h3>
+      <div class="space-y-6">
+          <div>
+              <p><strong>1. Quale tra i seguenti è un tipico esempio di applicazione IoT in ambito agricolo?</strong></p>
+              <ul class="list-disc list-inside pl-4 mt-2">
+                  <li>A. Un foglio di calcolo usato offline per registrare manualmente le misure</li>
+                  <li>B. Un sistema di irrigazione che regola l'acqua in base a sensori di umidità del terreno collegati a Internet</li>
+                  <li>C. Un trattore tradizionale senza alcun sensore</li>
+                  <li>D. Una calcolatrice tascabile usata dall'agricoltore</li>
+              </ul>
+          </div>
+          <div>
+              <p><strong>2. In una tipica architettura IoT, un gateway ha il compito di:</strong></p>
+              <ul class="list-disc list-inside pl-4 mt-2">
+                  <li>A. Convertire l'energia elettrica in energia termica</li>
+                  <li>B. Collegare i dispositivi IoT locali alla rete esterna (ad es. Internet) e talvolta fare una prima elaborazione dei dati</li>
+                  <li>C. Controllare esclusivamente la sicurezza fisica dei sensori</li>
+                  <li>D. Sostituire completamente il ruolo del cloud</li>
+              </ul>
+          </div>
+          <div>
+              <p><strong>3. Quale delle seguenti tecnologie è più adatta per permettere a un dispositivo IoT di comunicare in modalità wireless con uno smartphone a distanza di pochi metri?</strong></p>
+              <ul class="list-disc list-inside pl-4 mt-2">
+                  <li>A. HDMI</li>
+                  <li>B. SATA</li>
+                  <li>C. Wi-Fi</li>
+                  <li>D. PS/2</li>
+              </ul>
+          </div>
+          <div>
+              <p><strong>4. Qual è un vantaggio dell'uso dell'edge computing in un sistema IoT?</strong></p>
+              <ul class="list-disc list-inside pl-4 mt-2">
+                  <li>A. Tutti i dati vengono inviati sempre al cloud senza alcuna filtrazione</li>
+                  <li>B. La latenza può ridursi perché parte dell'elaborazione avviene vicino ai dispositivi</li>
+                  <li>C. I dispositivi non hanno più bisogno di sensori fisici</li>
+                  <li>D. È impossibile perdere la connessione a Internet</li>
+              </ul>
+          </div>
+          <div>
+              <p><strong>5. In un sistema IoT, un attuattore è:</strong></p>
+              <ul class="list-disc list-inside pl-4 mt-2">
+                  <li>A. Un componente che raccoglie dati dall'ambiente</li>
+                  <li>B. Un componente che esegue un'azione fisica in risposta a un comando (ad es. apre una valvola)</li>
+                  <li>C. Un server remoto che memorizza dati</li>
+                  <li>D. Un programma che analizza i dati nel cloud</li>
+              </ul>
+          </div>
+      </div>
+
+      <h3 class="text-xl font-semibold text-white mt-6 pt-4 border-t border-gray-700">Modulo Python</h3>
+      <div class="space-y-6">
+        <div>
+            <p><strong>6. Quale affermazione è corretta riguardo l'uso di un notebook (ad es. Google Colab) rispetto a un IDE tradizionale installato in locale?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Un notebook come Colab può essere usato direttamente dal browser e di solito offre già un ambiente Python configurato con molte librerie preinstallate</li>
+                <li>B. Un notebook non permette di salvare il lavoro svolto</li>
+                <li>C. Un IDE non permette di modificare il codice dopo l'esecuzione</li>
+                <li>D. Non ci sono differenze: sia il notebook sia l'IDE funzionano solo da riga di comando</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>7. Il seguente codice vorrebbe calcolare la media dei valori nella lista misure (come indicato nel commento). Quale affermazione è corretta?</strong></p>
+            <pre class="bg-gray-800 p-4 rounded-md mt-2"><code>def media(misure):
+    # restituisce la media delle misure
+    s = 0
+    for x in misure:
+        s = s + x
+    return s
+
+misure = [2, 4, 6]
+print(media(misure))</code></pre>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Stampa 4, cioè la media corretta dei valori</li>
+                <li>B. Stampa 12, perché la funzione calcola in realtà la somma, non la media</li>
+                <li>C. Stampa 2, perché prende solo il primo elemento della lista</li>
+                <li>D. Genera un errore di esecuzione e non stampa nulla</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>8. Cosa stampa il seguente codice Python?</strong></p>
+            <pre class="bg-gray-800 p-4 rounded-md mt-2"><code>s = 1
+for i in range(1, 4): # 1, 2, 3
+    s = s * i
+print(s)</code></pre>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. 3</li>
+                <li>B. 4</li>
+                <li>C. 6</li>
+                <li>D. 24</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>9. Cosa stampa il seguente codice Python?</strong></p>
+            <pre class="bg-gray-800 p-4 rounded-md mt-2"><code>class Sensore:
+    def __init__(self, nome, valore):
+        self.nome = nome
+        self.valore = valore
+    def aggiorna(self, delta):
+        self.valore = self.valore + delta
+    def mostra(self):
+        print(self.nome, self.valore)
+
+s = Sensore("umidita", 50)
+s.aggiorna(5)
+s.mostra()</code></pre>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. umidita 50</li>
+                <li>B. umidita 55</li>
+                <li>C. "umidita", 55</li>
+                <li>D. Sensore umidita</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>10. Cosa stampa il seguente codice Python?</strong></p>
+            <pre class="bg-gray-800 p-4 rounded-md mt-2"><code>porta_aperta = True
+umidita = 30
+
+if porta_aperta and umidita < 40:
+    print("Aerare la stanza")
+elif (not porta_aperta) and umidita > 70:
+    print("Ambiente molto umido")
+else:
+    print("Condizioni normali")</code></pre>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Aerare la stanza</li>
+                <li>B. Ambiente molto umido</li>
+                <li>C. Condizioni normali</li>
+                <li>D. Non stampa nulla</li>
+            </ul>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-semibold text-white mt-6 pt-4 border-t border-gray-700">Modulo Cyber-Security</h3>
+      <div class="space-y-6">
+        <div>
+            <p><strong>11. Quale delle seguenti caratteristiche rende in generale una password più sicura?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Essere identica al proprio nome e cognome</li>
+                <li>B. Essere molto breve, per essere digitata più in fretta</li>
+                <li>C. Contenere una combinazione di lettere maiuscole/minuscole, numeri e simboli ed essere sufficientemente lunga</li>
+                <li>D. Essere uguale per tutti gli account, così è più facile ricordarla</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>12. La social engineering (ingegneria sociale) è:</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Una tecnica per ottimizzare le prestazioni dei server</li>
+                <li>B. Una forma di attacco che punta a manipolare le persone per ottenere informazioni riservate</li>
+                <li>C. Un metodo per cifrare i dati</li>
+                <li>D. Un protocollo sicuro per l'autenticazione</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>13. Perché è importante mantenere aggiornato il sistema operativo e i programmi?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Perché le nuove versioni sono sempre più leggere delle precedenti</li>
+                <li>B. Perché gli aggiornamenti spesso correggono vulnerabilità di sicurezza note</li>
+                <li>C. Solo per ottenere nuove icone e grafica</li>
+                <li>D. Non è importante: gli aggiornamenti riguardano solo le prestazioni</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>14. Che cosa si intende per autenticazione a due fattori (2FA)?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Usare due password diverse per lo stesso account</li>
+                <li>B. Effettuare il login da due dispositivi contemporaneamente</li>
+                <li>C. Richiedere due diversi elementi di verifica per accedere a un account</li>
+                <li>D. Registrare due indirizzi email per lo stesso servizio</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>15. Ricevi un SMS che dice: "Il tuo conto è stato bloccato. Per sbloccarlo subito, clicca qui: http://sblocca-conto-sicuro.net e inserisci le credenziali di accesso e il PIN della carta." Qual è il comportamento più sicuro?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Cliccare immediatamente sul link e inserire i dati richiesti</li>
+                <li>B. Rispondere all'SMS chiedendo conferma della richiesta</li>
+                <li>C. Cancellare l'SMS e, in caso di dubbi, contattare la banca solo tramite i canali ufficiali (app/sito o numero sul retro della carta)</li>
+                <li>D. Inoltrare l'SMS a tutti i contatti per avvisarli</li>
+            </ul>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-semibold text-white mt-6 pt-4 border-t border-gray-700">Modulo Machine Learning</h3>
+      <div class="space-y-6">
+        <div>
+            <p><strong>16. Quale tra i seguenti è un esempio di problema di classificazione supervisionata?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Raggruppare i clienti in cluster in base al comportamento di acquisto, senza etichette</li>
+                <li>B. Prevedere se un'email è "spam" o "non spam" a partire da esempi già etichettati</li>
+                <li>C. Stimare il prezzo di una casa in euro</li>
+                <li>D. Generare nuove immagini di volti inesistenti</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>17. Perché si suddivide spesso un dataset in training set e test set?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Per ridurre la dimensione del file sul disco</li>
+                <li>B. Per addestrare il modello su una parte dei dati e valutarne le prestazioni su dati mai visti</li>
+                <li>C. Per poter cancellare metà dei dati dopo l'addestramento</li>
+                <li>D. Per usare il training set solo per la fase di test</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>18. Quale misura è più adatta per valutare un modello di classificazione?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. La media aritmetica dei valori di input</li>
+                <li>B. L'accuratezza</li>
+                <li>C. La varianza delle feature</li>
+                <li>D. La dimensione del dataset</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>19. Cosa accadrebbe se una rete neurale non utilizzasse alcuna funzione di attivazione non lineare (solo somme e moltiplicazioni)?</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Il modello potrebbe approssimare solo funzioni lineari, anche con molti strati</li>
+                <li>B. Il modello diventerebbe automaticamente più robusto al rumore</li>
+                <li>C. Il modello imparerebbe solo sui dati di test</li>
+                <li>D. Il modello non avrebbe bisogno di essere addestrato</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>20. Una rete neurale convoluzionale (CNN) è particolarmente adatta per:</strong></p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>A. Analizzare serie temporali di testo strutturato</li>
+                <li>B. Lavorare con immagini, usando filtri per estrarre caratteristiche locali</li>
+                <li>C. Ordinare valori numerici in ordine crescente</li>
+                <li>D. Gestire esclusivamente dati tabellari con poche colonne</li>
+            </ul>
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold text-white pt-4 border-t border-gray-700 mt-6">Parte B - Esercizio di programmazione in Python su Google Colab (40/100)</h2>
+      <div class="space-y-6">
+        <div>
+            <p><strong>21. Gli esercizi di questa parte vanno svolti su un vero notebook Google Colab. Sul presente testo non è necessario riscrivere tutto il codice.</strong></p>
+            <p class="mt-2">L'esercizio è suddiviso in tre parti: Cella 1 (15 punti), Cella 2 (15 punti), Cella 3 (10 punti).</p>
+            <p class="mt-2">Si consideri un semplice scenario IoT in cui un sensore misura il livello di umidità in una stanza (in percentuale) più volte al giorno, a orari diversi. Vuoi analizzare questi dati usando un notebook Google Colab, organizzando il lavoro in più celle.</p>
+            <p class="mt-2">In questo esercizio useremo una struttura dati leggermente diversa: ogni misura sarà rappresentata come una tupla ("ora", valore_umidita).</p>
+            <p class="mt-2">Nel notebook Colab crea e compila le seguenti celle, scrivendo il codice Python richiesto.</p>
+
+            <h4 class="text-lg font-semibold text-white mt-4">(a) Cella 1 - Dati di partenza con orario (15 punti)</h4>
+            <p class="mt-2">Nel notebook Colab, crea una prima cella in cui:</p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>definisci una lista chiamata <code class="bg-gray-700 p-1 rounded">umidita</code> che contenga alcune misure, ognuna come tupla (ora, valore), ad esempio una lista simile a: <code class="bg-gray-700 p-1 rounded">[("08:00", 45.0), ("12:00", 50.5), ...]</code>;</li>
+                <li>stampi l'intera lista <code class="bg-gray-700 p-1 rounded">umidita</code>;</li>
+                <li>stampi il numero totale di misure contenute nella lista;</li>
+                <li>stampi solo l'umidità della prima e dell'ultima misura presenti nella lista (non è necessario stampare l'orario).</li>
+            </ul>
+
+            <h4 class="text-lg font-semibold text-white mt-4">(b) Cella 2 - Statistiche diverse (15 punti)</h4>
+            <p class="mt-2">Nel notebook Colab, crea una seconda cella in cui:</p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>a partire dalla lista <code class="bg-gray-700 p-1 rounded">umidita</code>, costruisci una nuova lista chiamata <code class="bg-gray-700 p-1 rounded">solo_valori</code> che contenga solo i valori numerici di umidità (senza gli orari); puoi ottenerla usando un ciclo for;</li>
+                <li>calcoli e stampi il valore medio delle misure in <code class="bg-gray-700 p-1 rounded">solo_valori</code>;</li>
+                <li>calcoli quante misure in <code class="bg-gray-700 p-1 rounded">solo_valori</code> sono maggiori o uguali a 60.0 (ambiente molto umido);</li>
+                <li>calcoli la percentuale di misure molto umide sul totale, e la stampi (ad esempio: "Percentuale misure molto umide = ... %"; è sufficiente un'approssimazione a una cifra decimale usando round(..., 1)).</li>
+            </ul>
+
+            <h4 class="text-lg font-semibold text-white mt-4">(c) Cella 3 - Funzione con condizionale su intervallo (10 punti)</h4>
+            <p class="mt-2">Nel notebook Colab, crea una terza cella in cui:</p>
+            <ul class="list-disc list-inside pl-4 mt-2">
+                <li>definisci una funzione Python chiamata <code class="bg-gray-700 p-1 rounded">conta_fuori_intervallo(misure, soglia_bassa, soglia_alta)</code> che:
+                    <ul class="list-disc list-inside pl-6">
+                        <li>prende in input una lista come <code class="bg-gray-700 p-1 rounded">umidita</code> (cioè una lista di tuple (ora, valore)) e due soglie numeriche;</li>
+                        <li>conta quante misure hanno un valore di umidità strettamente minore di <code class="bg-gray-700 p-1 rounded">soglia_bassa</code> oppure strettamente maggiore di <code class="bg-gray-700 p-1 rounded">soglia_alta</code>;</li>
+                        <li>restituisce questo conteggio.</li>
+                    </ul>
+                </li>
+                <li>usi la funzione <code class="bg-gray-700 p-1 rounded">conta_fuori_intervallo</code> con la lista <code class="bg-gray-700 p-1 rounded">umidita</code>, <code class="bg-gray-700 p-1 rounded">soglia_bassa = 45.0</code> e <code class="bg-gray-700 p-1 rounded">soglia_alta = 60.0</code>;</li>
+                <li>salvi il risultato in una variabile (ad esempio <code class="bg-gray-700 p-1 rounded">fuori_range</code>) e lo stampi in modo leggibile, ad esempio: "Misure fuori dall'intervallo [45.0, 60.0]: X".</li>
+            </ul>
+        </div>
+      </div>
+    `;
+
+    function showEsameInformaticaScreen() {
+      closeSidebar();
+      changeBackground('programmazione'); // Using 'programmazione' background for this exam
+
+      // Hide all other screens
+      document.getElementById('home-screen').classList.add('hidden');
+      document.getElementById('subject-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('real-quiz-screen').classList.add('hidden');
+      document.getElementById('real-quiz-results-screen').classList.add('hidden');
+      document.getElementById('presenze-screen').classList.add('hidden');
+      
+      const esameScreen = document.getElementById('esame-informatica-screen');
+      esameScreen.classList.remove('hidden');
+
+      const esameContent = document.getElementById('esame-informatica-content');
+      if (esameContent) {
+          esameContent.innerHTML = esameInformaticaHTML;
+      }
+      
+      // Mark sidebar item as active
+      clearActiveSidebar();
+      // No specific item to mark active for this tool button, but good practice to clear others.
+    }
+
+    // Add event listener in DOMContentLoaded to ensure button exists
+    document.addEventListener('DOMContentLoaded', () => {
+        const esameBtn = document.getElementById('esame-informatica-btn');
+        if (esameBtn) {
+            esameBtn.addEventListener('click', showEsameInformaticaScreen);
+        }
+    });
+  </script>
 </body>
 </html>
