@@ -221,6 +221,7 @@
       color: #fff;
     }
 
+    /* Vecchia animazione blink singolo */
     @keyframes red-blink {
       50% { color: #ef4444; } /* red-500 */
     }
@@ -228,7 +229,14 @@
       animation: red-blink 0.5s ease-in-out 2;
     }
 
-
+    /* NUOVA ANIMAZIONE BLINK CONTINUO PER LA FRECCIA */
+    @keyframes pulse-red-infinite {
+      0%, 100% { color: #9ca3af; /* text-gray-400 */ }
+      50% { color: #ef4444; /* text-red-500 */ }
+    }
+    .blink-always {
+      animation: pulse-red-infinite 2s ease-in-out infinite;
+    }
 
 
     @keyframes fadeInOpacity {
@@ -274,7 +282,7 @@
       font-weight: 600;
       color: #E5E7EB;
     }
-  </style></style>
+  </style>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -326,14 +334,15 @@
 
   <div class="relative z-10 flex min-h-screen w-full">
     <!-- Sidebar -->
-    <nav id="sidebar" class="w-72 min-h-screen p-4 fixed top-0 left-0 transform -translate-x-full">
-      <div onclick="showHomeScreen()" class="cursor-pointer mb-8">
+    <!-- MODIFICA UI: Aggiunto h-full, flex-col, overflow-y-auto per adattare il contenuto all'altezza della finestra -->
+    <nav id="sidebar" class="w-72 h-full p-4 fixed top-0 left-0 transform -translate-x-full flex flex-col overflow-y-auto">
+      <div onclick="showHomeScreen()" class="cursor-pointer mb-8 flex-shrink-0">
         <img src="https://raw.githubusercontent.com/williamDelarosa/williamDelarosa.github.io/2c68fb5be3136d3458e073ea8c51dfaf8cdf3041/ready.png"
              alt="Logo TAI" class="mx-auto w-32" />
       </div>
       <!-- Titolo sidebar MANTENUTO come da richiesta -->
 
-      <div id="sidebar-list" class="space-y-2">
+      <div id="sidebar-list" class="space-y-2 flex-grow">
         <div>
           <button id="info-toggle" class="sidebar-item w-full flex justify-center items-center">
             <span class="material-symbols-sharp text-2xl" style="color: #81A1C1;">info</span>
@@ -356,6 +365,7 @@
                 <!-- Subject dropdowns will be injected here by JS -->
              </div>
           </div>
+        </div>
 
         <div>
           <button id="strumenti-toggle" class="sidebar-item w-full flex justify-center items-center">
@@ -383,15 +393,16 @@
             </div>
           </div>
         </div>
-        </div>
+      </div>
     </nav>
 
     <!-- Main Content -->
     <!-- Rimosso md:ml-72 da qui e gestito dinamicamente in JS e CSS con main-content-shifted -->
     <main id="main-content" class="flex-1 transition-all duration-300 ease-in-out h-screen overflow-y-auto">
       <div class="p-4 md:p-8">
+        <!-- MODIFICA: Freccia sempre visibile con animazione blink -->
         <button id="menu-toggle"
-                class="p-2 text-gray-400 hover:text-white fixed top-5 left-2 z-30 transform transition-all duration-300 ease-in-out focus:outline-none opacity-0 pointer-events-none">
+                class="p-2 text-gray-400 hover:text-white fixed top-5 left-2 z-30 transform transition-all duration-300 ease-in-out focus:outline-none opacity-100 pointer-events-auto blink-always">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </button>
 
@@ -1048,7 +1059,7 @@
         { question: "Cos'è il 'clustering'?", answer: "Un task di apprendimento non supervisionato che raggruppa dati simili in cluster." },
         { question: "Qual è l'algoritmo 'K-Means'?", answer: "Un popolare algoritmo di clustering che partiziona i dati in K cluster, minimizzando la varianza intra-cluster." },
         { question: "Cos'è un 'albero decisionale'?", answer: "Un modello di apprendimento supervisionato che utilizza una struttura ad albero per prendere decisioni basate su una serie di regole." },
-        { question: "Cos'è una 'Random Forest'?", answer: "Un metodo d'insieme (ensemble) che costruisce più alberi decisionali e ne combina i risultati per migliorare l'accuratezza e ridurre l'overfitting." },
+        { question: "Cos'è una 'Random Forest'?", answer: "Un metodo d'insieme (ensemble) che costruisce più alberi decisionali e ne combina i risultati per migliorare le prestazioni e ridurre l'overfitting." },
         { question: "Cos'è il 'Support Vector Machine' (SVM)?", answer: "Un classificatore che trova l'iperpiano ottimale che separa al meglio i dati di due classi." },
         { question: "Cos'è il 'transfer learning'?", answer: "Una tecnica in cui un modello pre-addestrato su un grande dataset viene riutilizzato e affinato per un nuovo task simile." },
         { question: "Cos'è l''ingegneria delle feature' (feature engineering)?", answer: "Il processo di selezione, trasformazione e creazione di variabili (feature) dai dati grezzi per migliorare le prestazioni del modello." },
@@ -1386,18 +1397,8 @@
         });
       }, 6200); // 5.1s + 1s fade-out + 0.1s buffer
 
-      // 4. After title animation, blink arrow
-      setTimeout(() => {
-          menuToggle.style.opacity = 1;
-          menuToggle.style.pointerEvents = 'auto';
-          menuToggle.classList.add('blink-red-twice');
-
-          setTimeout(() => {
-            menuToggle.style.opacity = 0;
-            menuToggle.style.pointerEvents = 'none';
-            menuToggle.classList.remove('blink-red-twice');
-          }, 1000);
-      }, 7800);
+      // 4. MODIFICA: Rimossa la logica che gestiva l'animazione temporanea della freccia.
+      // Ora la freccia è visibile e lampeggia sempre grazie al CSS.
 
       clearActiveSidebar();
     }
@@ -1421,7 +1422,7 @@
       solidworks: { name: 'Solidworks', flipbook: 'https://www.calameo.com/read/0080586708c1eaef6408f' },
       robotica: { name: 'Robotica', flipbook: 'https://www.calameo.com/read/008058670c3c6f838af83' },
       programmazione: { name: 'Programmazione Informatica', flipbook: 'https://www.calameo.com/read/0080586704c5f9a83fa5b' },
-      machine_learning: { name: 'Machine Learning', flipbook: 'https://www.calameo.com/read/008058670df9a575b8929' },
+      machine_learning: { name: 'Machine Learning', flipbook: 'https://www.calameo.com/read/008058670caf2315fdcf2' },
     };
 
 
@@ -2284,308 +2285,4 @@
       <div class="space-y-6">
           <div>
               <p><strong>1. Quale tra i seguenti è un tipico esempio di applicazione IoT in ambito agricolo?</strong></p>
-              <ul class="list-disc list-inside pl-4 mt-2">
-                  <li>A. Un foglio di calcolo usato offline per registrare manualmente le misure</li>
-                  <li>B. Un sistema di irrigazione che regola l'acqua in base a sensori di umidità del terreno collegati a Internet</li>
-                  <li>C. Un trattore tradizionale senza alcun sensore</li>
-                  <li>D. Una calcolatrice tascabile usata dall'agricoltore</li>
-              </ul>
-          </div>
-          <div>
-              <p><strong>2. In una tipica architettura IoT, un gateway ha il compito di:</strong></p>
-              <ul class="list-disc list-inside pl-4 mt-2">
-                  <li>A. Convertire l'energia elettrica in energia termica</li>
-                  <li>B. Collegare i dispositivi IoT locali alla rete esterna (ad es. Internet) e talvolta fare una prima elaborazione dei dati</li>
-                  <li>C. Controllare esclusivamente la sicurezza fisica dei sensori</li>
-                  <li>D. Sostituire completamente il ruolo del cloud</li>
-              </ul>
-          </div>
-          <div>
-              <p><strong>3. Quale delle seguenti tecnologie è più adatta per permettere a un dispositivo IoT di comunicare in modalità wireless con uno smartphone a distanza di pochi metri?</strong></p>
-              <ul class="list-disc list-inside pl-4 mt-2">
-                  <li>A. HDMI</li>
-                  <li>B. SATA</li>
-                  <li>C. Wi-Fi</li>
-                  <li>D. PS/2</li>
-              </ul>
-          </div>
-          <div>
-              <p><strong>4. Qual è un vantaggio dell'uso dell'edge computing in un sistema IoT?</strong></p>
-              <ul class="list-disc list-inside pl-4 mt-2">
-                  <li>A. Tutti i dati vengono inviati sempre al cloud senza alcuna filtrazione</li>
-                  <li>B. La latenza può ridursi perché parte dell'elaborazione avviene vicino ai dispositivi</li>
-                  <li>C. I dispositivi non hanno più bisogno di sensori fisici</li>
-                  <li>D. È impossibile perdere la connessione a Internet</li>
-              </ul>
-          </div>
-          <div>
-              <p><strong>5. In un sistema IoT, un attuattore è:</strong></p>
-              <ul class="list-disc list-inside pl-4 mt-2">
-                  <li>A. Un componente che raccoglie dati dall'ambiente</li>
-                  <li>B. Un componente che esegue un'azione fisica in risposta a un comando (ad es. apre una valvola)</li>
-                  <li>C. Un server remoto che memorizza dati</li>
-                  <li>D. Un programma che analizza i dati nel cloud</li>
-              </ul>
-          </div>
-      </div>
-
-      <h3 class="text-xl font-semibold text-white mt-6 pt-4 border-t border-gray-700">Modulo Python</h3>
-      <div class="space-y-6">
-        <div>
-            <p><strong>6. Quale affermazione è corretta riguardo l'uso di un notebook (ad es. Google Colab) rispetto a un IDE tradizionale installato in locale?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Un notebook come Colab può essere usato direttamente dal browser e di solito offre già un ambiente Python configurato con molte librerie preinstallate</li>
-                <li>B. Un notebook non permette di salvare il lavoro svolto</li>
-                <li>C. Un IDE non permette di modificare il codice dopo l'esecuzione</li>
-                <li>D. Non ci sono differenze: sia il notebook sia l'IDE funzionano solo da riga di comando</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>7. Il seguente codice vorrebbe calcolare la media dei valori nella lista misure (come indicato nel commento). Quale affermazione è corretta?</strong></p>
-            <pre class="bg-gray-800 p-4 rounded-md mt-2"><code>def media(misure):
-    # restituisce la media delle misure
-    s = 0
-    for x in misure:
-        s = s + x
-    return s
-
-misure = [2, 4, 6]
-print(media(misure))</code></pre>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Stampa 4, cioè la media corretta dei valori</li>
-                <li>B. Stampa 12, perché la funzione calcola in realtà la somma, non la media</li>
-                <li>C. Stampa 2, perché prende solo il primo elemento della lista</li>
-                <li>D. Genera un errore di esecuzione e non stampa nulla</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>8. Cosa stampa il seguente codice Python?</strong></p>
-            <pre class="bg-gray-800 p-4 rounded-md mt-2"><code>s = 1
-for i in range(1, 4): # 1, 2, 3
-    s = s * i
-print(s)</code></pre>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. 3</li>
-                <li>B. 4</li>
-                <li>C. 6</li>
-                <li>D. 24</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>9. Cosa stampa il seguente codice Python?</strong></p>
-            <pre class="bg-gray-800 p-4 rounded-md mt-2"><code>class Sensore:
-    def __init__(self, nome, valore):
-        self.nome = nome
-        self.valore = valore
-    def aggiorna(self, delta):
-        self.valore = self.valore + delta
-    def mostra(self):
-        print(self.nome, self.valore)
-
-s = Sensore("umidita", 50)
-s.aggiorna(5)
-s.mostra()</code></pre>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. umidita 50</li>
-                <li>B. umidita 55</li>
-                <li>C. "umidita", 55</li>
-                <li>D. Sensore umidita</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>10. Cosa stampa il seguente codice Python?</strong></p>
-            <pre class="bg-gray-800 p-4 rounded-md mt-2"><code>porta_aperta = True
-umidita = 30
-
-if porta_aperta and umidita < 40:
-    print("Aerare la stanza")
-elif (not porta_aperta) and umidita > 70:
-    print("Ambiente molto umido")
-else:
-    print("Condizioni normali")</code></pre>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Aerare la stanza</li>
-                <li>B. Ambiente molto umido</li>
-                <li>C. Condizioni normali</li>
-                <li>D. Non stampa nulla</li>
-            </ul>
-        </div>
-      </div>
-
-      <h3 class="text-xl font-semibold text-white mt-6 pt-4 border-t border-gray-700">Modulo Cyber-Security</h3>
-      <div class="space-y-6">
-        <div>
-            <p><strong>11. Quale delle seguenti caratteristiche rende in generale una password più sicura?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Essere identica al proprio nome e cognome</li>
-                <li>B. Essere molto breve, per essere digitata più in fretta</li>
-                <li>C. Contenere una combinazione di lettere maiuscole/minuscole, numeri e simboli ed essere sufficientemente lunga</li>
-                <li>D. Essere uguale per tutti gli account, così è più facile ricordarla</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>12. La social engineering (ingegneria sociale) è:</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Una tecnica per ottimizzare le prestazioni dei server</li>
-                <li>B. Una forma di attacco che punta a manipolare le persone per ottenere informazioni riservate</li>
-                <li>C. Un metodo per cifrare i dati</li>
-                <li>D. Un protocollo sicuro per l'autenticazione</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>13. Perché è importante mantenere aggiornato il sistema operativo e i programmi?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Perché le nuove versioni sono sempre più leggere delle precedenti</li>
-                <li>B. Perché gli aggiornamenti spesso correggono vulnerabilità di sicurezza note</li>
-                <li>C. Solo per ottenere nuove icone e grafica</li>
-                <li>D. Non è importante: gli aggiornamenti riguardano solo le prestazioni</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>14. Che cosa si intende per autenticazione a due fattori (2FA)?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Usare due password diverse per lo stesso account</li>
-                <li>B. Effettuare il login da due dispositivi contemporaneamente</li>
-                <li>C. Richiedere due diversi elementi di verifica per accedere a un account</li>
-                <li>D. Registrare due indirizzi email per lo stesso servizio</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>15. Ricevi un SMS che dice: "Il tuo conto è stato bloccato. Per sbloccarlo subito, clicca qui: http://sblocca-conto-sicuro.net e inserisci le credenziali di accesso e il PIN della carta." Qual è il comportamento più sicuro?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Cliccare immediatamente sul link e inserire i dati richiesti</li>
-                <li>B. Rispondere all'SMS chiedendo conferma della richiesta</li>
-                <li>C. Cancellare l'SMS e, in caso di dubbi, contattare la banca solo tramite i canali ufficiali (app/sito o numero sul retro della carta)</li>
-                <li>D. Inoltrare l'SMS a tutti i contatti per avvisarli</li>
-            </ul>
-        </div>
-      </div>
-
-      <h3 class="text-xl font-semibold text-white mt-6 pt-4 border-t border-gray-700">Modulo Machine Learning</h3>
-      <div class="space-y-6">
-        <div>
-            <p><strong>16. Quale tra i seguenti è un esempio di problema di classificazione supervisionata?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Raggruppare i clienti in cluster in base al comportamento di acquisto, senza etichette</li>
-                <li>B. Prevedere se un'email è "spam" o "non spam" a partire da esempi già etichettati</li>
-                <li>C. Stimare il prezzo di una casa in euro</li>
-                <li>D. Generare nuove immagini di volti inesistenti</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>17. Perché si suddivide spesso un dataset in training set e test set?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Per ridurre la dimensione del file sul disco</li>
-                <li>B. Per addestrare il modello su una parte dei dati e valutarne le prestazioni su dati mai visti</li>
-                <li>C. Per poter cancellare metà dei dati dopo l'addestramento</li>
-                <li>D. Per usare il training set solo per la fase di test</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>18. Quale misura è più adatta per valutare un modello di classificazione?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. La media aritmetica dei valori di input</li>
-                <li>B. L'accuratezza</li>
-                <li>C. La varianza delle feature</li>
-                <li>D. La dimensione del dataset</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>19. Cosa accadrebbe se una rete neurale non utilizzasse alcuna funzione di attivazione non lineare (solo somme e moltiplicazioni)?</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Il modello potrebbe approssimare solo funzioni lineari, anche con molti strati</li>
-                <li>B. Il modello diventerebbe automaticamente più robusto al rumore</li>
-                <li>C. Il modello imparerebbe solo sui dati di test</li>
-                <li>D. Il modello non avrebbe bisogno di essere addestrato</li>
-            </ul>
-        </div>
-        <div>
-            <p><strong>20. Una rete neurale convoluzionale (CNN) è particolarmente adatta per:</strong></p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>A. Analizzare serie temporali di testo strutturato</li>
-                <li>B. Lavorare con immagini, usando filtri per estrarre caratteristiche locali</li>
-                <li>C. Ordinare valori numerici in ordine crescente</li>
-                <li>D. Gestire esclusivamente dati tabellari con poche colonne</li>
-            </ul>
-        </div>
-      </div>
-
-      <h2 class="text-2xl font-bold text-white pt-4 border-t border-gray-700 mt-6">Parte B - Esercizio di programmazione in Python su Google Colab (40/100)</h2>
-      <div class="space-y-6">
-        <div>
-            <p><strong>21. Gli esercizi di questa parte vanno svolti su un vero notebook Google Colab. Sul presente testo non è necessario riscrivere tutto il codice.</strong></p>
-            <p class="mt-2">L'esercizio è suddiviso in tre parti: Cella 1 (15 punti), Cella 2 (15 punti), Cella 3 (10 punti).</p>
-            <p class="mt-2">Si consideri un semplice scenario IoT in cui un sensore misura il livello di umidità in una stanza (in percentuale) più volte al giorno, a orari diversi. Vuoi analizzare questi dati usando un notebook Google Colab, organizzando il lavoro in più celle.</p>
-            <p class="mt-2">In questo esercizio useremo una struttura dati leggermente diversa: ogni misura sarà rappresentata come una tupla ("ora", valore_umidita).</p>
-            <p class="mt-2">Nel notebook Colab crea e compila le seguenti celle, scrivendo il codice Python richiesto.</p>
-
-            <h4 class="text-lg font-semibold text-white mt-4">(a) Cella 1 - Dati di partenza con orario (15 punti)</h4>
-            <p class="mt-2">Nel notebook Colab, crea una prima cella in cui:</p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>definisci una lista chiamata <code class="bg-gray-700 p-1 rounded">umidita</code> che contenga alcune misure, ognuna come tupla (ora, valore), ad esempio una lista simile a: <code class="bg-gray-700 p-1 rounded">[("08:00", 45.0), ("12:00", 50.5), ...]</code>;</li>
-                <li>stampi l'intera lista <code class="bg-gray-700 p-1 rounded">umidita</code>;</li>
-                <li>stampi il numero totale di misure contenute nella lista;</li>
-                <li>stampi solo l'umidità della prima e dell'ultima misura presenti nella lista (non è necessario stampare l'orario).</li>
-            </ul>
-
-            <h4 class="text-lg font-semibold text-white mt-4">(b) Cella 2 - Statistiche diverse (15 punti)</h4>
-            <p class="mt-2">Nel notebook Colab, crea una seconda cella in cui:</p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>a partire dalla lista <code class="bg-gray-700 p-1 rounded">umidita</code>, costruisci una nuova lista chiamata <code class="bg-gray-700 p-1 rounded">solo_valori</code> che contenga solo i valori numerici di umidità (senza gli orari); puoi ottenerla usando un ciclo for;</li>
-                <li>calcoli e stampi il valore medio delle misure in <code class="bg-gray-700 p-1 rounded">solo_valori</code>;</li>
-                <li>calcoli quante misure in <code class="bg-gray-700 p-1 rounded">solo_valori</code> sono maggiori o uguali a 60.0 (ambiente molto umido);</li>
-                <li>calcoli la percentuale di misure molto umide sul totale, e la stampi (ad esempio: "Percentuale misure molto umide = ... %"; è sufficiente un'approssimazione a una cifra decimale usando round(..., 1)).</li>
-            </ul>
-
-            <h4 class="text-lg font-semibold text-white mt-4">(c) Cella 3 - Funzione con condizionale su intervallo (10 punti)</h4>
-            <p class="mt-2">Nel notebook Colab, crea una terza cella in cui:</p>
-            <ul class="list-disc list-inside pl-4 mt-2">
-                <li>definisci una funzione Python chiamata <code class="bg-gray-700 p-1 rounded">conta_fuori_intervallo(misure, soglia_bassa, soglia_alta)</code> che:
-                    <ul class="list-disc list-inside pl-6">
-                        <li>prende in input una lista come <code class="bg-gray-700 p-1 rounded">umidita</code> (cioè una lista di tuple (ora, valore)) e due soglie numeriche;</li>
-                        <li>conta quante misure hanno un valore di umidità strettamente minore di <code class="bg-gray-700 p-1 rounded">soglia_bassa</code> oppure strettamente maggiore di <code class="bg-gray-700 p-1 rounded">soglia_alta</code>;</li>
-                        <li>restituisce questo conteggio.</li>
-                    </ul>
-                </li>
-                <li>usi la funzione <code class="bg-gray-700 p-1 rounded">conta_fuori_intervallo</code> con la lista <code class="bg-gray-700 p-1 rounded">umidita</code>, <code class="bg-gray-700 p-1 rounded">soglia_bassa = 45.0</code> e <code class="bg-gray-700 p-1 rounded">soglia_alta = 60.0</code>;</li>
-                <li>salvi il risultato in una variabile (ad esempio <code class="bg-gray-700 p-1 rounded">fuori_range</code>) e lo stampi in modo leggibile, ad esempio: "Misure fuori dall'intervallo [45.0, 60.0]: X".</li>
-            </ul>
-        </div>
-      </div>
-    `;
-
-    function showEsameInformaticaScreen() {
-      closeSidebar();
-      changeBackground('programmazione'); // Using 'programmazione' background for this exam
-
-      // Hide all other screens
-      document.getElementById('home-screen').classList.add('hidden');
-      document.getElementById('subject-screen').classList.add('hidden');
-      document.getElementById('quiz-screen').classList.add('hidden');
-      document.getElementById('real-quiz-screen').classList.add('hidden');
-      document.getElementById('real-quiz-results-screen').classList.add('hidden');
-      document.getElementById('presenze-screen').classList.add('hidden');
-
-      const esameScreen = document.getElementById('esame-informatica-screen');
-      esameScreen.classList.remove('hidden');
-
-      const esameContent = document.getElementById('esame-informatica-content');
-      if (esameContent) {
-          esameContent.innerHTML = esameInformaticaHTML;
-      }
-
-      // Mark sidebar item as active
-      clearActiveSidebar();
-      // No specific item to mark active for this tool button, but good practice to clear others.
-    }
-
-    // Add event listener in DOMContentLoaded to ensure button exists
-    document.addEventListener('DOMContentLoaded', () => {
-        const esameBtn = document.getElementById('esame-informatica-btn');
-        if (esameBtn) {
-            esameBtn.addEventListener('click', showEsameInformaticaScreen);
-        }
-    });
-  </script>
-</body>
-</html>
+              <ul class="list-disc list-inside pl-4 mt-2
