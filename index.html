@@ -1096,6 +1096,58 @@
         { question: "Cos'è una 'rete neurale ricorrente' (RNN)?", answer: "Un tipo di rete neurale progettata per gestire dati sequenziali (es. testo, serie temporali), dotata di una 'memoria' interna." },
         { question: "Qual è il problema del 'vanishing gradient' nelle RNN?", answer: "Un problema in cui i gradienti diventano estremamente piccoli durante la backpropagation, rendendo difficile l'apprendimento di dipendenze a lungo termine." },
         { question: "Cos'è una 'LSTM' (Long Short-Term Memory)?", answer: "Un tipo speciale di RNN che risolve il problema del vanishing gradient, utilizzando 'gate' per regolare il flusso di informazioni." }
+      ],
+      plc: [
+        { "question": "Cosa significa PLC?", "answer": "Controllore a Logica Programmabile." },
+        { "question": "Qual è la funzione primaria di un PLC?", "answer": "Automatizzare i processi industriali controllando i macchinari." },
+        { "question": "Quali sono i componenti principali di un PLC?", "answer": "CPU, moduli di Ingresso/Uscita (I/O), alimentatore e un dispositivo di programmazione." },
+        { "question": "Qual è il ruolo della CPU in un PLC?", "answer": "Esegue il programma di controllo ed elabora le informazioni dagli ingressi." },
+        { "question": "Qual è la funzione dei moduli I/O?", "answer": "Collegano il PLC a sensori esterni (ingressi) e attuatori (uscite)." },
+        { "question": "Cos'è un 'ciclo di scansione' in un PLC?", "answer": "Il processo di lettura degli ingressi, esecuzione del programma e aggiornamento delle uscite." },
+        { "question": "Cos'è il 'tempo di scansione'?", "answer": "Il tempo che impiega il PLC per completare un intero ciclo di scansione." },
+        { "question": "Qual è il linguaggio di programmazione più comune per i PLC?", "answer": "Ladder Diagram (LD) o Logica a Scaletta." },
+        { "question": "Nomina un altro linguaggio di programmazione per PLC.", "answer": "Testo Strutturato (ST), Diagramma a Blocchi Funzionali (FBD), Lista di Istruzioni (IL) o Diagramma Funzionale Sequenziale (SFC)." },
+        { "question": "Cos'è un 'rung' nella Logica a Scaletta?", "answer": "Una linea orizzontale di logica in un diagramma a scaletta." },
+        { "question": "Qual è la differenza tra un contatto normalmente aperto (NA) e uno normalmente chiuso (NC)?", "answer": "Un contatto NA è aperto quando non è eccitato, mentre un contatto NC è chiuso." },
+        { "question": "A cosa serve un'istruzione 'timer' in un programma PLC?", "answer": "Per creare ritardi temporali nella logica di controllo." },
+        { "question": "A cosa serve un'istruzione 'contatore'?", "answer": "Per contare eventi o impulsi." },
+        { "question": "Qual è la differenza tra un timer 'on-delay' (TON) e un timer 'off-delay' (TOF)?", "answer": "Un TON ritarda l'attivazione di un'uscita, mentre un TOF ne ritarda la disattivazione." },
+        { "question": "Cos'è un timer 'ritentivo'?", "answer": "Un timer che mantiene il suo valore accumulato anche se la condizione di ingresso diventa falsa." },
+        { "question": "Cos'è un 'contatore crescente' (CTU)?", "answer": "Un contatore che incrementa il suo valore ad ogni impulso." },
+        { "question": "Cos'è un 'contatore decrescente' (CTD)?", "answer": "Un contatore che decrementa il suo valore ad ogni impulso." },
+        { "question": "Cos'è un circuito di 'auto-ritenuta' o 'latching'?", "answer": "Un circuito che mantiene un'uscita attiva anche dopo la rimozione dell'ingresso iniziale." },
+        { "question": "Cos'è un HMI?", "answer": "Interfaccia Uomo-Macchina, un'interfaccia utente che permette a una persona di interagire con una macchina o un sistema." },
+        { "question": "Cos'è SCADA?", "answer": "Controllo Supervisivo e Acquisizione Dati, un sistema per il monitoraggio e il controllo dei processi industriali." },
+        { "question": "Qual è la differenza tra un PLC e un relè?", "answer": "Un PLC è un dispositivo a stato solido che può essere programmato, mentre un relè è un interruttore elettromeccanico." },
+        { "question": "Qual è la differenza tra un PLC e un PC?", "answer": "I PLC sono progettati per ambienti industriali e controllo in tempo reale, mentre i PC sono per l'informatica generica." },
+        { "question": "Cos'è un ingresso o un'uscita 'digitale'?", "answer": "Un I/O che ha solo due stati: acceso o spento (1 o 0)." },
+        { "question": "Cos'è un ingresso o un'uscita 'analogica'?", "answer": "Un I/O che può avere un intervallo di valori, che rappresentano misure fisiche come temperatura o pressione." },
+        { "question": "Cos'è un modulo I/O 'sinking'?", "answer": "Un modulo in cui la corrente fluisce dal dispositivo di ingresso all'ingresso del PLC." },
+        { "question": "Cos'è un modulo I/O 'sourcing'?", "answer": "Un modulo in cui la corrente fluisce dall'ingresso del PLC al dispositivo di ingresso." },
+        { "question": "Cos'è un 'bit' nella programmazione PLC?", "answer": "L'unità di dati più piccola, che rappresenta uno 0 o un 1." },
+        { "question": "Cos'è una 'word' nella programmazione PLC?", "answer": "Un gruppo di bit (solitamente 16 o 32) che vengono gestiti come una singola unità." },
+        { "question": "Cos'è un 'file di dati' o 'registro di dati' in un PLC?", "answer": "Un'area di memoria utilizzata per memorizzare dati, come i valori di timer e contatori." },
+        { "question": "Cos'è il 'forzamento' di un ingresso o di un'uscita?", "answer": "La sovrascrittura manuale dello stato di un punto I/O per test o risoluzione dei problemi." },
+        { "question": "Cos'è un 'watchdog timer'?", "answer": "Un timer che monitora il ciclo di scansione del PLC e attiva un guasto se il tempo di scansione è troppo lungo." },
+        { "question": "Cos'è un 'interblocco' in un programma PLC?", "answer": "Una funzione di sicurezza che impedisce a una determinata azione di verificarsi a meno che non siano soddisfatte condizioni specifiche." },
+        { "question": "Cos'è un anello 'PID'?", "answer": "Proporzionale-Integrale-Derivativo, un meccanismo di feedback ad anello di controllo utilizzato nei sistemi di controllo industriale." },
+        { "question": "Qual è lo scopo del termine 'proporzionale' in un controllore PID?", "answer": "Fornisce un'azione di controllo proporzionale all'errore corrente." },
+        { "question": "Qual è lo scopo del termine 'integrale' in un controllore PID?", "answer": "Elimina l'errore a regime accumulando gli errori passati." },
+        { "question": "Qual è lo scopo del termine 'derivativo' in un controllore PID?", "answer": "Anticipa gli errori futuri considerando il tasso di variazione dell'errore." },
+        { "question": "Cos'è una 'subroutine' in un programma PLC?", "answer": "Un blocco di codice che può essere chiamato ed eseguito da diverse parti del programma principale." },
+        { "question": "Cos'è un'istruzione di 'salto' (jump)?", "answer": "Un'istruzione che può alterare il flusso di esecuzione del programma saltando a una parte diversa del programma." },
+        { "question": "Cos'è un 'relè di controllo principale' (MCR)?", "answer": "Un'istruzione che può abilitare o disabilitare una vasta sezione di un programma." },
+        { "question": "Cos'è un 'registro a scorrimento' (shift register)?", "answer": "Un registro che può spostare i suoi bit a sinistra o a destra." },
+        { "question": "Cos'è un'istruzione 'first-in, first-out' (FIFO)?", "answer": "Un'istruzione che memorizza e recupera i dati nell'ordine in cui sono stati ricevuti." },
+        { "question": "Cos'è un'istruzione 'last-in, first-out' (LIFO)?", "answer": "Un'istruzione che memorizza e recupera i dati nell'ordine inverso in cui sono stati ricevuti." },
+        { "question": "Cos'è un 'protocollo di comunicazione' utilizzato dai PLC?", "answer": "Un insieme di regole per lo scambio di dati, come Modbus, Profibus o Ethernet/IP." },
+        { "question": "Cos'è l' 'hot-swapping' di un modulo I/O?", "answer": "La sostituzione di un modulo I/O mentre il PLC è in esecuzione." },
+        { "question": "Cos'è un 'PLC di sicurezza'?", "answer": "Un PLC con processori ridondanti e autodiagnostica, progettato per applicazioni critiche per la sicurezza." },
+        { "question": "Qual è lo scopo della 'messa a terra' di un sistema PLC?", "answer": "Proteggere dal rumore elettrico e fornire un percorso sicuro per le correnti di guasto." },
+        { "question": "Cos'è il 'rumore elettrico'?", "answer": "Segnali elettrici indesiderati che possono interferire con il corretto funzionamento di un PLC." },
+        { "question": "Cos'è un 'isolatore ottico'?", "answer": "Un componente che utilizza la luce per trasmettere un segnale tra due circuiti isolati, prevenendo il rumore elettrico." },
+        { "question": "Cos'è un progetto 'fail-safe'?", "answer": "Un progetto che garantisce che un sistema si guasti in modo sicuro." },
+        { "question": "Cos'è un sistema PLC 'ridondante'?", "answer": "Un sistema con un PLC di backup che subentra se il PLC primario si guasta." }
       ]
     };
 
@@ -1110,7 +1162,8 @@
       programmazione: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       qualifica: 'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       presenze: 'https://images.pexels.com/photos/1591060/pexels-photo-1591060.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      machine_learning: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
+      machine_learning: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      plc: 'https://images.pexels.com/photos/6477203/pexels-photo-6477203.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
     };
 
     // --- Configurazione Immagini Cicliche per la Home ---
@@ -1423,6 +1476,7 @@
       robotica: { name: 'Robotica', flipbook: 'https://www.calameo.com/read/008058670c3c6f838af83' },
       programmazione: { name: 'Programmazione Informatica', flipbook: 'https://www.calameo.com/read/0080586704c5f9a83fa5b' },
       machine_learning: { name: 'Machine Learning', flipbook: 'https://www.calameo.com/read/008058670caf2315fdcf2' },
+      plc: { name: 'Plc', flipbook: 'https://www.calameo.com/read/008058670b95af1f77d29' },
     };
 
 
