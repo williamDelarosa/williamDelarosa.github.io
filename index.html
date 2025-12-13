@@ -290,7 +290,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-<body class="bg-gray-900 text-gray-200 flex min-h-screen">
+<body class="bg-gray-900 text-gray-200 min-h-screen overflow-x-hidden">
   <!-- LOGIN OVERLAY -->
   <div id="firebase-login-overlay" class="fixed inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center p-4" style="z-index: 9999;">
     <div class="bg-gray-800/80 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700">
@@ -398,7 +398,7 @@
 
     <!-- Main Content -->
     <!-- Rimosso md:ml-72 da qui e gestito dinamicamente in JS e CSS con main-content-shifted -->
-    <main id="main-content" class="flex-1 transition-all duration-300 ease-in-out h-screen overflow-y-auto">
+    <main id="main-content" class="flex-1 transition-all duration-300 ease-in-out">
       <div class="p-4 md:p-8">
         <!-- MODIFICA: Freccia sempre visibile con animazione blink -->
         <button id="menu-toggle"
@@ -408,7 +408,7 @@
 
         <div id="app-container" class="w-full max-w-5xl mx-auto">
           <!-- Home Screen -->
-          <div id="home-screen" class="hidden text-center h-screen flex flex-col justify-center items-center">
+          <div id="home-screen" class="hidden text-center min-h-screen flex flex-col justify-center items-center">
             <div id="home-animation-container" class="relative w-full h-full flex justify-center items-center">
                 <p id="home-subtitle" class="text-xl font-semibold italic text-gray-300 absolute opacity-0">"fatti non foste a viver come bruti, ma per seguir virtute e canoscenza"</p>
                 <div id="home-vertical-title" class="absolute inset-0 flex items-center justify-center opacity-0">
@@ -431,14 +431,14 @@
           </div>
 
           <!-- Subject Screen (content moved to sidebar) -->
-          <div id="subject-screen" class="hidden">
+          <div id="subject-screen" class="hidden min-h-screen flex flex-col justify-center">
              <div class="mb-12 pt-20 text-center">
               <h2 id="subject-title" class="text-4xl font-extrabold text-white uppercase mb-6"></h2>
             </div>
           </div>
 
           <!-- Real Quiz Screen -->
-          <div id="real-quiz-screen" class="hidden">
+          <div id="real-quiz-screen" class="hidden min-h-screen flex flex-col justify-center">
             <div class="content-panel p-6 md:p-8 rounded-2xl mt-8">
               <div class="flex justify-between items-center mb-6">
                 <h2 id="real-quiz-subject-title" class="text-2xl font-bold text-white">Quiz</h2>
@@ -458,7 +458,7 @@
           </div>
 
           <!-- Quiz Screen -->
-          <div id="quiz-screen" class="hidden fade-in">
+          <div id="quiz-screen" class="hidden fade-in min-h-screen flex flex-col justify-center">
             <div class="content-panel p-6 md:p-8 rounded-2xl mt-8">
               <div id="progress-text" class="text-sm font-medium text-gray-400 mb-6 text-right"></div>
               <div class="flashcard-container">
@@ -497,35 +497,39 @@
 
 
           <!-- Real Quiz Results Screen -->
-          <div id="real-quiz-results-screen" class="hidden text-center content-panel p-10 rounded-2xl fade-in">
-            <p id="real-quiz-results-message" class="text-3xl font-bold text-white mb-8"></p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <button onclick="startRealQuiz(currentSubjectInfo.subjectId)"
-                      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
-                Riprova Quiz
-              </button>
-              <button onclick="backToSubject()"
-                      class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg">
-                Torna alla materia
-              </button>
+          <div id="real-quiz-results-screen" class="hidden min-h-screen flex flex-col justify-center items-center">
+            <div class="text-center content-panel p-10 rounded-2xl fade-in">
+                <p id="real-quiz-results-message" class="text-3xl font-bold text-white mb-8"></p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="startRealQuiz(currentSubjectInfo.subjectId)"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
+                    Riprova Quiz
+                </button>
+                <button onclick="backToSubject()"
+                        class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg">
+                    Torna alla materia
+                </button>
+                </div>
             </div>
           </div>
 
           <!-- Results Screen -->
-          <div id="results-screen" class="hidden text-center content-panel p-10 rounded-2xl fade-in">
-            <p id="results-message" class="text-3xl font-bold text-white mb-8"></p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <button onclick="restartQuiz()"
-                      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
-                Riprova Quiz
-              </button>
+          <div id="results-screen" class="hidden min-h-screen flex flex-col justify-center items-center">
+            <div class="text-center content-panel p-10 rounded-2xl fade-in">
+                <p id="results-message" class="text-3xl font-bold text-white mb-8"></p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="restartQuiz()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
+                    Riprova Quiz
+                </button>
+                </div>
             </div>
           </div>
 
           <!-- PRESENZE SCREEN - GRAFICO CON NOMI -->
           <div id="presenze-screen" class="hidden">
-            <h1 class="text-4xl font-bold mb-2">Dashboard Presenze</h1>
-            <p class="text-gray-400 mb-8">Riepilogo presenze al 04/11/2025</p>
+            <h1 class="text-4xl font-bold mb-2 text-center">Dashboard Presenze</h1>
+
 
             <!-- Pannello Riepilogo Generale -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -546,6 +550,8 @@
                 <p id="students-danger" class="text-4xl font-bold text-red-500">--</p>
               </div>
             </div>
+
+
 
             <!-- GRAFICO ANDAMENTO ORE -->
             <div class="content-panel p-6 rounded-lg">
@@ -578,7 +584,7 @@
           <!-- ESAME INFORMATICA SCREEN -->
           <div id="esame-informatica-screen" class="hidden">
             <div class="content-panel p-6 md:p-8 rounded-2xl mt-8">
-                <h2 class="text-2xl font-bold text-white mb-6">Esame di Informatica – Versione DEMO</h2>
+                <h2 class="text-2xl font-bold text-white mb-6 text-center">Esame di Informatica – Versione DEMO</h2>
                 <div id="esame-informatica-content" class="text-gray-300 space-y-6 prose prose-invert max-w-none">
                     <!-- Content will be injected here by JS -->
                 </div>
@@ -1813,7 +1819,9 @@
         container.innerHTML = allSubjectsHtml;
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('DOMContentLoaded', () => {
+      let presenzeData = [];
+      let prezenzeChart = null;
       buildSubjectDropdowns();
       buildColabCards();
 
@@ -1847,38 +1855,7 @@
       // 2. Mostra la Home e avvia il carosello
       showHomeScreen();
 
-      // 3. Registra il Service Worker per la PWA
-      if ('serviceWorker' in navigator) {
-        const swContent = `
-          self.addEventListener('install', event => {
-            event.waitUntil(
-              caches.open('studio-tai-cache-v1').then(cache => {
-                return cache.addAll(['index.html']);
-              })
-            );
-          });
 
-          self.addEventListener('fetch', event => {
-            event.respondWith(
-              caches.match(event.request).then(response => {
-                return response || fetch(event.request);
-              })
-            );
-          });
-        `;
-        const swBlob = new Blob([swContent], { type: 'application/javascript' });
-        const swUrl = URL.createObjectURL(swBlob);
-
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register(swUrl)
-            .then(registration => {
-              console.log('Service Worker registrato con successo:', registration);
-            })
-            .catch(error => {
-              console.log('Registrazione del Service Worker fallita:', error);
-            });
-        });
-      }
 
       // --- Sidebar Interaction Enhancements ---
 
@@ -1942,6 +1919,279 @@
             }
         });
       }
+
+      function parseCSVLine(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
+          } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        result.push(current.trim());
+        return result;
+      }
+
+      function showPresenzeScreen() {
+        closeSidebar();
+        changeBackground('presenze');
+        hideAllScreens();
+        document.getElementById('presenze-screen').classList.remove('hidden');
+
+        // Show a loading state immediately
+        const chartContainer = document.getElementById('presenze-chart-container');
+        chartContainer.innerHTML = '<p class="text-center py-16 text-gray-400">Caricamento dati presenze...</p>';
+        document.getElementById('avg-attendance-value').innerText = '--%';
+        document.getElementById('students-total').innerText = '--';
+        document.getElementById('students-safe').innerText = '--';
+        document.getElementById('students-danger').innerText = '--';
+
+        fetch('https://docs.google.com/spreadsheets/d/1ytDd1n5vqhGooCpZ-25Vt93x8jUJGRkp/export?format=csv&gid=222758920')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            return response.text();
+          })
+          .then(csvText => {
+            const rows = csvText.split('\n').slice(1);
+            const presenzeData = rows.map(row => {
+              const cleanedRow = row.replace('\r', '');
+              const columns = parseCSVLine(cleanedRow);
+              if (columns.length < 12) return null;
+
+              let nome = `${columns[1].trim()} ${columns[2].trim()}`;
+              if (nome === "DE LA ROSA AYBAR ROGELIO STEPHANY") {
+                nome = "DE LA ROSA WILLIAM";
+              }
+              if (!nome.trim() || nome.includes('DATI AGGIORNATI')) return null;
+
+              const oreCorso = parseFloat(columns[4].replace(',', '.'));
+              const oreSvolte = parseFloat(columns[11].replace(',', '.'));
+
+              if (isNaN(oreCorso) || oreCorso <= 0) return null;
+              const percentuale = (oreSvolte / oreCorso) * 100;
+              if (isNaN(percentuale)) return null;
+
+              return { nome, percentuale, oreSvolte, oreCorso };
+            }).filter(Boolean);
+
+            const totalStudents = presenzeData.length;
+            const avgAttendance = totalStudents > 0 ? presenzeData.reduce((sum, student) => sum + student.percentuale, 0) / totalStudents : 0;
+            const studentsSafe = presenzeData.filter(s => s.percentuale >= 90).length;
+            const studentsDanger = presenzeData.filter(s => s.percentuale <= 70).length;
+
+            document.getElementById('avg-attendance-value').innerText = `${avgAttendance.toFixed(1)}%`;
+            document.getElementById('students-total').innerText = totalStudents;
+            document.getElementById('students-safe').innerText = studentsSafe;
+            document.getElementById('students-danger').innerText = studentsDanger;
+
+            createPresenzeChart(presenzeData);
+          })
+          .catch(error => {
+            console.error('Errore durante il fetch o l\'elaborazione dei dati:', error);
+            chartContainer.innerHTML = '<p class="text-center text-red-500">Impossibile caricare i dati. Controlla la connessione e la console per i dettagli.</p>';
+          });
+      }
+
+      document.getElementById('presenze-btn').addEventListener('click', showPresenzeScreen);
+
+      function createPresenzeChart(chartData) {
+        const chartContainer = document.getElementById('presenze-chart-container');
+        if (!chartContainer) return;
+        chartContainer.innerHTML = '<canvas id="presenze-chart"></canvas>';
+        const ctx = document.getElementById('presenze-chart').getContext('2d');
+        if (prezenzeChart) {
+          prezenzeChart.destroy();
+        }
+
+        const sortedData = [...chartData].sort((a, b) => a.percentuale - b.percentuale);
+
+        const labels = sortedData.map(student => student.nome);
+        const percentages = sortedData.map(student => student.percentuale);
+
+        const backgroundColors = percentages.map(p => {
+          if (p >= 90) return 'rgba(34, 197, 94, 0.8)';
+          if (p >= 80) return 'rgba(234, 179, 8, 0.8)';
+          if (p > 70) return 'rgba(249, 115, 22, 0.8)';
+          return 'rgba(239, 68, 68, 0.8)';
+        });
+        const borderColors = percentages.map(p => {
+            if (p >= 90) return 'rgba(34, 197, 94, 1)';
+            if (p >= 80) return 'rgba(234, 179, 8, 1)';
+            if (p > 70) return 'rgba(249, 115, 22, 1)';
+            return 'rgba(239, 68, 68, 1)';
+        });
+
+        prezenzeChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Percentuale Presenze',
+              data: percentages,
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
+              borderWidth: 2,
+              borderRadius: 5,
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                ticks: { color: '#d1d5db', font: { weight: 'bold' } }
+              },
+              y: {
+                grid: { display: false },
+                ticks: { color: '#d1d5db', font: { size: 10 } }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleFont: { size: 14, weight: 'bold' },
+                bodyFont: { size: 12 },
+                callbacks: {
+                  label: function(context) {
+                    const dataIndex = context.dataIndex;
+                    const studentData = sortedData[dataIndex];
+                    if (studentData) {
+                      return `Ore: ${studentData.oreSvolte.toFixed(1)} / ${studentData.oreCorso.toFixed(1)}`;
+                    }
+                    return '';
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+
+      // --- ESAME INFORMATICA ---
+      function showEsameInformaticaScreen() {
+          closeSidebar();
+          changeBackground('programmazione'); // o un altro sfondo a tema
+          hideAllScreens();
+          document.getElementById('esame-informatica-screen').classList.remove('hidden');
+
+          // Contenuto dell'esame (può essere caricato da un file JSON o definito qui)
+          const esameContent = `
+              <p class="text-lg">L'esame di qualifica di <strong>Tecnico di automazione industriale</strong> prevede una componente di programmazione informatica.</p>
+              <p>Questa è una versione <strong>DEMO</strong> per familiarizzare con la struttura della prova. Le domande e le risposte potrebbero non essere complete o corrette.</p>
+              <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                  <h3 class="font-bold text-xl mb-4">Struttura della Prova</h3>
+                  <ul class="list-disc pl-5 space-y-2">
+                      <li><strong>Sezione 1:</strong> Domande a risposta multipla sulla teoria della programmazione (Python).</li>
+                      <li><strong>Sezione 2:</strong> Esercizi pratici di coding in Python.</li>
+                      <li><strong>Sezione 3:</strong> Analisi e debugging di un breve script.</li>
+                  </ul>
+              </div>
+              <p class="text-yellow-400"><span class="font-bold">Nota:</span> Il giorno dell'esame, l'ambiente di coding sarà fornito e pre-configurato. Non sarà necessario installare alcun software.</p>
+          `;
+          document.getElementById('esame-informatica-content').innerHTML = esameContent;
+      }
+
+      document.getElementById('esame-informatica-btn').addEventListener('click', showEsameInformaticaScreen);
+      // --- FINE ESAME INFORMATICA ---
+
+    });
+  </script>
+</body>
+</html>
+
+        }
+        prezenzeChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+                        labels: labels,
+                        datasets: [{
+                          label: 'Percentuale di Presenza',
+                          data: percentages,              backgroundColor: presenzeData.map(d => {
+                if (d.percentuale >= 90) return 'rgba(34, 197, 94, 1)';
+                if (d.percentuale >= 80) return 'rgba(234, 179, 8, 1)';
+                if (d.percentuale >= 71) return 'rgba(249, 115, 22, 1)';
+                return 'rgba(239, 68, 68, 1)';
+              }),
+              borderColor: presenzeData.map(d => {
+                if (d.percentuale >= 90) return 'rgba(34, 197, 94, 1)';
+                if (d.percentuale >= 80) return 'rgba(234, 179, 8, 1)';
+                if (d.percentuale >= 71) return 'rgba(249, 115, 22, 1)';
+                return 'rgba(239, 68, 68, 1)';
+              }),
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              x: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Studente',
+                  color: '#d1d5db'
+                },
+                ticks: {
+                  color: '#9ca3af',
+                  maxRotation: 45,
+                  minRotation: 45
+                },
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
+                }
+              },
+              y: {
+                beginAtZero: true,
+                max: 100,
+                title: {
+                  display: true,
+                  text: 'Percentuale (%)',
+                  color: '#d1d5db'
+                },
+                ticks: {
+                  color: '#9ca3af'
+                },
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
+                }
+              }
+            }
+          }
+        });
+      }
+
+
+
+      function initializePresenzeHandlers() {
+        const prezenzeBtn = document.getElementById('presenze-btn');
+
+        if (prezenzeBtn) {
+          prezenzeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showPresenzeScreen();
+          });
+        }
+      }
+      initializePresenzeHandlers();
     });
   </script>
 
@@ -2085,241 +2335,7 @@
     }
 
 
-    // ====== PRESENZE - GRAFICO CON NOMI + FIX VISIBILITA ======
-
-    function initializePresenzeHandlers() {
-      const prezenzeBtn = document.getElementById('presenze-btn');
-
-      if (prezenzeBtn) {
-        prezenzeBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          showPresenzeScreen();
-        });
-      }
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initializePresenzeHandlers);
-    } else {
-      initializePresenzeHandlers();
-    }
-
-    let presenzeData = [];
-    let prezenzeChart = null;
-
-    function showPresenzeScreen() {
-      closeSidebar();
-      changeBackground('presenze');
-      hideAllScreens();
-
-      const presenzeScreen = document.getElementById('presenze-screen');
-      presenzeScreen.classList.remove('hidden');
-
-      // Show a loading state immediately to improve INP
-      const chartContainer = document.getElementById('presenze-chart-container');
-      chartContainer.innerHTML = '<p class="text-center py-16 text-gray-400">Caricamento dati presenze...</p>';
-
-      // Reset summary cards to loading state
-      document.getElementById('avg-attendance-value').innerText = '--%';
-      document.getElementById('students-total').innerText = '--';
-      document.getElementById('students-safe').innerText = '--';
-      document.getElementById('students-danger').innerText = '--';
-
-      // Defer the actual data loading to unblock the UI thread
-      setTimeout(loadPresenzeData, 100);
-    }
-
-    function loadPresenzeData() {
-      const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1ytDd1n5vqhGooCpZ-25Vt93x8jUJGRkp/export?format=csv&gid=222758920';
-      const chartContainer = document.getElementById('presenze-chart-container');
-
-      fetch(spreadsheetUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Errore di rete: ${response.statusText}`);
-          }
-          return response.text();
-        })
-        .then(csv => {
-          try {
-            presenzeData = parsePresenzeCSV(csv);
-            renderChart();
-          } catch (e) {
-            console.error("Errore durante l'elaborazione dei dati:", e);
-            chartContainer.innerHTML = '<p class="text-center py-16 text-red-400">Errore durante l\'elaborazione dei dati.</p>';
-          }
-        })
-        .catch(error => {
-          console.error('Errore caricamento presenze:', error);
-          chartContainer.innerHTML = '<p class="text-center py-16 text-red-400">Impossibile caricare i dati. Controlla la connessione.</p>';
-        });
-    }
-
-    function parsePresenzeCSV(csv) {
-      const data = [];
-      const lines = csv.trim().split('\n');
-      for (let i = 1; i < lines.length; i++) {
-        if (!lines[i].trim()) continue;
-        const values = parseCSVLine(lines[i]);
-
-        if (values.length < 13) continue;
-        if (values[0].includes('COGNOME') || values[1].includes('COGNOME')) continue;
-
-        const cognome = (values[1] || '').trim();
-        const nome = (values[2] || '').trim();
-        const oreCorse = parseInt(values[4]) || 111;
-        const oreSvolte = parseFloat((values[12] || '0').replace(',', '.')) || 0;
-
-        if (!cognome) continue;
-
-        data.push({
-          cognome: cognome,
-          nome: nome,
-          ore_corso: oreCorse,
-          ore_svolte: oreSvolte
-        });
-      }
-      return data;
-    }
-
-    function parseCSVLine(line) {
-      const result = [];
-      let current = '';
-      let inQuotes = false;
-      for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        if (char === '"') {
-          if (inQuotes && line[i + 1] === '"') {
-            current += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
-        } else if (char === ',' && !inQuotes) {
-          result.push(current.trim());
-          current = '';
-        } else {
-          current += char;
-        }
-      }
-      result.push(current.trim());
-      return result;
-    }
-
-    function renderChart() {
-      const chartContainer = document.getElementById('presenze-chart-container');
-      if (presenzeData.length === 0) {
-        chartContainer.innerHTML = '<p class="text-center py-16 text-gray-400">Nessun dato sulle presenze da visualizzare.</p>';
-        return;
-      }
-
-      // Re-create the canvas element that was replaced by the loading message
-      chartContainer.innerHTML = '<canvas id="presenze-chart"></canvas>';
-      const ctx = document.getElementById('presenze-chart');
-      if (!ctx) return;
-
-      // --- START: Calcoli per il dashboard di riepilogo ---
-      const totalStudents = presenzeData.length;
-      const totalPercentageSum = presenzeData.reduce((sum, student) => {
-          const percentage = (student.ore_svolte / student.ore_corso) * 100;
-          return sum + (isNaN(percentage) ? 0 : percentage);
-      }, 0);
-      const averageAttendance = totalStudents > 0 ? totalPercentageSum / totalStudents : 0;
-
-      const studentsAbove90 = presenzeData.filter(s => (s.ore_svolte / s.ore_corso) * 100 >= 90).length;
-      const studentsBelow70 = presenzeData.filter(s => (s.ore_svolte / s.ore_corso) * 100 <= 70).length;
-
-      // Popola le card del dashboard
-      const avgEl = document.getElementById('avg-attendance-value');
-      const totalEl = document.getElementById('students-total');
-      const safeEl = document.getElementById('students-safe');
-      const dangerEl = document.getElementById('students-danger');
-
-      if(avgEl) avgEl.innerText = `${averageAttendance.toFixed(1)}%`;
-      if(totalEl) totalEl.innerText = totalStudents;
-      if(safeEl) safeEl.innerText = studentsAbove90;
-      if(dangerEl) dangerEl.innerText = studentsBelow70;
-      // --- END: Calcoli per il dashboard di riepilogo ---
-
-      // Sort data in descending order by percentage
-      presenzeData.sort((a, b) => {
-        const percentageA = (a.ore_svolte / a.ore_corso) * 100;
-        const percentageB = (b.ore_svolte / b.ore_corso) * 100;
-        return percentageB - percentageA;
-      });
-
-      // LABELS CON COGNOME E NOME
-      const labels = presenzeData.map(d => {
-        if (d.cognome.toUpperCase().includes('DE LA ROSA')) {
-          return 'DE LA ROSA WILLIAM';
-        }
-        return d.cognome + ' ' + d.nome;
-      });
-      const dataValues = presenzeData.map(d => Math.round((d.ore_svolte / d.ore_corso) * 100));
-
-      const colors = dataValues.map(val => {
-        if (val >= 90) return 'rgba(34, 197, 94, 0.8)';
-        if (val >= 80) return 'rgba(234, 179, 8, 0.8)';
-        if (val > 70) return 'rgba(249, 115, 22, 0.8)';
-        return 'rgba(239, 68, 68, 0.8)';
-      });
-
-      const borderColors = dataValues.map(val => {
-        if (val >= 90) return 'rgba(34, 197, 94, 1)';
-        if (val >= 80) return 'rgba(234, 179, 8, 1)';
-        if (val > 70) return 'rgba(249, 115, 22, 1)';
-        return 'rgba(239, 68, 68, 1)';
-      });
-
-      if (prezenzeChart) {
-        prezenzeChart.destroy();
-      }
-
-      prezenzeChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Percentuale Presenze',
-            data: dataValues,
-            backgroundColor: colors,
-            borderColor: borderColors,
-            borderWidth: 2,
-            borderRadius: 5,
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              beginAtZero: true,
-              max: 100,
-              grid: { color: 'rgba(255, 255, 255, 0.1)' },
-              ticks: { color: '#d1d5db', font: { weight: 'bold' } }
-            },
-            y: {
-              grid: { display: false },
-              ticks: { color: '#d1d5db', font: { size: 10 } }
-            }
-          },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              enabled: true,
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              titleFont: { size: 14, weight: 'bold' },
-              bodyFont: { size: 12 },
-              callbacks: {
-                label: function(context) {
-                  return `Presenze: ${context.raw}%`;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
+    
 
     // ====== ESAME INFORMATICA ======
     const esameInformaticaHTML = `
