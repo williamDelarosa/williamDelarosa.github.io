@@ -1154,6 +1154,110 @@
         { "question": "Cos'è un 'isolatore ottico'?", "answer": "Un componente che utilizza la luce per trasmettere un segnale tra due circuiti isolati, prevenendo il rumore elettrico." },
         { "question": "Cos'è un progetto 'fail-safe'?", "answer": "Un progetto che garantisce che un sistema si guasti in modo sicuro." },
         { "question": "Cos'è un sistema PLC 'ridondante'?", "answer": "Un sistema con un PLC di backup che subentra se il PLC primario si guasta." }
+      ],
+      diagnosi_e_robot: [
+        { question: "Cos'è la 'diagnosi' in un sistema robotico?", answer: "Il processo di identificazione di guasti o anomalie nel funzionamento del robot." },
+        { question: "Qual è lo scopo del 'monitoraggio'?", answer: "Controllare continuamente lo stato del robot e dei suoi componenti per prevenire guasti." },
+        { question: "Cosa si intende per 'manutenzione predittiva'?", answer: "Una strategia di manutenzione che prevede quando un componente potrebbe guastarsi, basandosi sui dati raccolti." },
+        { question: "Quali sono i principali sensori usati per la diagnosi?", answer: "Sensori di vibrazione, temperatura, corrente e visione artificiale." },
+        { question: "Cos'è un 'modello di guasto'?", answer: "Una rappresentazione matematica o logica di come un guasto si manifesta nel sistema." },
+        { question: "Qual è la differenza tra 'diagnosi' e 'prognosi'?", answer: "La diagnosi identifica il guasto attuale, la prognosi stima la vita residua del componente." },
+        { question: "Cosa si intende per 'fault detection'?", answer: "Il rilevamento della presenza di un guasto nel sistema." },
+        { question: "Cos'è la 'fault isolation'?", answer: "La localizzazione del componente o del sottosistema guasto." },
+        { question: "Cosa si intende per 'fault identification'?", answer: "La determinazione della natura e della gravità del guasto." },
+        { question: "Quali sono gli approcci principali alla diagnosi?", answer: "Approcci basati su modello, basati su segnale e basati su conoscenza." },
+        { question: "Come funziona un approccio 'basato su modello'?", answer: "Confronta il comportamento reale del sistema con quello di un modello matematico di riferimento." },
+        { question: "Cosa si intende per 'residuo' in una diagnosi basata su modello?", answer: "La differenza tra le misure reali e le stime del modello. Un residuo non nullo indica un guasto." },
+        { question: "Qual è il vantaggio degli approcci 'basati sui dati' (data-driven)?", answer: "Non richiedono un modello fisico dettagliato del sistema, ma apprendono dai dati storici." },
+        { question: "Quali algoritmi di Machine Learning sono usati per la diagnosi?", answer: "Reti neurali, Support Vector Machines (SVM) e alberi decisionali." },
+        { question: "Cos'è l'analisi delle 'vibrazioni'?", answer: "Una tecnica che analizza le frequenze di vibrazione di un macchinario per rilevare usura o squilibri." },
+        { question: "A cosa serve la 'termografia' nella diagnosi?", answer: "A rilevare surriscaldamenti anomali nei componenti elettrici o meccanici." },
+        { question: "Cosa si intende per 'sistema esperto' per la diagnosi?", answer: "Un sistema software che emula le capacità decisionali di un esperto umano in un dominio specifico." },
+        { question: "Qual è il ruolo del 'Digital Twin' nella diagnosi?", answer: "Permette di simulare scenari di guasto e testare strategie di diagnosi su un gemello virtuale del robot." },
+        { question: "Cos'è un 'codice di errore'?", answer: "Un codice alfanumerico generato dal sistema di controllo del robot per indicare un guasto specifico." },
+        { question: "Come si può implementare la 'diagnosi remota'?", answer: "Attraverso la connessione del robot a una rete (IoT) che permette a un tecnico di monitorare e diagnosticare da remoto." },
+        { question: "Qual è l'importanza della 'ridondanza' per la tolleranza ai guasti?", answer: "L'uso di componenti di backup permette al sistema di continuare a funzionare anche in caso di guasto di un componente primario." },
+        { question: "Cosa si intende per 'fail-safe'?", answer: "La capacità di un sistema di passare a uno stato sicuro in caso di guasto, per prevenire danni a persone o cose." },
+        { question: "Cos'è un 'FMEA' (Failure Mode and Effects Analysis)?", answer: "Un'analisi sistematica per identificare le potenziali modalità di guasto di un sistema e i loro effetti." },
+        { question: "Qual è la differenza tra 'guasto' e 'avaria'?", answer: "Il guasto è la cessazione della capacità di un'entità di svolgere la funzione richiesta. L'avaria è il degrado delle prestazioni." },
+        { question: "Come l'IA sta cambiando la diagnosi robotica?", answer: "Permettendo di analizzare grandi quantità di dati, identificare pattern complessi e predire guasti con maggiore accuratezza." },
+        { question: "Cosa sono i 'log di sistema'?", answer: "File di testo che registrano eventi e messaggi di stato del sistema, utili per l'analisi post-guasto." },
+        { question: "Cos'è l'analisi dell' 'olio lubrificante'?", answer: "Una tecnica che analizza campioni di olio per rilevare la presenza di particelle metalliche, indicatrici di usura." },
+        { question: "Quali sono le sfide della diagnosi nei 'robot collaborativi' (cobot)?", answer: "La sicurezza dell'interazione uomo-robot richiede una diagnosi ancora più rapida e affidabile." },
+        { question: "Cosa si intende per 'self-healing' in un robot?", answer: "La capacità del sistema di rilevare, diagnosticare e correggere autonomamente un guasto." },
+        { question: "Qual è il ruolo dell''HMI' (Human-Machine Interface) nella diagnosi?", answer: "Visualizzare lo stato del robot, allarmi e messaggi di diagnostica in modo chiaro per l'operatore." },
+        { question: "Cos'è un 'guasto intermittente'?", answer: "Un guasto che si manifesta solo occasionalmente, rendendolo difficile da diagnosticare." },
+        { question: "Come si possono diagnosticare i problemi di 'comunicazione' in un sistema multi-robot?", answer: "Analizzando i log di rete, il tempo di latenza e la perdita di pacchetti." },
+        { question: "Cos'è un 'albero dei guasti' (Fault Tree)?", answer: "Un diagramma logico che rappresenta le possibili cause di un guasto di sistema." },
+        { question: "Qual è il primo passo da compiere quando si verifica un guasto?", answer: "Mettere in sicurezza il sistema e raccogliere quante più informazioni possibili sul contesto del guasto." },
+        { question: "Perché è importante documentare i guasti e le soluzioni adottate?", answer: "Per creare una base di conoscenza (knowledge base) che faciliti la diagnosi di problemi futuri." },
+        { question: "Cos'è l'analisi delle 'cause radice' (Root Cause Analysis)?", answer: "Un metodo per identificare la causa fondamentale di un problema, anziché limitarsi a trattarne i sintomi." },
+        { question: "Qual è il ruolo della 'simulazione' nella diagnosi?", answer: "Permette di riprodurre un guasto in un ambiente controllato per capirne le cause." },
+        { question: "Cosa si intende per 'condition monitoring'?", answer: "Il monitoraggio continuo di parametri significativi (es. vibrazioni, temperatura) per valutare lo stato di salute di un macchinario." },
+        { question: "Come si può usare un 'oscilloscopio' per la diagnosi?", answer: "Per visualizzare e analizzare i segnali elettrici dei sensori e degli attuatori." },
+        { question: "Quali sono i segnali di un 'motore' che sta per guastarsi?", answer: "Aumento del rumore, vibrazioni anomale, surriscaldamento, aumento dell'assorbimento di corrente." },
+        { question: "Come si diagnostica un problema al 'sistema di visione' di un robot?", answer: "Controllando la calibrazione della telecamera, l'illuminazione, la pulizia dell'obiettivo e il software di elaborazione delle immagini." },
+        { question: "Cos'è un 'guasto software'?", answer: "Un errore nel codice di programmazione che causa un comportamento anomalo del robot." },
+        { question: "Come si effettua il 'debug' di un programma robotico?", answer: "Utilizzando strumenti software (debugger) che permettono di eseguire il codice passo-passo e ispezionare le variabili." },
+        { question: "Qual è la differenza tra un 'errore' e un 'guasto'?", answer: "Un errore è una discrepanza tra un valore calcolato e quello vero. Un guasto è l'incapacità di funzionare correttamente." },
+        { question: "Cosa si intende per 'manutenzione basata sulle condizioni' (CBM)?", answer: "Una strategia di manutenzione che viene eseguita solo quando il monitoraggio indica un degrado delle prestazioni." },
+        { question: "Quale standard definisce la sicurezza funzionale dei sistemi di controllo?", answer: "Lo standard IEC 61508." },
+        { question: "Come si testa la 'ripetibilità' di un robot?", answer: "Facendogli eseguire lo stesso movimento più volte e misurando la deviazione tra le posizioni raggiunte." },
+        { question: "Cosa si intende per 'accuratezza' di un robot?", answer: "La capacità del robot di raggiungere una posizione comandata nello spazio." },
+        { question: "Qual è la causa più comune di guasti nei robot industriali?", answer: "L'usura dei componenti meccanici (es. riduttori, cinghie)." },
+        { question: "Come può un robot segnalare un guasto all'operatore?", answer: "Tramite messaggi sull'HMI, spie luminose, segnali acustici o notifiche remote." }
+      ],
+      direttiva_macchine: [
+        { question: "Qual è lo scopo principale della Direttiva Macchine 2006/42/CE?", answer: "Garantire la libera circolazione delle macchine nel mercato europeo e assicurare un elevato livello di protezione per la salute e la sicurezza." },
+        { question: "A quali prodotti si applica la Direttiva Macchine?", answer: "A macchine, quasi-macchine, attrezzature intercambiabili, componenti di sicurezza, accessori di sollevamento, catene, funi e cinghie." },
+        { question: "Cosa si intende per 'macchina' secondo la direttiva?", answer: "Un insieme equipaggiato o destinato ad essere equipaggiato di un sistema di azionamento diverso dalla forza umana o animale diretta, composto di parti o di componenti, di cui almeno uno mobile, collegati tra loro solidamente per un'applicazione ben determinata." },
+        { question: "Cos'è una 'quasi-macchina'?", answer: "Un insieme che costituisce quasi una macchina, ma che, da solo, non è in grado di garantire un'applicazione ben determinata." },
+        { question: "Chi è il 'fabbricante' di una macchina?", answer: "La persona fisica o giuridica che progetta e/o realizza una macchina o una quasi-macchina e che è responsabile della sua conformità alla direttiva." },
+        { question: "Cosa deve fare il fabbricante prima di immettere una macchina sul mercato?", answer: "Deve assicurarsi che soddisfi i Requisiti Essenziali di Sicurezza e di Salute (RESS), redigere il fascicolo tecnico, fornire le istruzioni e apporre la marcatura CE." },
+        { question: "Cos'è il 'fascicolo tecnico' della macchina?", answer: "Una documentazione che dimostra la conformità della macchina alla direttiva. Deve includere disegni, analisi dei rischi, norme applicate, ecc." },
+        { question: "Cosa deve contenere il 'manuale di istruzioni' di una macchina?", answer: "Tutte le informazioni necessarie per l'uso sicuro della macchina: installazione, uso, manutenzione, messa fuori servizio e smaltimento." },
+        { question: "Cos'è la 'marcatura CE' su una macchina?", answer: "Un'autocertificazione del fabbricante che dichiara la conformità della macchina a tutte le direttive UE applicabili." },
+        { question: "Qual è il ruolo dell''Organismo Notificato' nel processo di certificazione?", answer: "Interviene per la valutazione della conformità di macchine considerate 'pericolose' (elencate nell'Allegato IV della direttiva)." },
+        { question: "Cosa sono i 'Requisiti Essenziali di Sicurezza e di Salute' (RESS)?", answer: "Sono i requisiti obbligatori (elencati nell'Allegato I) che ogni macchina deve soddisfare per essere considerata sicura." },
+        { question: "Qual è il principio dell''integrazione della sicurezza'?", answer: "La sicurezza deve essere integrata fin dalla fase di progettazione della macchina, e non aggiunta in un secondo momento." },
+        { question: "Cosa deve fare il fabbricante se una macchina non è interamente conforme a una norma armonizzata?", answer: "Deve dimostrare nel fascicolo tecnico come ha soddisfatto i RESS corrispondenti con altre soluzioni tecniche." },
+        { question: "Quali sono le tre fasi del processo di riduzione dei rischi?", answer: "1. Misure di sicurezza intrinseche (progettazione), 2. Misure di protezione (ripari, dispositivi), 3. Informazioni per l'uso." },
+        { question: "Cos'è un 'riparo' in una macchina?", answer: "Un elemento della macchina utilizzato specificamente per garantire la protezione tramite una barriera materiale." },
+        { question: "Qual è la differenza tra un 'riparo fisso' e un 'riparo mobile'?", answer: "Il riparo fisso è fissato in modo permanente. Quello mobile può essere aperto senza l'uso di attrezzi (es. con interblocco)." },
+        { question: "Cos'è un 'dispositivo di interblocco'?", answer: "Un dispositivo che impedisce l'avvio di funzioni pericolose della macchina quando il riparo associato è aperto." },
+        { question: "A cosa serve un 'comando a due mani'?", answer: "A garantire che l'operatore usi entrambe le mani per avviare un'operazione pericolosa, tenendole lontane dalla zona di pericolo." },
+        { question: "Cosa si intende per 'arresto di emergenza'?", answer: "Una funzione che deve essere attivata da un'unica azione umana per arrestare un processo pericoloso nel più breve tempo possibile." },
+        { question: "Qual è la differenza tra 'arresto di categoria 0' e 'arresto di categoria 1'?", answer: "Categoria 0: arresto immediato togliendo energia agli attuatori. Categoria 1: arresto controllato mantenendo l'energia per poi toglierla a macchina ferma." },
+        { question: "Cosa deve indicare la 'targa' di una macchina?", answer: "Nome del fabbricante, designazione della macchina, modello, numero di serie, anno di costruzione e marcatura CE." },
+        { question: "La Direttiva Macchine si applica alle macchine usate?", answer: "Si applica alle macchine usate se importate da un paese extra-UE o se hanno subito modifiche sostanziali." },
+        { question: "Cosa si intende per 'modifica sostanziale' di una macchina?", answer: "Una modifica non prevista dal fabbricante originale che ne altera le prestazioni o introduce nuovi rischi." },
+        { question: "Chi è responsabile della sicurezza di una linea di produzione composta da più macchine?", answer: "Chi assembla la linea è considerato il 'fabbricante' dell'insieme e deve garantire la conformità dell'intera linea." },
+        { question: "Cosa sono le 'norme armonizzate'?", answer: "Sono norme tecniche europee che, se seguite, forniscono una 'presunzione di conformità' ai RESS della direttiva." },
+        { question: "Qual è la differenza tra una norma di tipo A, B e C?", answer: "Tipo A: principi fondamentali di progettazione. Tipo B: aspetti di sicurezza generici (es. distanze di sicurezza). Tipo C: requisiti per una specifica categoria di macchine (es. presse)." },
+        { question: "Un datore di lavoro può modificare una macchina marcata CE?", answer: "Sì, ma se la modifica è sostanziale, il datore di lavoro diventa il nuovo fabbricante e deve ricertificare la macchina." },
+        { question: "Cosa deve fare l'utilizzatore di una macchina?", answer: "Deve assicurarsi che la macchina sia utilizzata correttamente, manutenuta secondo le istruzioni e che gli operatori siano formati." },
+        { question: "La Direttiva Macchine copre i rischi elettrici?", answer: "Sì, per i rischi di origine elettrica, ma rimanda anche alla Direttiva Bassa Tensione (LVD) per la conformità dei componenti elettrici." },
+        { question: "Cosa significa che il fascicolo tecnico deve essere tenuto a disposizione delle autorità per 10 anni?", answer: "Significa che il fabbricante deve conservarlo e poterlo fornire su richiesta delle autorità di sorveglianza del mercato." },
+        { question: "Una macchina costruita per uso proprio deve essere marcata CE?", answer: "Sì, anche se la macchina è destinata all'uso interno, il fabbricante deve seguire tutta la procedura di certificazione." },
+        { question: "Qual è il campo di applicazione del nuovo Regolamento Macchine (UE) 2023/1230?", answer: "Sostituirà la Direttiva Macchine 2006/42/CE, introducendo nuovi requisiti per la cybersicurezza, l'IA e la digitalizzazione." },
+        { question: "Cosa si intende per 'componente di sicurezza'?", answer: "Un componente che svolge una funzione di sicurezza, immesso sul mercato separatamente, il cui guasto o malfunzionamento mette a repentaglio la sicurezza delle persone." },
+        { question: "È obbligatorio seguire le norme armonizzate?", answer: "No, non è obbligatorio, ma è il modo più semplice per dimostrare la conformità ai RESS." },
+        { question: "Quali informazioni sono cruciali nell'analisi dei rischi?", answer: "L'identificazione dei pericoli, la stima e la valutazione del rischio associato a ciascun pericolo." },
+        { question: "Una macchina può essere marcata CE se non è sicura?", answer: "No, la marcatura CE implica che la macchina soddisfa tutti i requisiti di sicurezza applicabili." },
+        { question: "Cosa succede se una macchina marcata CE si rivela non conforme?", answer: "Le autorità di sorveglianza possono ordinare il ritiro dal mercato e sanzionare il fabbricante." },
+        { question: "I software che svolgono funzioni di sicurezza rientrano nella Direttiva Macchine?", answer: "Sì, se sono immessi sul mercato separatamente, sono considerati componenti di sicurezza." },
+        { question: "Qual è lo scopo dei pittogrammi di sicurezza su una macchina?", answer: "Fornire avvertenze visive immediate sui rischi residui che non è stato possibile eliminare." },
+        { question: "La valutazione dei rischi deve considerare anche l' 'uso scorretto ragionevolmente prevedibile'?", answer: "Sì, il fabbricante deve prevedere e mitigare anche i rischi derivanti da un uso scorretto ma prevedibile della macchina." },
+        { question: "Cosa si intende per 'Performance Level' (PL) secondo la ISO 13849-1?", answer: "Un livello discreto (da 'a' a 'e') che specifica la capacità dei componenti di sicurezza di eseguire una funzione di sicurezza in condizioni prevedibili." },
+        { question: "Un robot collaborativo è considerato una 'macchina'?", answer: "Sì, e deve essere conforme alla Direttiva Macchine, oltre a norme specifiche come la ISO/TS 15066 per la collaborazione uomo-robot." },
+        { question: "Che validità ha la dichiarazione di conformità CE?", answer: "È valida finché la macchina non subisce modifiche sostanziali." },
+        { question: "Il manuale di istruzioni deve essere fornito nella lingua dell'utilizzatore?", answer: "Sì, la direttiva richiede che le istruzioni siano redatte in una o più lingue ufficiali della Comunità." },
+        { question: "Cosa deve fare un importatore che immette una macchina da un paese extra-UE?", answer: "L'importatore assume le responsabilità del fabbricante e deve garantire che la macchina sia conforme alla direttiva." },
+        { question: "Le macchine per la ricerca e sviluppo sono escluse dalla direttiva?", answer: "Sono escluse le macchine costruite a fini di ricerca per essere utilizzate temporaneamente nei laboratori." },
+        { question: "Quale allegato della direttiva elenca le macchine 'particolarmente pericolose'?", answer: "L'Allegato IV." },
+        { question: "Un ascensore rientra nella Direttiva Macchine?", answer: "No, gli ascensori sono coperti da una direttiva specifica (Direttiva Ascensori)." },
+        { question: "Qual è il ruolo del 'mandatario'?", answer: "Una persona fisica o giuridica stabilita nella Comunità che ha ricevuto un mandato scritto dal fabbricante per agire a suo nome per determinati compiti." },
+        { question: "Come si gestiscono i rischi legati al rumore emesso da una macchina?", answer: "Il fabbricante deve ridurre il rumore alla fonte, fornire misure di protezione e indicare il livello di emissione sonora nelle istruzioni." }
       ]
     };
 
@@ -1169,7 +1273,9 @@
       qualifica: 'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
       presenze: 'https://images.pexels.com/photos/1591060/pexels-photo-1591060.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
       machine_learning: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
-      plc: 'https://images.pexels.com/photos/6477203/pexels-photo-6477203.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
+      plc: 'https://images.pexels.com/photos/6477203/pexels-photo-6477203.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      diagnosi_e_robot: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60',
+      direttiva_macchine: 'https://images.pexels.com/photos/209230/pexels-photo-209230.jpeg?auto=compress&cs=tinysrgb&w=1920&q=60'
     };
 
     // --- Configurazione Immagini Cicliche per la Home ---
@@ -1483,6 +1589,8 @@
       programmazione: { name: 'Programmazione Informatica', flipbook: 'https://www.calameo.com/read/0080586704c5f9a83fa5b' },
       machine_learning: { name: 'Machine Learning', flipbook: 'https://www.calameo.com/read/008058670caf2315fdcf2' },
       plc: { name: 'Plc', flipbook: 'https://www.calameo.com/read/008058670b95af1f77d29' },
+      diagnosi_e_robot: { name: 'Diagnosi e Robot', flipbook: 'https://www.calameo.com/read/0080586702915caeed247' },
+      direttiva_macchine: { name: 'Direttiva Macchine', flipbook: 'https://www.calameo.com/read/00805867024a4740f9418' },
     };
 
 
@@ -1839,11 +1947,13 @@
             const isOpen = dropdown.classList.contains('max-h-[40rem]');
             if (isOpen) {
                 dropdown.classList.remove('max-h-[40rem]');
+                dropdown.classList.remove('overflow-y-auto'); // Rimuove lo scroll quando si chiude
                 dropdown.classList.add('max-h-0');
                 if (arrow) arrow.classList.remove('rotate-90');
             } else {
                 dropdown.classList.remove('max-h-0');
                 dropdown.classList.add('max-h-[40rem]');
+                dropdown.classList.add('overflow-y-auto'); // Aggiunge lo scroll quando si apre
                 if (arrow) arrow.classList.add('rotate-90');
             }
         }
@@ -2335,7 +2445,7 @@
     }
 
 
-    
+
 
     // ====== ESAME INFORMATICA ======
     const esameInformaticaHTML = `
